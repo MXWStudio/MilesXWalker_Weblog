@@ -5,6 +5,7 @@
         <router-link to="/about" class="category-link">About</router-link>
         <router-link to="/photos" class="category-link">Photos</router-link>
         <router-link to="/videos" class="category-link">Videos</router-link>
+        <router-link to="/ai" class="category-link">AI</router-link>
         <router-link to="/contact" class="category-link">Contact</router-link>
       </nav>
     </div>

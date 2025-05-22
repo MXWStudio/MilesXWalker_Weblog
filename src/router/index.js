@@ -4,6 +4,7 @@ import About from '../components/About.vue'
 import Photos from '../views/Photos.vue'
 import Videos from '../views/Videos.vue'
 import Contact from '../views/Contact.vue'
+import Ai from '../views/Ai.vue'
 
 const routes = [
   {
@@ -38,6 +39,14 @@ const routes = [
     component: Contact,
     meta: {
       title: '联系我们'
+    }
+  },
+  {
+    path: '/ai',
+    name: 'Ai',
+    component: Ai,
+    meta: {
+      title: 'AI专区'
     }
   }
 ]
