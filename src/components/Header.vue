@@ -3,20 +3,20 @@
     <div class="header-section left-section">
       <nav class="categories">
         <router-link to="/about" class="category-link">About</router-link>
-        <a href="#" class="category-link">Photos</a>
-        <a href="#" class="category-link">Videos</a>
-        <a href="#" class="category-link">Contact</a>
+        <router-link to="/photos" class="category-link">Photos</router-link>
+        <router-link to="/videos" class="category-link">Videos</router-link>
+        <router-link to="/contact" class="category-link">Contact</router-link>
       </nav>
     </div>
 
     <div class="header-section center-section">
-      <div class="logo-container">
+      <router-link to="/" class="logo-container">
         <svg class="logo-badge" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
           <path d="M2 17l10 5 10-5"></path>
           <path d="M2 12l10 5 10-5"></path>
         </svg>
-      </div>
+      </router-link>
     </div>
 
     <div class="header-section right-section">
@@ -118,6 +118,7 @@
   padding: 4px;
   border-radius: 8px;
   transition: background-color 0.2s ease;
+  text-decoration: none;
 }
 
 .logo-container:hover {

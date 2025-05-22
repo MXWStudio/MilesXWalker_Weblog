@@ -14,15 +14,8 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'Hero',
-  data() {
-    return {
-      // 可以在这里添加数据
-    }
-  }
-}
+<script setup>
+// 组件逻辑
 </script>
 
 <style scoped>
@@ -30,42 +23,42 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 60px 5%;
+  padding: 100px 8%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 500px;
+  min-height: 700px;
 }
 
 .hero-content {
   flex: 1;
-  max-width: 600px;
-  padding-right: 40px;
+  max-width: 700px;
+  padding-right: 60px;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 700;
+  font-size: 4.5rem;
+  font-weight: 800;
   color: #2c3e50;
-  margin-bottom: 20px;
-  line-height: 1.2;
+  margin-bottom: 30px;
+  line-height: 1.15;
 }
 
 .hero-subtitle {
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #666;
-  margin-bottom: 30px;
-  line-height: 1.6;
+  margin-bottom: 40px;
+  line-height: 1.7;
 }
 
 .hero-buttons {
   display: flex;
-  gap: 20px;
+  gap: 28px;
 }
 
 .btn {
-  padding: 12px 30px;
-  border-radius: 30px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  padding: 18px 40px;
+  border-radius: 36px;
+  font-size: 1.3rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
@@ -97,10 +90,10 @@ export default {
 
 .hero-image {
   flex: 1;
-  max-width: 600px;
-  border-radius: 20px;
+  max-width: 750px;
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
 }
 
 .hero-image img {
@@ -117,15 +110,17 @@ export default {
 /* 响应式设计 */
 @media (max-width: 1024px) {
   .hero {
-    padding: 40px 5%;
+    padding: 60px 5%;
+    min-height: 500px;
   }
-  
   .hero-title {
-    font-size: 3rem;
+    font-size: 3.2rem;
   }
-  
   .hero-subtitle {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+  }
+  .hero-image {
+    max-width: 100%;
   }
 }
 
@@ -134,25 +129,21 @@ export default {
     flex-direction: column;
     text-align: center;
     padding: 40px 20px;
+    min-height: 400px;
   }
-  
   .hero-content {
     padding-right: 0;
     margin-bottom: 40px;
   }
-  
   .hero-buttons {
     justify-content: center;
   }
-  
   .hero-title {
     font-size: 2.5rem;
   }
-  
   .hero-subtitle {
     font-size: 1.2rem;
   }
-  
   .hero-image {
     max-width: 100%;
   }
@@ -160,24 +151,23 @@ export default {
 
 @media (max-width: 480px) {
   .hero {
-    padding: 30px 15px;
+    padding: 30px 10px;
+    min-height: 250px;
   }
-  
   .hero-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
-  
   .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
-  
   .hero-buttons {
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
   }
-  
   .btn {
     width: 100%;
+    font-size: 1rem;
+    padding: 12px 0;
   }
 }
 </style> 
