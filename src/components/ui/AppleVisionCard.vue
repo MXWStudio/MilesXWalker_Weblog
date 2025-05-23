@@ -40,9 +40,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Rays from "/Users/neo/MXWStudio/MilesXWalkerStudio_vue3.js_frame_inspiraUi/src/components/ui/templates/Rays.vue";
-import Beams from "/Users/neo/MXWStudio/MilesXWalkerStudio_vue3.js_frame_inspiraUi/src/components/ui/templates/Beams.vue";
-import Lens from "/Users/neo/MXWStudio/MilesXWalkerStudio_vue3.js_frame_inspiraUi/src/components/ui/templates/Lens.vue";
+import Rays from "@/components/ui/templates/Rays.vue";
+import Beams from "@/components/ui/templates/Beams.vue";
+import Lens from "@/components/ui/templates/Lens.vue";
 
 const imgSrc = "https://images.unsplash.com/photo-1713869820987-519844949a8a?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 const imgRef = ref<HTMLImageElement | null>(null)
