@@ -1,8 +1,10 @@
 # views 目录说明
 
-- 存放所有页面级 Vue 组件（即路由页面）。
-- 复杂页面建议建立子目录结构，如 photos/Index.vue、videos/Index.vue。
-- 每个页面目录建议配套 README.md 说明用途和开发规范。
+本目录用于存放所有页面级 Vue 组件（即路由页面）。
+
+- 每个页面建议单独一个 .vue 文件，文件名与路由/页面功能一致。
+- 复杂页面可建立子目录（如 photos/Index.vue、videos/Index.vue）。
+- 页面内可引用 components 目录下的各种复用组件。
 
 ## 页面级组件
 

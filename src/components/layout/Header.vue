@@ -12,11 +12,7 @@
 
     <div class="header-section center-section">
       <router-link to="/" class="logo-container">
-        <svg class="logo-badge" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-          <path d="M2 17l10 5 10-5"></path>
-          <path d="M2 12l10 5 10-5"></path>
-        </svg>
+        <img src="@/assets/images/logos/M_logo_combinatorial.png" alt="Logo" class="logo-badge" />
       </router-link>
     </div>
 
@@ -51,6 +47,7 @@
   background-color: #ffffff; /* 页眉背景色 */
   border-bottom: 1px solid #e0e0e0; /* 页眉底部分割线 */
   min-height: 70px; /* 增加最小高度 */
+  height: 70px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 调整阴影 */
 }
 
@@ -118,26 +115,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
+  padding: 0;
+  border-radius: 0;
+  height: 100%;
+  background: none !important;
 }
 
-.logo-container:hover {
-  background-color: rgba(0, 123, 255, 0.08);
+.logo-container:hover .logo-badge {
+  transform: scale(1.04);
+  opacity: 0.88;
 }
 
 .logo-badge {
-  color: #007bff;
-  width: 42px;
-  height: 42px;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.logo-badge:hover {
-  transform: scale(1.05);
-  color: #0056b3;
+  height: 48px;
+  max-width: 180px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1), opacity 0.18s cubic-bezier(.4,0,.2,1);
 }
 
 /* 右侧部分：社交媒体图标 */

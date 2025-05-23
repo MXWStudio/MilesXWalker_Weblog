@@ -22,7 +22,6 @@
               <input type="password" id="login-password" v-model="loginForm.password" required
                      class="login-input"
                      placeholder="密码 (Password)">
-              <a href="#" class="forgot-password-link">忘记密码?</a>
             </div>
             <button type="submit" class="login-button">
               登 录
@@ -30,10 +29,11 @@
           </form>
   
           <div class="mt-6 text-center">
-            <p class="text-sm text-gray-300">
-              还没有账户？
-              <a href="/register" class="font-medium text-teal-400 hover:text-teal-300 hover:underline">立即注册</a>
-            </p>
+            <span class="login-register-tip">还没有账户？</span>
+            <span class="login-register-actions">
+              <a href="/register" class="register-link-btn">立即注册</a>
+              <a href="#" class="forgot-password-link">忘记密码?</a>
+            </span>
           </div>
   
           <div class="social-login-divider">
@@ -225,7 +225,7 @@
   }
   
   .login-form-wrapper {
-    background: rgba(20, 20, 30, 0.65); /* Dark semi-transparent card */
+    background: rgba(20, 20, 30, 0.65);
     backdrop-filter: blur(15px) saturate(150%);
     -webkit-backdrop-filter: blur(15px) saturate(150%);
     padding: 30px 35px;
@@ -233,7 +233,9 @@
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
-    max-width: 420px;
+    max-width: 380px;
+    min-width: 260px;
+    margin: 0 auto;
     color: #e0e0e0;
   }
   
@@ -263,8 +265,16 @@
   
   /* 移除了旧的 .hypertext-logo, .hypertext-logo:hover::before, .hypertext-logo:hover::after 样式 */
   
-  .login-input {
+  .login-input,
+  .login-button {
     width: 100%;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  
+  .login-input {
     padding: 14px 16px;
     background-color: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -272,6 +282,7 @@
     color: #f0f0f0;
     font-size: 0.95rem;
     transition: all 0.3s ease;
+    margin-bottom: 18px;
   }
   .login-input::placeholder {
     color: rgba(200, 200, 200, 0.6);
@@ -283,21 +294,42 @@
     box-shadow: 0 0 15px rgba(0, 220, 220, 0.3);
   }
   
-  .forgot-password-link {
-    display: block;
-    float: right;
-    margin-top: 0.25rem;
-    font-size: 0.75rem;
-    color: #5eead4;
-    transition: color 0.3s ease;
+  .login-register-tip {
+    color: #b0b8c9;
+    font-size: 0.97rem;
+    margin-top: 18px;
+    margin-bottom: 0;
+    display: inline;
   }
+  .login-register-actions {
+    display: inline-flex;
+    gap: 10px;
+    vertical-align: middle;
+  }
+  
+  .register-link-btn,
+  .forgot-password-link {
+    display: inline-block;
+    font-size: 0.95rem;
+    color: #5eead4;
+    background: rgba(94, 234, 212, 0.08);
+    border-radius: 6px;
+    padding: 2px 12px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+    min-width: 72px;
+    text-align: center;
+  }
+  .register-link-btn:hover,
   .forgot-password-link:hover {
-    color: #2dd4bf;
-    text-decoration: underline;
+    background: #2dd4bf;
+    color: #fff;
+    text-decoration: none;
   }
   
   .login-button {
-    width: 100%;
     background: linear-gradient(90deg, #0d9488, #0d9488);
     color: white;
     padding-top: 0.85rem;
@@ -309,6 +341,7 @@
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 15px rgba(0, 128, 128, 0.3);
     transform-origin: center;
+    margin-bottom: 18px;
   }
   .login-button:hover {
     background: linear-gradient(90deg, #0d9488, #14b8a6);
@@ -322,7 +355,7 @@
   
   
   .social-login-divider {
-    margin-top: 2rem;
+    margin-top: 18px;
     margin-bottom: 2rem;
     display: flex;
     align-items: center;
@@ -393,14 +426,19 @@
     font-size: 0.75rem;
     color: rgba(200, 200, 200, 0.6);
     line-height: 1.6;
+    margin: 0 auto;
+    text-align: center;
+    word-break: break-all;
+    white-space: normal;
+    display: inline-block;
+    max-width: 90%;
   }
   .user-info-statement a {
     text-decoration: underline;
     transition: color 0.3s ease;
     color: #5eead4;
-  }
-  .user-info-statement a:hover {
-    color: #2dd4bf;
+    display: inline-block;
+    word-break: break-all;
   }
   
   </style>

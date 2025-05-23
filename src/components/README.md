@@ -1,7 +1,9 @@
 # components 目录说明
 
-- 统一存放所有可复用的 Vue 组件。
+本目录用于存放所有可复用的 Vue 组件。
+
 - 按功能细分 base、layout、effects、ui 等子目录。
+- 每个子目录下建议配套 README.md 说明用途。
 
 ## 组件总览
 
