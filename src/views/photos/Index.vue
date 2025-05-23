@@ -1,3 +1,4 @@
+<!-- 照片作品页，原Photos.vue内容迁移于此 -->
 <template>
   <div class="photo-detail-page">
     <section class="featured-image-section">
@@ -89,6 +90,7 @@ const closeLightbox = () => {
 </script>
 
 <style scoped>
+/* ...原Photos.vue样式全部复制... */
 .photo-detail-page {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
@@ -257,6 +259,16 @@ const closeLightbox = () => {
   transform: scale(1.1);
 }
 
+.footer-copyright {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.45); /* 版权文字颜色更淡 */
+  letter-spacing: 0.3px;
+}
+
+.footer-copyright p {
+  margin: 0;
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
   .featured-image-caption h2 {
@@ -287,4 +299,4 @@ const closeLightbox = () => {
     background-color: rgba(0,0,0,0.7);
    }
 }
-</style>
+</style> 

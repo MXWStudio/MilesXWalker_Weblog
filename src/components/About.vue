@@ -1,3 +1,4 @@
+<!-- About.vue 关于我页面专用组件，存放个人介绍、联系方式等内容 -->
 <template>
     <div class="about-page-container">
       <div class="about-page-content">
@@ -5,12 +6,12 @@
         <div class="main-layout">
           <aside class="profile-sidebar">
             <div class="profile-image-wrapper">
-              <img src="https://placehold.co/300x300/EBF4FF/769FCD?text=个人照片" alt="个人工作照" class="profile-image"/>
+              <img :src="personalHeadshot" alt="个人照" class="profile-image"/>
             </div>
             <div class="contact-info-block">
               <h2>联系方式</h2>
-              <p><span class="icon">📧</span> <strong>邮箱:</strong> your.email@example.com</p>
-              <p><span class="icon">📞</span> <strong>电话:</strong> +86 138 0013 8000 (示例)</p>
+              <p><span class="icon">📧</span> <strong>邮箱:</strong> MilesXWalkerStudio@gmail.com</p>
+              <p><span class="icon">📞</span> <strong>电话:</strong> +86 18652791015 </p>
               <p><span class="icon">📍</span> <strong>位置:</strong> 城市, 国家 (可选)</p>
             </div>
             <div class="social-media-block">
@@ -73,7 +74,7 @@
   </template>
   
   <script setup>
-  // "关于我"页面组件目前不需要特定的JS逻辑
+  import personalHeadshot from '@/assets/images/photos/Personal-headshot.jpg';
   </script>
   
   <style scoped>

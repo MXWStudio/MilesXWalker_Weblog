@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../components/About.vue'
-import Photos from '../views/Photos.vue'
-import Videos from '../views/Videos.vue'
+import Photos from '../views/photos/Index.vue'
+import Videos from '../views/videos/Index.vue'
 import Contact from '../views/Contact.vue'
 import Ai from '../views/Ai.vue'
+import Login from '@/views/Login.vue'
+import Signup from '@/views/Signup.vue'
 
 const routes = [
   {
@@ -48,6 +50,16 @@ const routes = [
     meta: {
       title: 'AI专区'
     }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup
   }
 ]
 

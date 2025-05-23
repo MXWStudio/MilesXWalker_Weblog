@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import Hero from '../components/Hero.vue'
-import Gallery from '../components/Gallery.vue'
+import Hero from '@/components/ui/Hero.vue'
+import Gallery from '@/components/ui/Gallery.vue'
 </script>
 
 <style scoped>

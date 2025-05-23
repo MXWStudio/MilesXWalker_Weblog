@@ -1,3 +1,4 @@
+<!-- Hero.vue 首页顶部展示组件 -->
 <template>
   <section class="hero">
     <div class="hero-content">

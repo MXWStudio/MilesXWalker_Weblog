@@ -11,8 +11,8 @@
 
 <script setup>
 // 导入所需的组件
-import Header from './components/Header.vue'          // 导入顶部导航组件
-import Footer from './components/Footer.vue'         // 导入底部导航组件
+import Header from './components/layout/Header.vue'          // 导入顶部导航组件
+import Footer from './components/layout/Footer.vue'         // 导入底部导航组件
 </script>
 
 <style>
