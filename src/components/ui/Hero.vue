@@ -2,11 +2,14 @@
 <template>
   <section class="hero">
     <div class="hero-content">
-      <h1 class="hero-title">欢迎来到我的网站</h1>
-      <p class="hero-subtitle">探索、创造、分享</p>
+      <h1 class="hero-title">Hi! My name is Miles.👋</h1>
+      <h2 class="hero-subtitle">独立摄影师 & 前端开发者</h2>
+      <p class="hero-subtitle-content">
+        我热爱摄影，喜欢用镜头记录生活。在技术领域，我自学编程，目前精通Vue，仍在前端领域不断探索成长。同时也喜欢用代码创造有趣的东西，希望和大家一起进步。
+      </p>
       <div class="hero-buttons">
-        <button class="btn primary">开始探索</button>
-        <button class="btn secondary">了解更多</button>
+        <button class="btn primary">联系我</button>
+        <button class="btn secondary">我的作品</button>
       </div>
     </div>
     <div class="hero-image">
@@ -24,30 +27,46 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 100px 8%;
+  padding: 60px 8%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 700px;
+  min-height: 600px;
 }
 
 .hero-content {
   flex: 1;
   max-width: 700px;
   padding-right: 60px;
+  margin-top: -40px;
 }
 
 .hero-title {
   font-size: 4.5rem;
   font-weight: 800;
   color: #2c3e50;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
   line-height: 1.15;
+  white-space: nowrap;
 }
 
 .hero-subtitle {
   font-size: 2rem;
   color: #666;
-  margin-bottom: 40px;
-  line-height: 1.7;
+  margin-bottom: 18px;
+  line-height: 1.5;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hero-subtitle-content {
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: #555;
+  margin-bottom: 32px;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  max-width: 700px;
+  text-align: left;
+  white-space: normal;
 }
 
 .hero-buttons {
@@ -91,7 +110,7 @@
 
 .hero-image {
   flex: 1;
-  max-width: 750px;
+  max-width: 400px;
   border-radius: 28px;
   overflow: hidden;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
