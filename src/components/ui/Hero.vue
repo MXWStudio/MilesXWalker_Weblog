@@ -3,7 +3,7 @@
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">Hi! My name is Miles.👋</h1>
-      <h2 class="hero-subtitle">独立摄影师 & 前端开发者</h2>
+      <h2 class="hero-subtitle">摄影爱好者 & 前端小白</h2>
       <p class="hero-subtitle-content">
         我热爱摄影，喜欢用镜头记录生活。在技术领域，我自学编程，目前精通Vue，仍在前端领域不断探索成长。同时也喜欢用代码创造有趣的东西，希望和大家一起进步。
       </p>
