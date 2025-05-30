@@ -20,7 +20,7 @@
   "framework": "vite",
   "git": {
     "deploymentEnabled": {
-      "inspira_ui": true
+      "main": true
     }
   }
 } 
