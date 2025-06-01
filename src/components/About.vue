@@ -2,7 +2,7 @@
 <template>
     <div class="about-page-container">
       <div class="about-page-content">
-        <h1 class="page-title">关于我</h1>
+        <h1 class="page-title">ABOUT ME</h1>
         <div class="main-layout">
           <aside class="profile-sidebar">
             <div class="profile-image-wrapper">
@@ -10,9 +10,9 @@
             </div>
             <div class="contact-info-block">
               <h2>联系方式</h2>
-              <p><span class="icon">📧</span> <strong>:</strong> MilesXWalkerStudio@gmail.com</p>
-              <p><span class="icon">📞</span> <strong>:</strong> +86 18652791015 </p>
-              <p><span class="icon">📍</span> <strong>:</strong> 四川, 成都 </p>
+              <p><span class="icon">📧</span> <strong></strong> milesxwalkerstudio@gmail.com</p>
+              <p><span class="icon">📞</span> <strong></strong> +86 18652791015 </p>
+              <p><span class="icon">📍</span> <strong></strong> 四川, 成都 </p>
             </div>
             <div class="social-media-block">
               <h2>社交媒体</h2>
@@ -57,20 +57,50 @@
                 <a href="https://x.com/MXWStudio" target="_blank" rel="noopener noreferrer" class="social-link twitter-link">
                   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" class="social-svg twitter-svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25h6.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> Twitter/X
                 </a>
+                <a href="https://kavyar.com/zvgw9svqijj3" target="_blank" rel="noopener noreferrer" class="social-link bleachfilm-link">
+                  <svg class="social-svg bleachfilm-svg" width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <radialGradient id="bleachfilm-glow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#00CFFF" stop-opacity="1"/>
+                        <stop offset="100%" stop-color="#00CFFF" stop-opacity="0"/>
+                      </radialGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="20" fill="#00CFFF" fill-opacity="0.7"/>
+                    <g stroke="#00CFFF" stroke-width="4">
+                      <line x1="50" y1="10" x2="50" y2="30"/>
+                      <line x1="50" y1="70" x2="50" y2="90"/>
+                      <line x1="10" y1="50" x2="30" y2="50"/>
+                      <line x1="70" y1="50" x2="90" y2="50"/>
+                      <line x1="22" y1="22" x2="36" y2="36"/>
+                      <line x1="64" y1="64" x2="78" y2="78"/>
+                      <line x1="22" y1="78" x2="36" y2="64"/>
+                      <line x1="64" y1="36" x2="78" y2="22"/>
+                      <line x1="50" y1="10" x2="50" y2="30"/>
+                      <line x1="50" y1="70" x2="50" y2="90"/>
+                      <line x1="10" y1="50" x2="30" y2="50"/>
+                      <line x1="70" y1="50" x2="90" y2="50"/>
+                      <line x1="15" y1="35" x2="35" y2="50"/>
+                      <line x1="85" y1="35" x2="65" y2="50"/>
+                      <line x1="15" y1="65" x2="35" y2="50"/>
+                      <line x1="85" y1="65" x2="65" y2="50"/>
+                    </g>
+                    <circle cx="50" cy="50" r="40" fill="url(#bleachfilm-glow)"/>
+                  </svg>
+                  Bleachfilm
+                </a>
               </div>
             </div>
           </aside>
   
           <section class="about-me-details">
-            <h2>详细介绍</h2>
             <p>大家好，我是一名专注于捕捉自然之美的风景摄影师。镜头是我探索世界的眼睛，我热衷于通过影像记录下山川湖海的壮丽与细腻，分享那些触动人心的瞬间。</p>
             <p>除了对光影的执着，我对数字世界同样充满好奇。在摄影之余，我自学了编程，并对Vue.js尤为钟爱，喜欢用代码构建一些有趣或实用的东西，这为我打开了另一扇探索创造力的大门。</p>
             <p>平日里，我的生活离不开摄影、阅读、旅行、咖啡和健身。这些爱好不仅丰富了我的视野，也为我的摄影和编程创作带来了源源不断的灵感。旅行中的风景成为我镜头下的主角，阅读则给予我思考的深度，而咖啡与健身则是我保持精力与创造力的秘诀。</p>
             <p>如果您对我的摄影作品感兴趣，或者想交流关于Vue.js、旅行、咖啡等任何话题，都非常欢迎与我联系！期待与志同道合的您相遇。</p>
             <table class="about-image-table">
               <tr>
-                <td><img src="https://picsum.photos/400/600?random=1" alt="随机图片1" class="about-table-img" /></td>
-                <td><img src="https://picsum.photos/400/600?random=2" alt="随机图片2" class="about-table-img" /></td>
+                <td><img :src="aboutLeftImg" alt="关于我左图" class="about-table-img" /></td>
+                <td><img :src="aboutRightImg" alt="关于我右图" class="about-table-img" /></td>
               </tr>
             </table>
           </section>
@@ -80,7 +110,9 @@
   </template>
   
   <script setup>
-  import personalHeadshot from '@/assets/images/photos/Personal-headshot.jpg';
+  import personalHeadshot from '@/assets/images/photos/resume photo.jpg';
+  import aboutLeftImg from '@/assets/images/photos/about_left.png';
+  import aboutRightImg from '@/assets/images/photos/about_right.png';
   </script>
   
   <style scoped>
@@ -118,12 +150,14 @@
     .main-layout {
       flex-direction: row;
       gap: 45px;
+      align-items: flex-start;
     }
     .profile-sidebar {
       flex: 0 0 280px;
     }
     .about-me-details {
       flex: 1;
+      padding-left: 36px;
     }
   }
   
@@ -292,20 +326,25 @@
   }
   @media (min-width: 768px) {
     .about-me-details {
-      padding-left: 20px;
+      padding-left: 36px;
     }
   }
   
   .about-me-details h2 {
-      margin-bottom: 20px;
+    margin-bottom: 20px;
+    font-size: 1.45em;
+    font-weight: 600;
+    color: #2c3e50;
+    letter-spacing: 0.5px;
   }
   
   .about-me-details p {
-    margin-bottom: 20px;
-    line-height: 1.75;
-    font-size: 1rem;
+    margin-bottom: 18px;
+    line-height: 1.85;
+    font-size: 1.08em;
     color: #343a40;
     text-align: justify;
+    letter-spacing: 0.01em;
   }
   
   .about-me-details p:last-child {
@@ -314,7 +353,7 @@
   
   .about-image-table {
     width: 100%;
-    margin-top: 32px;
+    margin-top: 38px;
     border-collapse: separate;
     border-spacing: 24px 0;
   }
@@ -330,6 +369,16 @@
     border-radius: 12px;
     box-shadow: 0 4px 18px rgba(0,0,0,0.10);
     display: block;
+  }
+  
+  .bleachfilm-svg {
+    filter: drop-shadow(0 0 8px #00CFFF);
+  }
+  .bleachfilm-link:hover {
+    background-color: #00CFFF;
+  }
+  .bleachfilm-link:hover .bleachfilm-svg {
+    filter: drop-shadow(0 0 16px #00CFFF);
   }
   </style>
   

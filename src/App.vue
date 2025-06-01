@@ -6,6 +6,8 @@
     <router-view></router-view>
     <!-- 路由视图 -->
     <Footer />
+    <!-- Stagewise 工具栏 -->
+    <StagewiseToolbar v-if="isDevelopment" :config="stagewiseConfig" />
   </div>
 </template>
 
@@ -13,6 +15,16 @@
 // 导入所需的组件
 import Header from './components/layout/Header.vue'          // 导入顶部导航组件
 import Footer from './components/layout/Footer.vue'         // 导入底部导航组件
+import { StagewiseToolbar } from '@stagewise/toolbar-vue'  // 导入 Stagewise 工具栏组件
+import { computed } from 'vue'
+
+// Stagewise 配置
+const stagewiseConfig = {
+  plugins: []
+}
+
+// 判断是否为开发环境
+const isDevelopment = computed(() => import.meta.env.DEV)
 </script>
 
 <style>

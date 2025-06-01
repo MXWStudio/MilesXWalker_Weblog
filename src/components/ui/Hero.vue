@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 60px 8%;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #ffffff;
   min-height: 600px;
 }
 

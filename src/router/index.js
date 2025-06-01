@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../components/About.vue'
-import Photos from '../views/photos/Index.vue'
-import Videos from '../views/videos/Index.vue'
+import Photos from '../views/photos/photoindex.vue'
+import Videos from '../views/videos/videoindex.vue'
 import Contact from '../views/Contact.vue'
 import Ai from '../views/Ai.vue'
 import Login from '@/views/Login.vue'
@@ -20,16 +20,16 @@ const routes = [
     component: About
   },
   {
-    path: '/photos',
-    name: 'Photos',
+    path: '/photoindex',
+    name: 'PhotoIndex',
     component: Photos,
     meta: {
       title: '照片作品集'
     }
   },
   {
-    path: '/videos',
-    name: 'Videos',
+    path: '/videoindex',
+    name: 'VideoIndex',
     component: Videos,
     meta: {
       title: '视频作品集'

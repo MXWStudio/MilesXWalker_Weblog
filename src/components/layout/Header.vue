@@ -3,8 +3,8 @@
     <div class="header-section left-section">
       <nav class="categories">
         <router-link to="/about" class="category-link">About</router-link>
-        <router-link to="/photos" class="category-link">Photos</router-link>
-        <router-link to="/videos" class="category-link">Videos</router-link>
+        <router-link to="/photoindex" class="category-link">Photos</router-link>
+        <router-link to="/videoindex" class="category-link">Videos</router-link>
         <router-link to="/ai" class="category-link">AI</router-link>
         <router-link to="/contact" class="category-link">Contact</router-link>
       </nav>
@@ -26,6 +26,32 @@
         </a>
         <a href="https://www.instagram.com/milesxwalker?igsh=cW0xZmM2czFndzgy&utm_source=qr" aria-label="Instagram" class="social-icon" target="_blank" rel="noopener noreferrer">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4c2.21 0 4 1.791 4 4s-1.79 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="https://kavyar.com/zvgw9svqijj3" aria-label="Bleachfilm" class="social-icon" target="_blank" rel="noopener noreferrer">
+          <svg class="bleachfilm-svg" width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="bleachfilm-glow-header" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#00CFFF" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#00CFFF" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="50" cy="50" r="20" fill="#00CFFF" fill-opacity="0.7"/>
+            <g stroke="#00CFFF" stroke-width="4">
+              <line x1="50" y1="10" x2="50" y2="30"/>
+              <line x1="50" y1="70" x2="50" y2="90"/>
+              <line x1="10" y1="50" x2="30" y2="50"/>
+              <line x1="70" y1="50" x2="90" y2="50"/>
+              <line x1="22" y1="22" x2="36" y2="36"/>
+              <line x1="64" y1="64" x2="78" y2="78"/>
+              <line x1="22" y1="78" x2="36" y2="64"/>
+              <line x1="64" y1="36" x2="78" y2="22"/>
+              <line x1="15" y1="35" x2="35" y2="50"/>
+              <line x1="85" y1="35" x2="65" y2="50"/>
+              <line x1="15" y1="65" x2="35" y2="50"/>
+              <line x1="85" y1="65" x2="65" y2="50"/>
+            </g>
+            <circle cx="50" cy="50" r="40" fill="url(#bleachfilm-glow-header)"/>
+          </svg>
         </a>
         <button class="login-nav-btn" @click="$router.push('/login')">登录</button>
         <button class="signup-nav-btn" @click="$router.push('/signup')">注册</button>
@@ -169,6 +195,14 @@
 .social-icon svg {
   width: 22px;
   height: 22px;
+}
+
+/* 更新样式，保持发光蓝色 */
+.social-icon .bleachfilm-svg {
+  filter: drop-shadow(0 0 8px #00CFFF);
+}
+.social-icon:hover .bleachfilm-svg {
+  filter: drop-shadow(0 0 16px #00CFFF);
 }
 
 /* 响应式调整 */
