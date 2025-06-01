@@ -36,18 +36,24 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import photoPreviews from '@/assets/images/photos/photo_previews.png';
-import img1 from '@/assets/images/photos/photowork/lotus leaf.jpeg';
-import img2 from '@/assets/images/photos/photowork/_DSC7941.jpeg';
-import img3 from '@/assets/images/photos/photowork/swan.jpeg';
-import img4 from '@/assets/images/photos/photowork/flow.jpeg';
-import img5 from '@/assets/images/photos/photowork/black.jpeg';
-import img6 from '@/assets/images/photos/photowork/limb.jpeg';
-import img7 from '@/assets/images/photos/photowork/chrysanthemum.jpeg';
-import img8 from '@/assets/images/photos/photowork/boat.jpeg';
-import img9 from '@/assets/images/photos/photowork/portraits.jpeg';
-import img10 from '@/assets/images/photos/photowork/Coffee.jpeg';
-import img11 from '@/assets/images/photos/photowork/Coffee2.jpeg';
+import photoPreviews from '@/assets/images/photos/photo_previews.jpg';
+import img1 from '@/assets/images/photos/photowork/lotus leaf.jpg';
+import img2 from '@/assets/images/photos/photowork/city.jpg';
+import img3 from '@/assets/images/photos/photowork/swan.jpg';
+import img4 from '@/assets/images/photos/photowork/flow.jpg';
+import img5 from '@/assets/images/photos/photowork/black.jpg';
+import img6 from '@/assets/images/photos/photowork/limb.jpg';
+import img7 from '@/assets/images/photos/photowork/chrysanthemum.jpg';
+import img8 from '@/assets/images/photos/photowork/boat.jpg';
+import img9 from '@/assets/images/photos/photowork/portraits.jpg';
+import img10 from '@/assets/images/photos/photowork/Coffee.jpg';
+import img11 from '@/assets/images/photos/photowork/Coffee2.jpg';
+import img12 from '@/assets/images/photos/photowork/city1.jpg';
+import img13 from '@/assets/images/photos/photowork/city2.jpg';
+import img14 from '@/assets/images/photos/photowork/metro1.jpg';
+import img15 from '@/assets/images/photos/photowork/metro2.jpg';
+import img16 from '@/assets/images/photos/photowork/metro3.jpg';
+import img17 from '@/assets/images/photos/photowork/lotus flower.jpg';
 
 // --- 响应式数据 ---
 const featuredImage = ref({
@@ -60,7 +66,7 @@ const featuredImage = ref({
 
 const galleryImages = ref([
   { id: 'img1', src: img1, alt: 'lotus leaf' },
-  { id: 'img2', src: img2, alt: '_DSC7941' },
+  { id: 'img2', src: img2, alt: 'city' },
   { id: 'img3', src: img3, alt: 'swan' },
   { id: 'img4', src: img4, alt: 'flow' },
   { id: 'img5', src: img5, alt: 'black' },
@@ -70,6 +76,12 @@ const galleryImages = ref([
   { id: 'img9', src: img9, alt: 'portraits' },
   { id: 'img10', src: img10, alt: 'Coffee' },
   { id: 'img11', src: img11, alt: 'Coffee2' },
+  { id: 'img12', src: img12, alt: 'city1' },
+  { id: 'img13', src: img13, alt: 'city2' },
+  { id: 'img14', src: img14, alt: 'metro1' },
+  { id: 'img15', src: img15, alt: 'metro2' },
+  { id: 'img16', src: img16, alt: 'metro3' },
+  { id: 'img17', src: img17, alt: 'lotus flower' },
 ]);
 
 const lightbox = ref({

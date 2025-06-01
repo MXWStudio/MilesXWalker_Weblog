@@ -17,45 +17,8 @@
     </div>
 
     <div class="header-section right-section">
-      <div class="social-media-icons">
-        <a href="https://www.youtube.com/channel/UCWsm3OC_I_S572PVoz85CBg" aria-label="YouTube" class="social-icon" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-        </a>
-        <a href="mailto:milesxwalkerstudio@gmail.com" aria-label="Email" class="social-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
-        </a>
-        <a href="https://www.instagram.com/milesxwalker?igsh=cW0xZmM2czFndzgy&utm_source=qr" aria-label="Instagram" class="social-icon" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4c2.21 0 4 1.791 4 4s-1.79 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </a>
-        <a href="https://kavyar.com/zvgw9svqijj3" aria-label="Bleachfilm" class="social-icon" target="_blank" rel="noopener noreferrer">
-          <svg class="bleachfilm-svg" width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="bleachfilm-glow-header" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#00CFFF" stop-opacity="1"/>
-                <stop offset="100%" stop-color="#00CFFF" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-            <circle cx="50" cy="50" r="20" fill="#00CFFF" fill-opacity="0.7"/>
-            <g stroke="#00CFFF" stroke-width="4">
-              <line x1="50" y1="10" x2="50" y2="30"/>
-              <line x1="50" y1="70" x2="50" y2="90"/>
-              <line x1="10" y1="50" x2="30" y2="50"/>
-              <line x1="70" y1="50" x2="90" y2="50"/>
-              <line x1="22" y1="22" x2="36" y2="36"/>
-              <line x1="64" y1="64" x2="78" y2="78"/>
-              <line x1="22" y1="78" x2="36" y2="64"/>
-              <line x1="64" y1="36" x2="78" y2="22"/>
-              <line x1="15" y1="35" x2="35" y2="50"/>
-              <line x1="85" y1="35" x2="65" y2="50"/>
-              <line x1="15" y1="65" x2="35" y2="50"/>
-              <line x1="85" y1="65" x2="65" y2="50"/>
-            </g>
-            <circle cx="50" cy="50" r="40" fill="url(#bleachfilm-glow-header)"/>
-          </svg>
-        </a>
-        <button class="login-nav-btn" @click="$router.push('/login')">登录</button>
-        <button class="signup-nav-btn" @click="$router.push('/signup')">注册</button>
-      </div>
+      <button class="login-nav-btn" @click="$router.push('/login')">登录</button>
+      <button class="signup-nav-btn" @click="$router.push('/signup')">注册</button>
     </div>
   </header>
 </template>
@@ -170,140 +133,6 @@
   padding-right: 20px; /* 添加右侧内边距 */
 }
 
-.social-media-icons {
-  display: flex;
-  gap: 12px; /* 图标之间的间距 */
-}
-
-.social-icon {
-  color: #555;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: transparent;
-}
-
-.social-icon:hover {
-  color: #007bff;
-  transform: translateY(-1px);
-  background-color: rgba(0, 123, 255, 0.08);
-}
-
-.social-icon svg {
-  width: 22px;
-  height: 22px;
-}
-
-/* 更新样式，保持发光蓝色 */
-.social-icon .bleachfilm-svg {
-  filter: drop-shadow(0 0 8px #00CFFF);
-}
-.social-icon:hover .bleachfilm-svg {
-  filter: drop-shadow(0 0 16px #00CFFF);
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .app-header {
-    padding: 10px 15px;
-    min-height: 56px;
-  }
-
-  .categories {
-    gap: 6px;
-  }
-
-  .category-link {
-    padding: 6px 10px;
-    font-size: 0.9em;
-  }
-
-  .social-media-icons {
-    gap: 6px;
-  }
-
-  .social-icon {
-    padding: 6px;
-  }
-
-  .social-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .logo-badge {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-@media (max-width: 600px) {
-  .left-section .categories {
-    font-size: 0.85em;
-    gap: 4px;
-  }
-
-  .category-link {
-    padding: 5px 8px;
-  }
-
-  .app-header {
-    padding: 8px 12px;
-  }
-
-  .social-icon {
-    padding: 5px;
-  }
-
-  .social-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-@media (max-width: 450px) {
-  .left-section .categories {
-    display: none;
-  }
-
-  .app-header {
-    justify-content: space-between;
-    padding: 6px 10px;
-  }
-
-  .left-section {
-    flex: 0 0 auto;
-  }
-
-  .right-section {
-    justify-content: flex-end;
-  }
-
-  .social-icon {
-    padding: 4px;
-  }
-
-  .social-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-/* 路由链接激活状态 */
-.router-link-active {
-  color: #007bff;
-  font-weight: 600;
-  background-color: rgba(0, 123, 255, 0.08);
-}
-
-.router-link-active::after {
-  width: 70%;
-  opacity: 1;
-}
-
 .login-nav-btn {
   margin-left: 18px;
   padding: 8px 22px;
@@ -339,5 +168,107 @@
 .signup-nav-btn:hover {
   background: #b6c6e3;
   color: #2c3e50;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 10px 15px;
+    min-height: 56px;
+  }
+
+  .categories {
+    gap: 6px;
+  }
+
+  .category-link {
+    padding: 6px 10px;
+    font-size: 0.9em;
+  }
+
+  .login-nav-btn {
+    padding: 6px 18px;
+  }
+
+  .signup-nav-btn {
+    padding: 6px 10px;
+  }
+
+  .logo-badge {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .left-section .categories {
+    font-size: 0.85em;
+    gap: 4px;
+  }
+
+  .category-link {
+    padding: 5px 8px;
+  }
+
+  .app-header {
+    padding: 8px 12px;
+  }
+
+  .login-nav-btn {
+    padding: 5px 18px;
+  }
+
+  .signup-nav-btn {
+    padding: 5px 10px;
+  }
+
+  .logo-badge {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 450px) {
+  .left-section .categories {
+    display: none;
+  }
+
+  .app-header {
+    justify-content: space-between;
+    padding: 6px 10px;
+  }
+
+  .left-section {
+    flex: 0 0 auto;
+  }
+
+  .right-section {
+    justify-content: flex-end;
+  }
+
+  .login-nav-btn {
+    padding: 4px 18px;
+  }
+
+  .signup-nav-btn {
+    padding: 4px 10px;
+  }
+
+  .logo-badge {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* 路由链接激活状态 */
+.router-link-active {
+  color: #007bff;
+  font-weight: 600;
+  background-color: rgba(0, 123, 255, 0.08);
+}
+
+.router-link-active::after {
+  width: 70%;
+  opacity: 1;
 }
 </style>
