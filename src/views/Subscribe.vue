@@ -30,7 +30,7 @@
           <div class="social-media-links-detailed">
             <h3>关注我的社交媒体</h3>
             <div class="social-icons-grid">
-              <a href="YOUR_INSTAGRAM_LINK" target="_blank" rel="noopener noreferrer" class="social-card">
+              <a href="https://www.instagram.com/milesxwalker?igsh=cW0xZmM2czFndzgy&utm_source=qr" target="_blank" rel="noopener noreferrer" class="social-card">
                 <div class="card-image">
                   <img src="https://picsum.photos/300/200?random=1" alt="Instagram" />
                 </div>
@@ -39,7 +39,7 @@
                   <span>Instagram</span>
                 </div>
               </a>
-              <a href="YOUR_YOUTUBE_LINK" target="_blank" rel="noopener noreferrer" class="social-card">
+              <a href="https://www.youtube.com/channel/UCWsm3OC_I_S572PVoz85CBg" target="_blank" rel="noopener noreferrer" class="social-card">
                 <div class="card-image">
                   <img src="https://picsum.photos/300/200?random=2" alt="YouTube" />
                 </div>

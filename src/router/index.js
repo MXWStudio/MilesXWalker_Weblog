@@ -3,10 +3,12 @@ import Home from '../views/Home.vue'
 import About from '../components/About.vue'
 import Photos from '../views/photos/photoindex.vue'
 import Videos from '../views/videos/videoindex.vue'
-import Contact from '../views/Contact.vue'
+import Subscribe from '../views/Subscribe.vue'
 import Ai from '../views/Ai.vue'
 import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
+import Terms from '../views/Terms.vue'
+import Privacy from '../views/Privacy.vue'
 
 const routes = [
   {
@@ -36,11 +38,11 @@ const routes = [
     }
   },
   {
-    path: '/contact',
-    name: 'Contact',
-    component: Contact,
+    path: '/subscribe',
+    name: 'Subscribe',
+    component: Subscribe,
     meta: {
-      title: '联系我们'
+      title: '订阅我们'
     }
   },
   {
@@ -60,11 +62,21 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/terms',
+    name: 'terms',
+    component: Terms
+  },
+  {
+    path: '/privacy',
+    name: 'privacy',
+    component: Privacy
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

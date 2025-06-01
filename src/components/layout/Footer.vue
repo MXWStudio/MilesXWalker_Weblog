@@ -83,12 +83,11 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .site-footer {
-  background-color: #f5f5f5; /* 浅灰色背景 */
+  background-color: #ffffff; /* 白色背景 */
   color: rgba(0, 0, 0, 0.7); /* 深色文字 */
   padding: 50px 20px 30px; /* 上下内边距 */
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* 现代无衬线字体 */
   text-align: center; /* 内容居中 */
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* 顶部细微分割线 */
 }
 
 .footer-container {

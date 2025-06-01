@@ -5,7 +5,7 @@
     <!-- 顶部导航组件 -->
     <router-view></router-view>
     <!-- 路由视图 -->
-    <Footer />
+    <Footer v-if="!isLoginPage && !isContactPage && !isSubscribePage && !isAboutPage" />
     <!-- Stagewise 工具栏 -->
     <StagewiseToolbar v-if="isDevelopment" :config="stagewiseConfig" />
   </div>
@@ -17,6 +17,7 @@ import Header from './components/layout/Header.vue'          // 导入顶部导�
 import Footer from './components/layout/Footer.vue'         // 导入底部导航组件
 import { StagewiseToolbar } from '@stagewise/toolbar-vue'  // 导入 Stagewise 工具栏组件
 import { computed } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 
 // Stagewise 配置
 const stagewiseConfig = {
@@ -25,6 +26,13 @@ const stagewiseConfig = {
 
 // 判断是否为开发环境
 const isDevelopment = computed(() => import.meta.env.DEV)
+
+// 判断当前是否为登录页面或联系页面
+const route = useRoute()
+const isLoginPage = computed(() => route.path === '/login')
+const isContactPage = computed(() => route.path === '/contact')
+const isSubscribePage = computed(() => route.path === '/subscribe')
+const isAboutPage = computed(() => route.path === '/about')
 </script>
 
 <style>

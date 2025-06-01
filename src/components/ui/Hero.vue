@@ -8,8 +8,7 @@
         我热爱摄影，喜欢用镜头记录生活。在技术领域，我自学编程，目前精通Vue，仍在前端领域不断探索成长。同时也喜欢用代码创造有趣的东西，希望和大家一起进步。
       </p>
       <div class="hero-buttons">
-        <button class="btn primary">联系我</button>
-        <button class="btn secondary">我的作品</button>
+        <button class="btn primary">Subscribe</button>
       </div>
     </div>
     <div class="hero-image">

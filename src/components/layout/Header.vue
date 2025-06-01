@@ -6,7 +6,7 @@
         <router-link to="/photoindex" class="category-link">Photos</router-link>
         <router-link to="/videoindex" class="category-link">Videos</router-link>
         <router-link to="/ai" class="category-link">AI</router-link>
-        <router-link to="/contact" class="category-link">Contact</router-link>
+        <router-link to="/subscribe" class="category-link">Subscribe</router-link>
       </nav>
     </div>
 
@@ -28,21 +28,44 @@
 
 <style scoped>
 .app-header {
+  position: relative;
   display: flex;
-  justify-content: space-between; /* 主要部分之间留有空间 */
-  align-items: center; /* 垂直居中对齐 */
-  padding: 15px 25px; /* 增加上下内边距 */
-  background-color: #ffffff; /* 页眉背景色 */
-  border-bottom: 1px solid #e0e0e0; /* 页眉底部分割线 */
-  min-height: 70px; /* 增加最小高度 */
+  justify-content: center;
+  align-items: center;
+  padding: 15px 25px;
+  background-color: #ffffff;
+  min-height: 70px;
   height: 70px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 调整阴影 */
 }
 
-.header-section {
+.left-section, .right-section {
+  position: absolute;
+  top: 0;
+  height: 100%;
   display: flex;
   align-items: center;
-  flex: 1; /* 平均分配空间，有助于居中 */
+}
+.left-section {
+  left: 0;
+  padding-left: 20px;
+}
+.right-section {
+  right: 0;
+  padding-right: 20px;
+}
+
+.center-section {
+  position: static; /* 取消绝对定位 */
+  flex: 0 0 auto;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 380px;         /* 和登录表单宽度一致 */
+  max-width: 100vw;
+  margin: 0 auto;       /* 居中 */
+  padding: 0 15px;
+  z-index: 1;
+  height: 100%;
 }
 
 /* 左侧部分：分类 */
@@ -93,17 +116,11 @@
 }
 
 /* 中间部分：Logo */
-.center-section {
-  flex: 0 0 auto;
-  justify-content: center;
-  padding: 0 15px;
-}
-
 .logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding-left: 13px;
   border-radius: 0;
   height: 100%;
   background: none !important;
@@ -127,11 +144,6 @@
 }
 
 /* 右侧部分：社交媒体图标 */
-.right-section {
-  justify-content: flex-end; /* 改为靠右对齐 */
-  padding-right: 20px; /* 添加右侧内边距 */
-}
-
 .login-nav-btn {
   margin-left: 18px;
   padding: 8px 22px;
@@ -143,7 +155,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 2px 8px rgba(118,159,205,0.08);
 }
 
 .login-nav-btn:hover {
@@ -161,7 +172,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  box-shadow: 0 2px 8px rgba(118,159,205,0.08);
 }
 
 .signup-nav-btn:hover {
@@ -269,5 +279,16 @@
 .router-link-active::after {
   width: 70%;
   opacity: 1;
+}
+
+.login-content-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 保证内容水平居中 */
+}
+.login-form-wrapper {
+  max-width: 380px;
+  width: 100%;
+  margin: 0 auto;
 }
 </style>
