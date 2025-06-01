@@ -3,7 +3,6 @@
     <div class="footer-container">
       <div class="footer-branding">
         <h3 class="studio-name">Miles X Walker Studio</h3>
-        <p class="tagline">捕捉光影间的诗意</p>
       </div>
 
       <div class="footer-social-media">
