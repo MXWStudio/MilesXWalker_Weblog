@@ -3,15 +3,6 @@
       <canvas ref="wavyBackgroundCanvas" class="wavy-background"></canvas>
       <div class="login-content-overlay">
         <div class="login-form-wrapper">
-          <div class="logo-container">
-            <HyperTextEffect
-              text="Miles X Walker"
-              :duration="1500"
-              :animateOnLoad="true"
-              class="hypertext-logo-new"
-            />
-          </div>
-  
           <form @submit.prevent="handleLogin" class="space-y-6 mt-10">
             <div>
               <input type="email" id="login-email" v-model="loginForm.email" required
@@ -31,7 +22,7 @@
           <div class="mt-6 text-center">
             <span class="login-register-tip">还没有账户？</span>
             <span class="login-register-actions">
-              <a href="/register" class="register-link-btn">立即注册</a>
+              <a href="/signup" class="register-link-btn">立即注册</a>
               <a href="#" class="forgot-password-link">忘记密码?</a>
             </span>
           </div>
@@ -238,32 +229,6 @@
     margin: 0 auto;
     color: #e0e0e0;
   }
-  
-  .logo-container {
-    text-align: center;
-    margin-bottom: 2rem; /* mb-8 */
-  }
-  
-  /* 新的 HyperText Logo 样式 */
-  .hypertext-logo-new {
-    /* 这个类会应用到 HyperTextEffect 组件的根 div 上 */
-    /* HyperTextEffect 内部的 span 是 font-mono，这里可以设置整体效果 */
-    font-size: 2.5rem; /* 调整Logo大小 */
-    font-weight: 700; /* 加粗 */
-    color: #ffffff; /* Logo文字颜色 */
-    line-height: 1.2;
-    text-shadow: /* 保持或调整发光效果 */
-      0 0 7px rgba(0, 255, 255, 0.7),
-      0 0 12px rgba(0, 255, 255, 0.6),
-      0 0 18px rgba(0, 255, 255, 0.5),
-      0 0 25px rgba(100, 100, 255, 0.4);
-    letter-spacing: 0.05em; /* 轻微增加字间距 */
-    /* HyperTextEffect 组件本身有 @mouseenter="triggerAnimation" */
-    /* 如果需要额外的容器交互，可以在这里添加 */
-    display: inline-block; /* 使 text-align: center 生效 */
-  }
-  
-  /* 移除了旧的 .hypertext-logo, .hypertext-logo:hover::before, .hypertext-logo:hover::after 样式 */
   
   .login-input,
   .login-button {

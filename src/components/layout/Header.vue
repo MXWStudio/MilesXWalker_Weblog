@@ -17,8 +17,7 @@
     </div>
 
     <div class="header-section right-section">
-      <button class="login-nav-btn" @click="$router.push('/login')">登录</button>
-      <button class="signup-nav-btn" @click="$router.push('/signup')">注册</button>
+      <button class="login-nav-btn" @click="$router.push('/login')">Login</button>
     </div>
   </header>
 </template>
