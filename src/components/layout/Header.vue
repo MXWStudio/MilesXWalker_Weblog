@@ -3,9 +3,14 @@
     <div class="header-section left-section">
       <nav class="categories">
         <router-link to="/about" class="category-link">About</router-link>
-        <router-link to="/photoindex" class="category-link">Photos</router-link>
-        <router-link to="/videoindex" class="category-link">Videos</router-link>
-        <router-link to="/ai" class="category-link">AI</router-link>
+        <div class="dropdown">
+          <router-link to="/works" class="category-link">Works</router-link>
+          <div class="dropdown-content">
+            <router-link to="/photoindex" class="dropdown-item">Photos</router-link>
+            <router-link to="/videoindex" class="dropdown-item">Videos</router-link>
+            <router-link to="/ai" class="dropdown-item">AI</router-link>
+          </div>
+        </div>
         <router-link to="/subscribe" class="category-link">Subscribe</router-link>
       </nav>
     </div>
@@ -18,6 +23,7 @@
 
     <div class="header-section right-section">
       <button class="login-nav-btn" @click="$router.push('/login')">Login</button>
+      <img class="user-avatar" src="https://i.pravatar.cc/100" alt="User Avatar" />
     </div>
   </header>
 </template>
@@ -30,53 +36,44 @@
 .app-header {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 15px 25px;
+  padding: 15px 8%;
   background-color: #ffffff;
   min-height: 70px;
   height: 70px;
 }
 
 .left-section, .right-section {
-  position: absolute;
-  top: 0;
+  flex: 0 0 auto;     /* 左右区域固定宽度 */
   height: 100%;
   display: flex;
   align-items: center;
 }
-.left-section {
-  left: 0;
-  padding-left: 20px;
-}
-.right-section {
-  right: 0;
-  padding-right: 20px;
-}
 
 .center-section {
-  position: static; /* 取消绝对定位 */
-  flex: 0 0 auto;
+  position: static;
+  flex: 0 0 auto;     /* 改回固定宽度 */
   justify-content: center;
   align-items: center;
   display: flex;
-  width: 380px;         /* 和登录表单宽度一致 */
-  max-width: 100vw;
-  margin: 0 auto;       /* 居中 */
-  padding: 0 15px;
+  width: 380px;       /* 固定宽度 */
+  margin: 0 auto;     /* 水平居中 */
+  padding: 0;
   z-index: 1;
   height: 100%;
 }
 
 /* 左侧部分：分类 */
 .left-section {
-  justify-content: flex-start; /* 改为靠左对齐 */
-  padding-left: 20px; /* 添加左侧内边距 */
+  justify-content: flex-start;
+  padding-left: 0;
 }
 
 .categories {
   display: flex;
-  gap: 15px; /* 分类链接之间的间距 */
+  gap: 15px;
+  margin-left: 0;
 }
 
 .category-link {
@@ -120,7 +117,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 13px;
+  padding-left: 15px;
   border-radius: 0;
   height: 100%;
   background: none !important;
@@ -137,7 +134,7 @@
   width: auto;
   object-fit: contain;
   display: block;
-  margin: 0;
+  margin-right: 90px;
   background: none;
   box-shadow: none;
   transition: transform 0.18s cubic-bezier(.4,0,.2,1), opacity 0.18s cubic-bezier(.4,0,.2,1);
@@ -290,5 +287,69 @@
   max-width: 380px;
   width: 100%;
   margin: 0 auto;
+}
+
+/* 下拉菜单样式 */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown .category-link {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 8px 0;
+  z-index: 1000;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 16px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(0, 123, 255, 0.08);
+  color: #007bff;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 20px;
+  margin-right: 0;
+  border: 2px solid #e0e7ef;
+  background: #f5f6fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #769fcd;
 }
 </style>

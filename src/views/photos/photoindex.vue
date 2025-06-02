@@ -16,12 +16,28 @@
       </div>
     </section>
 
-    <!-- 瀑布流画廊区域：展示更多照片，采用响应式布局 -->
+    <!-- 添加分类按钮区域 -->
     <section class="gallery-section">
+      <div class="category-buttons">
+        <button 
+          :class="['category-btn', { active: currentCategory === 'all' }]"
+          @click="currentCategory = 'all'"
+        >
+          全部
+        </button>
+        <button 
+          v-for="category in categories" 
+          :key="category"
+          :class="['category-btn', { active: currentCategory === category }]"
+          @click="currentCategory = category"
+        >
+          {{ category }}
+        </button>
+      </div>
       <h3 class="gallery-title">More moments</h3>
       <div class="gallery-grid">
         <div
-          v-for="image in galleryImages"
+          v-for="image in filteredImages"
           :key="image.id"
           class="gallery-item"
           @click="openLightbox(image.src)"
@@ -42,7 +58,7 @@
 
 <script setup>
 // 导入所需的Vue组件和图片资源
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import photoPreviews from '@/assets/images/photos/photo_previews.jpg';
 import img1 from '@/assets/images/photos/photowork/lotus leaf.jpg';
 import img2 from '@/assets/images/photos/photowork/city.jpg';
@@ -95,49 +111,61 @@ const featuredImage = ref({
   description: '凌晨四点，城市还没醒',
 });
 
+// 分类数据
+const categories = ['城市', '自然', '动物', '建筑', '生活'];
+const currentCategory = ref('all');
+
 // 画廊图片数据数组
 const galleryImages = ref([
-  { id: 'img1', src: img1, alt: 'lotus leaf' },
-  { id: 'img2', src: img2, alt: 'city' },
-  { id: 'img3', src: img3, alt: 'swan' },
-  { id: 'img4', src: img4, alt: 'flow' },
-  { id: 'img5', src: img5, alt: 'black' },
-  { id: 'img6', src: img6, alt: 'limb' },
-  { id: 'img7', src: img7, alt: 'chrysanthemum' },
-  { id: 'img8', src: img8, alt: 'boat' },
-  { id: 'img9', src: img9, alt: 'portraits' },
-  { id: 'img10', src: img10, alt: 'Coffee' },
-  { id: 'img11', src: img11, alt: 'Coffee2' },
-  { id: 'img12', src: img12, alt: 'city1' },
-  { id: 'img13', src: img13, alt: 'city2' },
-  { id: 'img14', src: img14, alt: 'metro1' },
-  { id: 'img15', src: img15, alt: 'metro2' },
-  { id: 'img16', src: img16, alt: 'metro3' },
-  { id: 'img17', src: img17, alt: 'lotus flower' },
-  { id: 'img18', src: img18, alt: 'dog' },
-  { id: 'img19', src: img19, alt: 'boat2' },
-  { id: 'img20', src: img20, alt: 'boat3' },
-  { id: 'img21', src: img21, alt: 'boat4' },
-  { id: 'img22', src: img22, alt: 'water pipes' },
-  { id: 'img23', src: img23, alt: 'observation wheel' },
-  { id: 'img24', src: img24, alt: 'observation wheel black' },
-  { id: 'img25', src: img25, alt: 'microcosmic jungle' },
-  { id: 'img26', src: img26, alt: '夜鹭鸟' },
-  { id: 'img27', src: img27, alt: 'blurred water feature' },
-  { id: 'img28', src: img28, alt: 'chrysanthemum2' },
-  { id: 'img29', src: img29, alt: 'flow - 01' },
-  { id: 'img30', src: img30, alt: 'cat' },
-  { id: 'img31', src: img31, alt: 'dilapidate' },
-  { id: 'img32', src: img32, alt: 'swan2' },
-  { id: 'img33', src: img33, alt: 'swan3' },
-  { id: 'img34', src: img34, alt: 'swan4' },
-  { id: 'img35', src: img35, alt: 'swan5' },
-  { id: 'img36', src: img36, alt: 'swan6' },
-  { id: 'img37', src: img37, alt: 'swan7' },
-  { id: 'img38', src: img38, alt: '夜鹭鸟2' },
-  { id: 'img39', src: img39, alt: 'pigeons' },
-  { id: 'img40', src: img40, alt: 'microcosmic jungle2' },
+  { id: 'img1', src: img1, alt: 'lotus leaf', category: '自然' },
+  { id: 'img2', src: img2, alt: 'city', category: '城市' },
+  { id: 'img3', src: img3, alt: 'swan', category: '动物' },
+  { id: 'img4', src: img4, alt: 'flow', category: '自然' },
+  { id: 'img5', src: img5, alt: 'black', category: '建筑' },
+  { id: 'img6', src: img6, alt: 'limb', category: '自然' },
+  { id: 'img7', src: img7, alt: 'chrysanthemum', category: '自然' },
+  { id: 'img8', src: img8, alt: 'boat', category: '生活' },
+  { id: 'img9', src: img9, alt: 'portraits', category: '生活' },
+  { id: 'img10', src: img10, alt: 'Coffee', category: '生活' },
+  { id: 'img11', src: img11, alt: 'Coffee2', category: '生活' },
+  { id: 'img12', src: img12, alt: 'city1', category: '城市' },
+  { id: 'img13', src: img13, alt: 'city2', category: '城市' },
+  { id: 'img14', src: img14, alt: 'metro1', category: '建筑' },
+  { id: 'img15', src: img15, alt: 'metro2', category: '建筑' },
+  { id: 'img16', src: img16, alt: 'metro3', category: '建筑' },
+  { id: 'img17', src: img17, alt: 'lotus flower', category: '自然' },
+  { id: 'img18', src: img18, alt: 'dog', category: '动物' },
+  { id: 'img19', src: img19, alt: 'boat2', category: '生活' },
+  { id: 'img20', src: img20, alt: 'boat3', category: '生活' },
+  { id: 'img21', src: img21, alt: 'boat4', category: '生活' },
+  { id: 'img22', src: img22, alt: 'water pipes', category: '建筑' },
+  { id: 'img23', src: img23, alt: 'observation wheel', category: '建筑' },
+  { id: 'img24', src: img24, alt: 'observation wheel black', category: '建筑' },
+  { id: 'img25', src: img25, alt: 'microcosmic jungle', category: '自然' },
+  { id: 'img26', src: img26, alt: '夜鹭鸟', category: '动物' },
+  { id: 'img27', src: img27, alt: 'blurred water feature', category: '自然' },
+  { id: 'img28', src: img28, alt: 'chrysanthemum2', category: '自然' },
+  { id: 'img29', src: img29, alt: 'flow - 01', category: '自然' },
+  { id: 'img30', src: img30, alt: 'cat', category: '动物' },
+  { id: 'img31', src: img31, alt: 'dilapidate', category: '建筑' },
+  { id: 'img32', src: img32, alt: 'swan2', category: '动物' },
+  { id: 'img33', src: img33, alt: 'swan3', category: '动物' },
+  { id: 'img34', src: img34, alt: 'swan4', category: '动物' },
+  { id: 'img35', src: img35, alt: 'swan5', category: '动物' },
+  { id: 'img36', src: img36, alt: 'swan6', category: '动物' },
+  { id: 'img37', src: img37, alt: 'swan7', category: '动物' },
+  { id: 'img38', src: img38, alt: '夜鹭鸟2', category: '动物' },
+  { id: 'img39', src: img39, alt: 'pigeons', category: '动物' },
+  { id: 'img40', src: img40, alt: 'microcosmic jungle2', category: '自然' },
 ]);
+
+// 计算属性：根据当前分类过滤图片
+const filteredImages = computed(() => {
+  if (currentCategory.value === 'all') {
+    return galleryImages.value;
+  }
+  return galleryImages.value.filter(img => img.category === currentCategory.value);
+});
 
 // 图片查看器状态控制
 const lightbox = ref({
@@ -363,5 +391,34 @@ const closeLightbox = () => {
     background-color: rgba(0,0,0,0.5);
     color: white;
   }
+}
+
+/* 分类按钮样式 */
+.category-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.category-btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.category-btn:hover {
+  background: #f5f5f5;
+}
+
+.category-btn.active {
+  background: #2c3e50;
+  color: white;
+  border-color: #2c3e50;
 }
 </style> 
