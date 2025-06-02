@@ -34,11 +34,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "src/api/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "regions": ["hnd1", "sfo1", "iad1"]
+  ]
 } 
