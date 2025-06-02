@@ -1,6 +1,12 @@
 <!-- Blog页面组件 -->
 <template>
   <div class="blog-page">
+    <!-- 测试状态提示 -->
+    <div class="publish-status">
+      <span class="status-badge">测试中</span>
+      <span class="status-text">当前内容为测试数据，实际内容待更新</span>
+    </div>
+    
     <!-- 搜索和订阅区域 -->
     <div class="blog-header">
       <h1>博客文章</h1>
@@ -243,6 +249,34 @@ const handleSubscribe = () => {
   padding: 40px 20px;
 }
 
+.publish-status {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.status-badge {
+  background-color: #ffc107;
+  color: #000;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-text {
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
 .blog-header {
   text-align: center;
   margin-bottom: 50px;
@@ -456,6 +490,21 @@ const handleSubscribe = () => {
 @media (max-width: 768px) {
   .blog-header h1 {
     font-size: 2em;
+  }
+  
+  .publish-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 15px;
+  }
+  
+  .status-badge {
+    font-size: 0.85em;
+  }
+  
+  .status-text {
+    font-size: 0.9em;
   }
 }
 
