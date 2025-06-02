@@ -4,13 +4,14 @@
       <nav class="categories">
         <router-link to="/about" class="category-link">About</router-link>
         <div class="dropdown">
-          <router-link to="/works" class="category-link">Works</router-link>
-          <div class="dropdown-content">
+          <span class="category-link dropdown-trigger">Works</span>
+          <div class="dropdown-menu">
             <router-link to="/photoindex" class="dropdown-item">Photos</router-link>
             <router-link to="/videoindex" class="dropdown-item">Videos</router-link>
             <router-link to="/ai" class="dropdown-item">AI</router-link>
           </div>
         </div>
+        <router-link to="/blog" class="category-link">Blog</router-link>
         <router-link to="/subscribe" class="category-link">Subscribe</router-link>
       </nav>
     </div>
@@ -32,60 +33,72 @@
 // Logo相关的 ref 和方法已移除，因为现在使用静态SVG徽标
 </script>
 
-<style scoped>
+<style>
 .app-header {
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 15px 8%;
+  align-items: center; 
+  padding: 15px 4%; /* 将左右内边距从2%增加到4%，使内容向中心靠拢 */
   background-color: #ffffff;
   min-height: 70px;
   height: 70px;
+  width: 100%;
+  box-sizing: border-box;
+  /* overflow: hidden; */ /* 移除或注释掉这里，以允许下拉菜单溢出头部 */
 }
 
 .left-section, .right-section {
-  flex: 0 0 auto;     /* 左右区域固定宽度 */
-  height: 100%;
+  flex: 0 1 auto;
   display: flex;
   align-items: center;
+  min-width: 0;
+  max-width: 40%;
+}
+
+.left-section {
+  justify-content: flex-start;
+  margin-right: 20px;
+}
+
+.right-section {
+  justify-content: flex-end;
+  margin-left: 20px;
 }
 
 .center-section {
-  position: static;
-  flex: 0 0 auto;     /* 改回固定宽度 */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
-  width: 380px;       /* 固定宽度 */
-  margin: 0 auto;     /* 水平居中 */
-  padding: 0;
-  z-index: 1;
   height: 100%;
+  z-index: 2;
+  flex: 0 0 auto;
 }
 
 /* 左侧部分：分类 */
-.left-section {
-  justify-content: flex-start;
-  padding-left: 0;
-}
-
 .categories {
   display: flex;
-  gap: 15px;
-  margin-left: 0;
+  gap: 8px;
+  flex-wrap: nowrap;
+  /* overflow: hidden; */ /* 移除或注释掉这里，以允许下拉菜单溢出分类栏 */
+  width: 100%;
 }
 
 .category-link {
   text-decoration: none;
   color: #333;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   transition: all 0.2s ease;
-  font-size: 0.95em;
+  font-size: 0.9em;
   position: relative;
   background-color: transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .category-link:hover {
@@ -94,7 +107,8 @@
   transform: translateY(-1px);
 }
 
-.category-link::after {
+/* 使用 ::before 生成下划线，以避免与下拉箭头的 ::after 冲突 */
+.category-link::before {
   content: '';
   position: absolute;
   width: 0;
@@ -107,9 +121,17 @@
   opacity: 0;
 }
 
-.category-link:hover::after {
+.category-link:hover::before {
   width: 70%;
   opacity: 1;
+}
+
+/* 针对 Works 下拉菜单触发器的下划线特殊调整 */
+/* 现在针对 ::before 进行调整 */
+.dropdown-trigger.category-link::before {
+  /* 尝试将横线稍微向左移动，以补偿右侧箭头带来的宽度影响 */
+  /* 这个值可能需要微调，5px 是一个基于箭头宽度的估算值 */
+  left: calc(50% - 5px);
 }
 
 /* 中间部分：Logo */
@@ -117,10 +139,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 15px;
-  border-radius: 0;
   height: 100%;
+  padding: 0;
   background: none !important;
+  flex: 0 0 auto;
 }
 
 .logo-container:hover .logo-badge {
@@ -129,58 +151,130 @@
 }
 
 .logo-badge {
-  height: 48px;
-  max-width: 180px;
+  height: 40px;
   width: auto;
   object-fit: contain;
   display: block;
-  margin-right: 90px;
   background: none;
   box-shadow: none;
   transition: transform 0.18s cubic-bezier(.4,0,.2,1), opacity 0.18s cubic-bezier(.4,0,.2,1);
 }
 
-/* 右侧部分：社交媒体图标 */
+/* 右侧部分：登录按钮和头像 */
 .login-nav-btn {
-  margin-left: 18px;
-  padding: 8px 22px;
+  padding: 6px 16px;
   background: #769fcd;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 1em;
+  font-size: 0.9em;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .login-nav-btn:hover {
   background: #4a6fa5;
 }
 
-.signup-nav-btn {
-  margin-left: 10px;
-  padding: 8px 22px;
-  background: #e0e7ef;
-  color: #4a6fa5;
-  border: none;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 600;
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 12px;
+  border: 2px solid #e0e7ef;
+  background: #f5f6fa;
+  transition: all 0.3s ease;
   cursor: pointer;
+  flex-shrink: 0;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #769fcd;
+}
+
+/* 下拉菜单样式 */
+.dropdown {
+  position: relative;
+  display: inline-flex; /* 改为 inline-flex 以更好地控制内部对齐 */
+  align-items: center; /* 垂直居中 .dropdown-trigger span */
+}
+
+.dropdown-trigger {
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* 将菜单顶部对齐到 .dropdown 容器的底部 */
+  left: 0;
+  margin-top: 4px; /* 在触发器和菜单之间添加一个小的固定间隙 */
+  min-width: 140px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out; /* 调整过渡效果 */
+  transform: translateY(8px); /* 动画起始时，菜单稍微靠下一点 */
+  z-index: 1000;
+}
+.dropdown:hover {
+  /* 当下拉菜单激活时，提升其父元素 .dropdown 的堆叠顺序，确保菜单在 logo 之上 */
+  /* .dropdown 已经有 position: relative，所以 z-index 会生效 */
+  z-index: 3; /* 需要高于 .center-section 的 z-index: 2 */
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 18px;
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap;
   transition: background 0.2s, color 0.2s;
 }
 
-.signup-nav-btn:hover {
-  background: #b6c6e3;
-  color: #2c3e50;
+.dropdown-item:hover {
+  background: #f0f6ff;
+  color: #007bff;
+}
+
+/* 下拉箭头 */
+.dropdown-trigger::after {
+  content: '';
+  display: inline-block;
+  margin-left: 6px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #333;
+  transition: transform 0.2s ease; 
+  vertical-align: middle; /* 尝试让箭头与文本垂直居中对齐 */
+}
+
+.dropdown:hover .dropdown-trigger::after {
+  transform: rotate(180deg); /* 悬浮时箭头向上翻转 */
 }
 
 /* 响应式调整 */
 @media (max-width: 768px) {
   .app-header {
-    padding: 10px 15px;
-    min-height: 56px;
+    padding: 10px 4%; /* 相应调整中等屏幕的左右内边距 */
   }
 
   .categories {
@@ -188,50 +282,80 @@
   }
 
   .category-link {
-    padding: 6px 10px;
-    font-size: 0.9em;
+    padding: 5px 8px;
+    font-size: 0.85em;
   }
 
   .login-nav-btn {
-    padding: 6px 18px;
-  }
-
-  .signup-nav-btn {
-    padding: 6px 10px;
+    padding: 5px 12px;
+    font-size: 0.85em;
   }
 
   .logo-badge {
-    width: 32px;
     height: 32px;
   }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    margin-left: 8px;
+  }
+
+  .dropdown-menu {
+    min-width: 140px;
+    padding: 6px 0;
+  }
+
+  .dropdown-item {
+    padding: 6px 12px;
+    font-size: 0.9em;
+  }
+
+  /* .dropdown-trigger 会从 .category-link 继承响应式的 padding 和 font-size,
+     此处特定的覆盖是不必要的，并且导致了不一致。 */
 }
 
 @media (max-width: 600px) {
-  .left-section .categories {
-    font-size: 0.85em;
+  .app-header {
+    padding: 8px 3%; /* 在较小屏幕上，可以将内边距调整为3%，避免内容区过窄 */
+  }
+
+  .categories {
     gap: 4px;
   }
 
   .category-link {
-    padding: 5px 8px;
-  }
-
-  .app-header {
-    padding: 8px 12px;
+    padding: 4px 6px;
+    font-size: 0.8em;
   }
 
   .login-nav-btn {
-    padding: 5px 18px;
-  }
-
-  .signup-nav-btn {
-    padding: 5px 10px;
+    padding: 4px 10px;
+    font-size: 0.8em;
   }
 
   .logo-badge {
+    height: 28px;
+  }
+
+  .user-avatar {
     width: 24px;
     height: 24px;
+    margin-left: 6px;
   }
+
+  .dropdown-menu {
+    min-width: 120px;
+    padding: 4px 0;
+  }
+
+  .dropdown-item {
+    padding: 5px 10px;
+    font-size: 0.85em;
+  }
+
+  /* .dropdown-trigger 会从 .category-link 继承响应式的 padding 和 font-size,
+     此处特定的覆盖是不必要的，并且导致了不一致。 */
 }
 
 @media (max-width: 450px) {
@@ -240,30 +364,43 @@
   }
 
   .app-header {
-    justify-content: space-between;
-    padding: 6px 10px;
+    padding: 6px 3%; /* 在非常小的屏幕上，同样调整为3% */
   }
 
   .left-section {
-    flex: 0 0 auto;
+    margin-right: 10px;
   }
 
   .right-section {
-    justify-content: flex-end;
+    margin-left: 10px;
   }
 
   .login-nav-btn {
-    padding: 4px 18px;
-  }
-
-  .signup-nav-btn {
-    padding: 4px 10px;
+    padding: 4px 8px;
+    font-size: 0.75em;
   }
 
   .logo-badge {
-    width: 16px;
-    height: 16px;
+    height: 24px;
   }
+
+  .user-avatar {
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+  }
+
+  .dropdown-menu {
+    min-width: 100px;
+  }
+
+  .dropdown-item {
+    padding: 4px 8px;
+    font-size: 0.8em;
+  }
+
+  /* .dropdown-trigger 会从 .category-link 继承响应式的 padding 和 font-size,
+     此处特定的覆盖是不必要的，并且导致了不一致。 */
 }
 
 /* 路由链接激活状态 */
@@ -273,83 +410,9 @@
   background-color: rgba(0, 123, 255, 0.08);
 }
 
-.router-link-active::after {
+/* 激活状态的下划线也应针对 ::before */
+.router-link-active::before {
   width: 70%;
   opacity: 1;
-}
-
-.login-content-overlay {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 保证内容水平居中 */
-}
-.login-form-wrapper {
-  max-width: 380px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* 下拉菜单样式 */
-.dropdown {
-  position: relative;
-  display: inline-block;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown .category-link {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #fff;
-  min-width: 160px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  padding: 8px 0;
-  z-index: 1000;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-item {
-  display: block;
-  padding: 8px 16px;
-  color: #333;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.dropdown-item:hover {
-  background-color: rgba(0, 123, 255, 0.08);
-  color: #007bff;
-}
-
-.user-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-left: 20px;
-  margin-right: 0;
-  border: 2px solid #e0e7ef;
-  background: #f5f6fa;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.user-avatar:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: #769fcd;
 }
 </style>

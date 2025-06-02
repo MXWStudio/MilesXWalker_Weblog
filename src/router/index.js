@@ -9,6 +9,8 @@ import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
 import Terms from '../views/Terms.vue'
 import Privacy from '../views/Privacy.vue'
+import Blog from '../views/Blog.vue'
+import Web3D from '../views/articles/Web3D.vue'
 
 const routes = [
   {
@@ -54,6 +56,14 @@ const routes = [
     }
   },
   {
+    path: '/blog',
+    name: 'Blog',
+    component: Blog,
+    meta: {
+      title: '博客文章'
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login
@@ -72,6 +82,12 @@ const routes = [
     path: '/privacy',
     name: 'privacy',
     component: Privacy
+  },
+  {
+    path: '/articles/web3d',
+    name: 'Web3DArticle',
+    component: Web3D,
+    meta: { title: 'Web3D虚拟人物标准' }
   }
 ]
 
