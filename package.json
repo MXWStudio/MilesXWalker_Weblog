@@ -6,7 +6,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "vercel": "vercel --prod --cwd ./dist"
+    "lint": "eslint src --ext .vue,.js,.ts,.jsx,.tsx --fix",
+    "type-check": "vue-tsc --noEmit",
+    "vercel:dev": "vercel dev",
+    "vercel:build": "vercel build",
+    "vercel:deploy": "vercel --prod",
+    "vercel:preview": "vercel"
   },
   "dependencies": {
     "@vueuse/core": "^10.11.1",

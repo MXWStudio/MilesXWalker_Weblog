@@ -131,7 +131,6 @@
         <p>
           📧 如果你想一起参与这项实践，欢迎联系我：<br>
           👉 milesxwalkerstudio@gmail.com<br>
-          👉 www.mxwstudio.com
         </p>
       </section>
     </div>
