@@ -14,16 +14,6 @@
               <p>"Miles Walker"</p>
             </div>
           </div>
-          <div class="quick-info">
-            <div class="info-block">
-              <span class="info-icon">📧</span>
-              <a href="mailto:milesxwalkerstudio@example.com" class="info-link">milesxwalkerstudio@gmail.com</a>
-            </div>
-            <div class="info-block">
-              <span class="info-icon">📞</span>
-              <span class="info-text">(+86) 186 5279 1015 </span>
-            </div>
-          </div>
         </div>
 
         <div class="contact-details-form">
