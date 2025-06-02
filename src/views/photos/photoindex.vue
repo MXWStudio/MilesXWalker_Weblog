@@ -7,6 +7,7 @@
         :src="featuredImage.src"
         :alt="featuredImage.alt"
         class="featured-image"
+        loading="lazy"
         @click="openLightbox(featuredImage.src)"
       />
       <div class="featured-image-caption">
