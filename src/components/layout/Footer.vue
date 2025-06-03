@@ -153,7 +153,7 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+  import { computed, onBeforeUnmount, onMounted } from 'vue'
 
   const currentYear = computed(() => new Date().getFullYear())
 

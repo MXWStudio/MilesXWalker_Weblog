@@ -11,10 +11,10 @@
 Vercel的自动部署通过 **Git Webhook** 实现：
 
 ```
-你推送代码到GitHub 
+你推送代码到GitHub
     ↓
 GitHub自动通知Vercel："有新代码了！"
-    ↓  
+    ↓
 Vercel自动下载代码并构建
     ↓
 自动发布到生产环境
@@ -27,6 +27,7 @@ Vercel自动下载代码并构建
 ## 🎯 你需要做什么？
 
 ### 💻 日常开发时：
+
 ```bash
 # 1. 修改代码后，推送到GitHub
 git add .
@@ -45,11 +46,13 @@ git push origin main
 ## 📱 查看部署状态的3种方法
 
 ### 1️⃣ **Vercel仪表板**（推荐）
+
 - 打开 [vercel.com/dashboard](https://vercel.com/dashboard)
 - 找到你的项目
 - 查看部署历史和状态
 
 ### 2️⃣ **命令行查看**
+
 ```bash
 # 查看部署状态
 vercel ls
@@ -59,6 +62,7 @@ vercel logs
 ```
 
 ### 3️⃣ **GitHub上查看**
+
 - 在GitHub仓库中，推送后会看到橙色圆圈 🟡（构建中）
 - 构建完成会变成绿色勾号 ✅
 
@@ -91,12 +95,15 @@ git push origin main
 ## 🎯 常见情况说明
 
 ### 🟢 **正常情况**
+
 - 推送后2-5分钟自动部署完成
 - 网站自动更新
 - 无需任何手动操作
 
 ### 🟡 **首次设置**
+
 如果是第一次使用，可能需要：
+
 ```bash
 # 连接到Vercel（只需要做一次）
 vercel
@@ -105,12 +112,15 @@ vercel
 ```
 
 ### 🔴 **如果没有自动部署**
+
 可能的原因：
+
 1. GitHub和Vercel没有连接
 2. Webhook没有设置
 3. 构建失败
 
 解决方法：
+
 ```bash
 # 查看部署日志
 vercel logs
@@ -124,6 +134,7 @@ npm run vercel:deploy
 如果还没有设置，按以下步骤操作：
 
 ### 1️⃣ **登录Vercel**
+
 ```bash
 # 安装并登录Vercel CLI
 npm i -g vercel
@@ -131,6 +142,7 @@ vercel login
 ```
 
 ### 2️⃣ **连接项目**
+
 ```bash
 # 在项目根目录运行
 vercel
@@ -141,11 +153,13 @@ vercel
 ```
 
 ### 3️⃣ **连接GitHub**
-- 在 [vercel.com/dashboard](https://vercel.com/dashboard) 
+
+- 在 [vercel.com/dashboard](https://vercel.com/dashboard)
 - 找到你的项目 → Settings → Git
 - 确保连接到正确的GitHub仓库
 
 ### 4️⃣ **测试部署**
+
 ```bash
 git add .
 git commit -m "设置自动部署"
@@ -175,6 +189,7 @@ git add . && git commit -m "更新功能" && git push origin main
 ## 🆘 常见问题
 
 ### Q: 推送后没有自动部署怎么办？
+
 ```bash
 # 检查Vercel连接状态
 vercel ls
@@ -184,6 +199,7 @@ vercel inspect
 ```
 
 ### Q: 部署失败了怎么办？
+
 ```bash
 # 查看错误日志
 vercel logs
@@ -193,9 +209,10 @@ npm run vercel:deploy
 ```
 
 ### Q: 如何取消自动部署？
+
 - 在Vercel仪表板中断开GitHub连接
 - 或删除项目中的`.vercel`目录
 
 ---
 
-🎯 **总结**：推送代码后，Vercel会**完全自动**地部署你的网站，你不需要输入任何命令！ 
+🎯 **总结**：推送代码后，Vercel会**完全自动**地部署你的网站，你不需要输入任何命令！
