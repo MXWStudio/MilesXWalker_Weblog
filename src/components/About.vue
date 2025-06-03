@@ -241,10 +241,12 @@
             如果您对我的摄影作品感兴趣，或者想交流关于Vue.js、旅行、咖啡等任何话题，都非常欢迎与我联系！期待与志同道合的您相遇。
           </p>
           <table class="about-image-table">
-            <tr>
-              <td><img :src="aboutLeftImg" alt="关于我左图" class="about-table-img" /></td>
-              <td><img :src="aboutRightImg" alt="关于我右图" class="about-table-img" /></td>
-            </tr>
+            <tbody>
+              <tr>
+                <td><img :src="aboutLeftImg" alt="关于我左图" class="about-table-img" /></td>
+                <td><img :src="aboutRightImg" alt="关于我右图" class="about-table-img" /></td>
+              </tr>
+            </tbody>
           </table>
         </section>
       </div>
@@ -253,285 +255,283 @@
 </template>
 
 <script setup>
-  import personalHeadshot from '@/assets/images/photos/resume photo.jpg'
-  import aboutLeftImg from '@/assets/images/photos/about_left.jpg'
-  import aboutRightImg from '@/assets/images/photos/about_right.jpg'
+import persaboutRightImg from '@/assets/images/photos/about_right.jpg'
 </script>
 
 <style scoped>
-  .about-page-container {
-    padding: 20px 15px 40px;
-    background-color: #f8f9fa;
-    min-height: calc(100vh - 70px);
-  }
+.about-page-container {
+  padding: 20px 15px 40px;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 70px);
+}
 
-  .about-page-content {
-    max-width: 1100px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-  }
+.about-page-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
 
-  .page-title {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 35px;
-    font-size: 2.8em;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-  }
+.page-title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 35px;
+  font-size: 2.8em;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
 
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+@media (min-width: 768px) {
   .main-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 35px;
+    flex-direction: row;
+    gap: 45px;
+    align-items: flex-start;
   }
-
-  @media (min-width: 768px) {
-    .main-layout {
-      flex-direction: row;
-      gap: 45px;
-      align-items: flex-start;
-    }
-    .profile-sidebar {
-      flex: 0 0 280px;
-    }
-    .about-me-details {
-      flex: 1;
-      padding-left: 36px;
-    }
-  }
-
   .profile-sidebar {
-    border: 1px solid #e9ecef;
-    padding: 25px;
-    border-radius: 8px;
-    background-color: #fdfdfd;
+    flex: 0 0 280px;
   }
-
-  .profile-image-wrapper {
-    text-align: center;
-    margin-bottom: 25px;
-  }
-
-  .profile-image {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 6px solid #ffffff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-  }
-
-  .contact-info-block h2,
-  .social-media-block h2,
-  .about-me-details h2 {
-    color: #343a40;
-    margin-top: 0;
-    margin-bottom: 18px;
-    font-size: 1.5em;
-    font-weight: 600;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #dee2e6;
-  }
-
-  .contact-info-block p {
-    margin-bottom: 12px;
-    font-size: 0.95em;
-    color: #495057;
-    display: flex;
-    align-items: center;
-    line-height: 1.6;
-  }
-  .contact-info-block .icon {
-    margin-right: 10px;
-    font-size: 1.2em;
-    color: #007bff;
-  }
-
-  .social-media-block {
-    margin-top: 30px;
-  }
-
-  .social-links-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    color: #333;
-    background-color: #e9ecef;
-    padding: 10px 15px;
-    border-radius: 6px;
-    transition:
-      background-color 0.25s ease,
-      color 0.25s ease,
-      transform 0.2s ease;
-    font-size: 0.9em;
-    font-weight: 500;
-  }
-
-  .social-link:hover {
-    /* General hover for background and text, specific hovers below for icon colors */
-    color: #fff;
-    transform: translateY(-2px);
-  }
-
-  .social-svg {
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    transition: fill 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Instagram */
-  .instagram-link .social-svg path {
-    fill: url(#instagram-gradient);
-  }
-  .instagram-link:hover {
-    background: linear-gradient(
-      45deg,
-      #f09433 0%,
-      #e6683c 25%,
-      #dc2743 50%,
-      #cc2366 75%,
-      #bc1888 100%
-    );
-  }
-  .instagram-link:hover .social-svg path {
-    fill: #fff;
-  }
-
-  /* YouTube */
-  .youtube-svg {
-    fill: #ff0000;
-  }
-  .youtube-link:hover {
-    background-color: #cc0000;
-  }
-  .youtube-link:hover .youtube-svg {
-    fill: #fff;
-  }
-
-  /* Bilibili */
-  .bilibili-svg {
-    width: 22px;
-    height: 22px;
-    fill: #00a1f1;
-    margin-top: -2px;
-    margin-left: -2px;
-  }
-  .bilibili-svg path,
-  .bilibili-svg rect {
-    fill: #00a1f1;
-  }
-  .bilibili-link:hover {
-    background-color: #007ac0;
-  }
-  .bilibili-link:hover .bilibili-svg path,
-  .bilibili-link:hover .bilibili-svg rect {
-    fill: #fff;
-  }
-
-  /* Xiaohongshu */
-  .xiaohongshu-svg path {
-    fill: #ff2442;
-  }
-  .xiaohongshu-link:hover {
-    background-color: #e60023;
-  }
-  .xiaohongshu-link:hover .xiaohongshu-svg path {
-    fill: #fff;
-  }
-
-  /* GitHub */
-  .github-svg {
-    fill: #181717;
-  }
-  .github-link:hover {
-    background-color: #333;
-  }
-  .github-link:hover .github-svg {
-    fill: #fff;
-  }
-
-  /* Twitter/X */
-  .twitter-svg {
-    fill: #000000;
-  }
-  .twitter-link:hover {
-    background-color: #272c30;
-  }
-  .twitter-link:hover .twitter-svg {
-    fill: #fff;
-  }
-
   .about-me-details {
-    padding-left: 0;
+    flex: 1;
+    padding-left: 36px;
   }
-  @media (min-width: 768px) {
-    .about-me-details {
-      padding-left: 36px;
-    }
-  }
+}
 
-  .about-me-details h2 {
-    margin-bottom: 20px;
-    font-size: 1.45em;
-    font-weight: 600;
-    color: #2c3e50;
-    letter-spacing: 0.5px;
-  }
+.profile-sidebar {
+  border: 1px solid #e9ecef;
+  padding: 25px;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+}
 
-  .about-me-details p {
-    margin-bottom: 18px;
-    line-height: 1.85;
-    font-size: 1.08em;
-    color: #343a40;
-    text-align: justify;
-    letter-spacing: 0.01em;
-  }
+.profile-image-wrapper {
+  text-align: center;
+  margin-bottom: 25px;
+}
 
-  .about-me-details p:last-child {
-    margin-bottom: 0;
-  }
+.profile-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
 
-  .about-image-table {
-    width: 100%;
-    margin-top: 38px;
-    border-collapse: separate;
-    border-spacing: 24px 0;
-  }
-  .about-image-table td {
-    vertical-align: top;
-    width: 50%;
-    padding: 0;
-  }
-  .about-table-img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
-    display: block;
-  }
+.contact-info-block h2,
+.social-media-block h2,
+.about-me-details h2 {
+  color: #343a40;
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.5em;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
 
-  .bleachfilm-svg {
-    filter: drop-shadow(0 0 8px #00cfff);
+.contact-info-block p {
+  margin-bottom: 12px;
+  font-size: 0.95em;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  line-height: 1.6;
+}
+.contact-info-block .icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: #007bff;
+}
+
+.social-media-block {
+  margin-top: 30px;
+}
+
+.social-links-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  background-color: #e9ecef;
+  padding: 10px 15px;
+  border-radius: 6px;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.social-link:hover {
+  /* General hover for background and text, specific hovers below for icon colors */
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.social-svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  transition: fill 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Instagram */
+.instagram-link .social-svg path {
+  fill: url(#instagram-gradient);
+}
+.instagram-link:hover {
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+}
+.instagram-link:hover .social-svg path {
+  fill: #fff;
+}
+
+/* YouTube */
+.youtube-svg {
+  fill: #ff0000;
+}
+.youtube-link:hover {
+  background-color: #cc0000;
+}
+.youtube-link:hover .youtube-svg {
+  fill: #fff;
+}
+
+/* Bilibili */
+.bilibili-svg {
+  width: 22px;
+  height: 22px;
+  fill: #00a1f1;
+  margin-top: -2px;
+  margin-left: -2px;
+}
+.bilibili-svg path,
+.bilibili-svg rect {
+  fill: #00a1f1;
+}
+.bilibili-link:hover {
+  background-color: #007ac0;
+}
+.bilibili-link:hover .bilibili-svg path,
+.bilibili-link:hover .bilibili-svg rect {
+  fill: #fff;
+}
+
+/* Xiaohongshu */
+.xiaohongshu-svg path {
+  fill: #ff2442;
+}
+.xiaohongshu-link:hover {
+  background-color: #e60023;
+}
+.xiaohongshu-link:hover .xiaohongshu-svg path {
+  fill: #fff;
+}
+
+/* GitHub */
+.github-svg {
+  fill: #181717;
+}
+.github-link:hover {
+  background-color: #333;
+}
+.github-link:hover .github-svg {
+  fill: #fff;
+}
+
+/* Twitter/X */
+.twitter-svg {
+  fill: #000000;
+}
+.twitter-link:hover {
+  background-color: #272c30;
+}
+.twitter-link:hover .twitter-svg {
+  fill: #fff;
+}
+
+.about-me-details {
+  padding-left: 0;
+}
+@media (min-width: 768px) {
+  .about-me-details {
+    padding-left: 36px;
   }
-  .bleachfilm-link:hover {
-    background-color: #00cfff;
-  }
-  .bleachfilm-link:hover .bleachfilm-svg {
-    filter: drop-shadow(0 0 16px #00cfff);
-  }
+}
+
+.about-me-details h2 {
+  margin-bottom: 20px;
+  font-size: 1.45em;
+  font-weight: 600;
+  color: #2c3e50;
+  letter-spacing: 0.5px;
+}
+
+.about-me-details p {
+  margin-bottom: 18px;
+  line-height: 1.85;
+  font-size: 1.08em;
+  color: #343a40;
+  text-align: justify;
+  letter-spacing: 0.01em;
+}
+
+.about-me-details p:last-child {
+  margin-bottom: 0;
+}
+
+.about-image-table {
+  width: 100%;
+  margin-top: 38px;
+  border-collapse: separate;
+  border-spacing: 24px 0;
+}
+.about-image-table td {
+  vertical-align: top;
+  width: 50%;
+  padding: 0;
+}
+.about-table-img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+.bleachfilm-svg {
+  filter: drop-shadow(0 0 8px #00cfff);
+}
+.bleachfilm-link:hover {
+  background-color: #00cfff;
+}
+.bleachfilm-link:hover .bleachfilm-svg {
+  filter: drop-shadow(0 0 16px #00cfff);
+}
 </style>

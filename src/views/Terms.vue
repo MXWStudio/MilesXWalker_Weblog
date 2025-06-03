@@ -26,45 +26,45 @@
 </template>
 
 <style scoped>
-  .terms-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-  }
+.terms-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
 
-  .terms-content {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  }
+.terms-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
 
-  h1 {
-    color: #2c3e50;
-    margin-bottom: 30px;
-    text-align: center;
-  }
+h1 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
 
-  h2 {
-    color: #769fcd;
-    margin: 25px 0 15px;
-  }
+h2 {
+  color: #769fcd;
+  margin: 25px 0 15px;
+}
 
-  section {
-    margin-bottom: 30px;
-  }
+section {
+  margin-bottom: 30px;
+}
 
-  p,
-  ul {
-    color: #333;
-    line-height: 1.6;
-  }
+p,
+ul {
+  color: #333;
+  line-height: 1.6;
+}
 
-  ul {
-    padding-left: 20px;
-  }
+ul {
+  padding-left: 20px;
+}
 
-  li {
-    margin: 8px 0;
-  }
+li {
+  margin: 8px 0;
+}
 </style>

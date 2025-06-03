@@ -153,136 +153,136 @@
 </template>
 
 <script setup>
-  import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
 
-  const currentYear = computed(() => new Date().getFullYear())
+const currentYear = computed(() => new Date().getFullYear())
 
-  // 这里不需要 props，因为这个页脚是一个独立的、传统的页脚组件
-  // 如果需要从父组件接收数据，可以在这里定义 props
+// 这里不需要 props，因为这个页脚是一个独立的、传统的页脚组件
+// 如果需要从父组件接收数据，可以在这里定义 props
 
-  // 如果有需要在组件挂载后执行的逻辑，可以放在 onMounted 中
-  onMounted(() => {
-    // 例如: console.log('Footer component mounted');
-  })
+// 如果有需要在组件挂载后执行的逻辑，可以放在 onMounted 中
+onMounted(() => {
+  // 例如: console.log('Footer component mounted');
+})
 
-  // 如果有需要在组件卸载前执行的清理逻辑，可以放在 onBeforeUnmount 中
-  onBeforeUnmount(() => {
-    // 例如: console.log('Footer component will unmount');
-  })
+// 如果有需要在组件卸载前执行的清理逻辑，可以放在 onBeforeUnmount 中
+onBeforeUnmount(() => {
+  // 例如: console.log('Footer component will unmount');
+})
 </script>
 
 <style scoped>
-  .site-footer {
-    background-color: #ffffff; /* 白色背景 */
-    color: rgba(0, 0, 0, 0.7); /* 深色文字 */
-    padding: 50px 20px 30px; /* 上下内边距 */
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* 现代无衬线字体 */
-    text-align: center; /* 内容居中 */
-  }
+.site-footer {
+  background-color: #ffffff; /* 白色背景 */
+  color: rgba(0, 0, 0, 0.7); /* 深色文字 */
+  padding: 50px 20px 30px; /* 上下内边距 */
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* 现代无衬线字体 */
+  text-align: center; /* 内容居中 */
+}
 
+.footer-container {
+  max-width: 1100px; /* 内容最大宽度 */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px; /* 各主要区域之间的间距 */
+}
+
+.footer-branding {
+  margin-bottom: 10px; /* 品牌信息与社交媒体之间的间距 */
+}
+
+.studio-name {
+  font-size: 1.6em;
+  font-weight: 500;
+  color: #333333; /* 深色标题 */
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.tagline {
+  font-size: 0.95em;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.6); /* 深色标语 */
+  margin: 0;
+}
+
+.footer-social-media {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* 社交图标之间的间距 */
+  margin-bottom: 20px; /* 社交媒体与版权之间的间距 */
+}
+
+.social-icon {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+  display: inline-block; /* 确保 transform 生效 */
+}
+
+.social-icon svg {
+  width: 26px; /* SVG图标大小 */
+  height: 26px;
+  vertical-align: middle; /* 如果需要，进行垂直对齐 */
+}
+/* 为特定图标设置品牌色 */
+.social-icon[aria-label='Instagram'] svg {
+  fill: #e4405f;
+}
+.social-icon[aria-label='YouTube'] svg {
+  fill: #ff0000;
+}
+.social-icon[aria-label='Bilibili'] svg {
+  width: 32px;
+  height: 32px;
+  margin: -4px;
+}
+.social-icon[aria-label='小红书'] svg {
+  fill: #ff2442;
+} /* 小红书SVG已包含颜色 */
+.social-icon[aria-label='Bleachfilm'] .bleachfilm-svg {
+  /* 移除发光效果 */
+}
+.social-icon[aria-label='Bleachfilm']:hover .bleachfilm-svg {
+  /* 移除悬停时的发光效果 */
+}
+
+.social-icon:hover {
+  color: #ffffff; /* 悬停时图标变亮 */
+  transform: scale(1.15); /* 轻微放大效果 */
+}
+
+.footer-copyright {
+  font-size: 0.8em;
+  color: rgba(0, 0, 0, 0.45); /* 深色版权文字 */
+  letter-spacing: 0.3px;
+}
+
+.footer-copyright p {
+  margin: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
   .footer-container {
-    max-width: 1100px; /* 内容最大宽度 */
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px; /* 各主要区域之间的间距 */
+    gap: 25px;
   }
-
-  .footer-branding {
-    margin-bottom: 10px; /* 品牌信息与社交媒体之间的间距 */
-  }
-
   .studio-name {
-    font-size: 1.6em;
-    font-weight: 500;
-    color: #333333; /* 深色标题 */
-    margin: 0 0 8px 0;
-    letter-spacing: 0.5px;
+    font-size: 1.4em;
   }
-
   .tagline {
-    font-size: 0.95em;
-    font-style: italic;
-    color: rgba(0, 0, 0, 0.6); /* 深色标语 */
-    margin: 0;
+    font-size: 0.9em;
   }
-
-  .footer-social-media {
-    display: flex;
-    justify-content: center;
-    gap: 20px; /* 社交图标之间的间距 */
-    margin-bottom: 20px; /* 社交媒体与版权之间的间距 */
-  }
-
-  .social-icon {
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition:
-      color 0.3s ease,
-      transform 0.3s ease;
-    display: inline-block; /* 确保 transform 生效 */
-  }
-
   .social-icon svg {
-    width: 26px; /* SVG图标大小 */
-    height: 26px;
-    vertical-align: middle; /* 如果需要，进行垂直对齐 */
+    width: 24px;
+    height: 24px;
   }
-  /* 为特定图标设置品牌色 */
-  .social-icon[aria-label='Instagram'] svg {
-    fill: #e4405f;
-  }
-  .social-icon[aria-label='YouTube'] svg {
-    fill: #ff0000;
-  }
-  .social-icon[aria-label='Bilibili'] svg {
-    width: 32px;
-    height: 32px;
-    margin: -4px;
-  }
-  .social-icon[aria-label='小红书'] svg {
-    fill: #ff2442;
-  } /* 小红书SVG已包含颜色 */
-  .social-icon[aria-label='Bleachfilm'] .bleachfilm-svg {
-    /* 移除发光效果 */
-  }
-  .social-icon[aria-label='Bleachfilm']:hover .bleachfilm-svg {
-    /* 移除悬停时的发光效果 */
-  }
-
-  .social-icon:hover {
-    color: #ffffff; /* 悬停时图标变亮 */
-    transform: scale(1.15); /* 轻微放大效果 */
-  }
-
   .footer-copyright {
-    font-size: 0.8em;
-    color: rgba(0, 0, 0, 0.45); /* 深色版权文字 */
-    letter-spacing: 0.3px;
+    font-size: 0.75em;
   }
-
-  .footer-copyright p {
-    margin: 0;
-  }
-
-  /* 响应式调整 */
-  @media (max-width: 768px) {
-    .footer-container {
-      gap: 25px;
-    }
-    .studio-name {
-      font-size: 1.4em;
-    }
-    .tagline {
-      font-size: 0.9em;
-    }
-    .social-icon svg {
-      width: 24px;
-      height: 24px;
-    }
-    .footer-copyright {
-      font-size: 0.75em;
-    }
-  }
+}
 </style>

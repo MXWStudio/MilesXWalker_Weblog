@@ -21,63 +21,63 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, type HTMLAttributes } from 'vue'
-  import { useIntervalFn } from '@vueuse/core'
-  import { cn } from '@/lib/utils'
-  import { Motion } from 'motion-v'
+import { ref, computed, watch, type HTMLAttributes } from 'vue'
+import { useIntervalFn } from '@vueuse/core'
+import { cn } from '@/lib/utils'
+import { Motion } from 'motion-v'
 
-  const props = withDefaults(
-    defineProps<{
-      class?: HTMLAttributes['class']
-      text: string
-      duration?: number
-      animateOnLoad: boolean
-    }>(),
-    {
-      duration: 800,
+const props = withDefaults(
+  defineProps<{
+    class?: HTMLAttributes['class']
+    text: string
+    duration?: number
+    animateOnLoad: boolean
+  }>(),
+  {
+    duration: 800,
+  }
+)
+
+const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const displayText = ref(props.text.split(''))
+const iterations = ref(0)
+
+function getRandomLetter() {
+  return alphabets[Math.floor(Math.random() * alphabets.length)]
+}
+function triggerAnimation() {
+  iterations.value = 0
+  startAnimation()
+}
+
+const { pause, resume } = useIntervalFn(
+  () => {
+    if (iterations.value < props.text.length) {
+      displayText.value = displayText.value.map((l, i) =>
+        l === ' ' ? l : i <= iterations.value ? props.text[i] : getRandomLetter()
+      )
+      iterations.value += 0.1
+    } else {
+      pause()
     }
-  )
+  },
+  computed(() => props.duration / (props.text.length * 10))
+)
 
-  const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  const displayText = ref(props.text.split(''))
-  const iterations = ref(0)
+function startAnimation() {
+  pause()
+  resume()
+}
 
-  function getRandomLetter() {
-    return alphabets[Math.floor(Math.random() * alphabets.length)]
-  }
-  function triggerAnimation() {
-    iterations.value = 0
-    startAnimation()
-  }
-
-  const { pause, resume } = useIntervalFn(
-    () => {
-      if (iterations.value < props.text.length) {
-        displayText.value = displayText.value.map((l, i) =>
-          l === ' ' ? l : i <= iterations.value ? props.text[i] : getRandomLetter()
-        )
-        iterations.value += 0.1
-      } else {
-        pause()
-      }
-    },
-    computed(() => props.duration / (props.text.length * 10))
-  )
-
-  function startAnimation() {
-    pause()
-    resume()
-  }
-
-  watch(
-    () => props.text,
-    newText => {
-      displayText.value = newText.split('')
-      triggerAnimation()
-    }
-  )
-
-  if (props.animateOnLoad) {
+watch(
+  () => props.text,
+  newText => {
+    displayText.value = newText.split('')
     triggerAnimation()
   }
+)
+
+if (props.animateOnLoad) {
+  triggerAnimation()
+}
 </script>

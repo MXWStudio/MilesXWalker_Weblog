@@ -204,334 +204,334 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+import { ref } from 'vue'
 
-  const formData = ref({
+const formData = ref({
+  name: '',
+  email: '',
+  message: '',
+})
+
+const handleSubmit = () => {
+  // 在这里添加您的表单提交逻辑，例如发送到后端API或邮件服务
+  console.log('表单已提交:', formData.value)
+  alert('感谢您的留言，我会尽快与您联系！') // 简单的提示
+
+  // 提交后重置表单
+  formData.value = {
     name: '',
     email: '',
     message: '',
-  })
-
-  const handleSubmit = () => {
-    // 在这里添加您的表单提交逻辑，例如发送到后端API或邮件服务
-    console.log('表单已提交:', formData.value)
-    alert('感谢您的留言，我会尽快与您联系！') // 简单的提示
-
-    // 提交后重置表单
-    formData.value = {
-      name: '',
-      email: '',
-      message: '',
-    }
   }
+}
 </script>
 
 <style scoped>
-  .contact-us-section {
-    padding: 60px 20px 80px; /* 上 右/左 下 */
-    background-color: #fff; /* 干净的白色背景 */
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #333;
-  }
+.contact-us-section {
+  padding: 60px 20px 80px; /* 上 右/左 下 */
+  background-color: #fff; /* 干净的白色背景 */
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #333;
+}
 
-  .contact-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+.contact-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  .contact-header {
-    text-align: center;
-    margin-bottom: 50px;
-  }
+.contact-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
 
-  .contact-header h2 {
-    font-size: 2.8em;
-    color: #2c3e50; /* 深蓝灰色 */
-    margin-bottom: 15px;
-    font-weight: 500;
-  }
+.contact-header h2 {
+  font-size: 2.8em;
+  color: #2c3e50; /* 深蓝灰色 */
+  margin-bottom: 15px;
+  font-weight: 500;
+}
 
-  .contact-header p {
-    font-size: 1.1em;
-    color: #555;
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.7;
-  }
+.contact-header p {
+  font-size: 1.1em;
+  color: #555;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
 
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* 左侧稍窄，右侧稍宽 */
+  gap: 50px; /* 两列之间的间距 */
+  align-items: flex-start; /* 顶部对齐 */
+}
+
+/* 左侧：图片与简要信息 */
+.contact-visual-info {
+  position: sticky; /* 尝试让左侧在滚动时有一定粘性效果 */
+  top: 100px; /* 粘性定位的起始点，根据您的Header高度调整 */
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 12px; /* 图片圆角 */
+  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.image-wrapper img {
+  display: block;
+  width: 100%;
+  height: auto; /* 或固定高度，如 height: 500px; object-fit: cover; */
+  min-height: 400px; /* 确保图片有一定高度 */
+  object-fit: cover;
+  transition: transform 0.4s ease-out;
+}
+.image-wrapper:hover img {
+  transform: scale(1.05);
+}
+
+.image-overlay-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 25px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+  color: #fff;
+  box-sizing: border-box;
+  text-align: center;
+}
+.image-overlay-text p {
+  margin: 0;
+  font-size: 1.1em;
+  font-style: italic;
+}
+
+.quick-info {
+  padding: 10px 0;
+}
+
+.info-block {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  font-size: 1.05em;
+}
+
+.info-icon {
+  font-size: 1.4em;
+  margin-right: 12px;
+  color: #007bff; /* 图标颜色 */
+}
+
+.info-link,
+.info-text {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.info-link:hover {
+  color: #0056b3;
+}
+
+/* 右侧：详细信息与表单 */
+.contact-details-form {
+  padding: 20px 0; /* 给右侧一些呼吸空间 */
+}
+
+.social-media-links-detailed {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.social-media-links-detailed h3 {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.social-icons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.social-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.social-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-image {
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.social-card:hover .card-image img {
+  transform: scale(1.1);
+}
+
+.card-content {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f9fa;
+}
+
+.card-content svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.card-content span {
+  font-size: 0.9em;
+  color: #495057;
+}
+
+.contact-form-main {
+  background: #f8f9fa; /* 表单区域背景色，与页面背景稍作区分 */
+  padding: 35px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+}
+.form-intro {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #555;
+  font-size: 1em;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ced4da; /* 更柔和的边框 */
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: inherit;
+  box-sizing: border-box; /* 确保padding不影响总宽度 */
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-group textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  background-color: #007bff; /* 主题色 */
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.05em;
+  font-weight: 500;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* 深一点的主题色 */
+  transform: translateY(-2px);
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
   .contact-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr; /* 左侧稍窄，右侧稍宽 */
-    gap: 50px; /* 两列之间的间距 */
-    align-items: flex-start; /* 顶部对齐 */
+    grid-template-columns: 1fr; /* 中等屏幕变为单列 */
+    gap: 30px;
   }
-
-  /* 左侧：图片与简要信息 */
   .contact-visual-info {
-    position: sticky; /* 尝试让左侧在滚动时有一定粘性效果 */
-    top: 100px; /* 粘性定位的起始点，根据您的Header高度调整 */
+    position: static; /* 取消粘性定位 */
+    text-align: center; /* 居中图片和信息 */
   }
-
   .image-wrapper {
-    position: relative;
-    border-radius: 12px; /* 图片圆角 */
-    overflow: hidden;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* 限制图片最大宽度 */
+    margin-left: auto;
+    margin-right: auto;
   }
+  .quick-info {
+    justify-content: center; /* 居中简要信息 */
+  }
+  .info-block {
+    justify-content: center;
+  }
+  .social-media-links-detailed h3 {
+    font-size: 1.2em;
+  }
+  .contact-details-form {
+    padding-top: 0;
+  }
+}
 
-  .image-wrapper img {
-    display: block;
-    width: 100%;
-    height: auto; /* 或固定高度，如 height: 500px; object-fit: cover; */
-    min-height: 400px; /* 确保图片有一定高度 */
-    object-fit: cover;
-    transition: transform 0.4s ease-out;
+@media (max-width: 576px) {
+  .contact-header h2 {
+    font-size: 2.2em;
   }
-  .image-wrapper:hover img {
-    transform: scale(1.05);
+  .contact-header p {
+    font-size: 1em;
   }
-
-  .image-overlay-text {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 25px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
-    color: #fff;
-    box-sizing: border-box;
-    text-align: center;
+  .form-group input,
+  .form-group textarea,
+  .submit-button {
+    font-size: 0.95em;
   }
   .image-overlay-text p {
-    margin: 0;
-    font-size: 1.1em;
-    font-style: italic;
+    font-size: 1em;
   }
+}
 
-  .quick-info {
-    padding: 10px 0;
-  }
-
-  .info-block {
-    display: flex;
-    align-items: center;
-    margin-bottom: 18px;
-    font-size: 1.05em;
-  }
-
-  .info-icon {
-    font-size: 1.4em;
-    margin-right: 12px;
-    color: #007bff; /* 图标颜色 */
-  }
-
-  .info-link,
-  .info-text {
-    color: #333;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  .info-link:hover {
-    color: #0056b3;
-  }
-
-  /* 右侧：详细信息与表单 */
-  .contact-details-form {
-    padding: 20px 0; /* 给右侧一些呼吸空间 */
-  }
-
-  .social-media-links-detailed {
-    margin-bottom: 40px;
-    text-align: center;
-  }
-
-  .social-media-links-detailed h3 {
-    font-size: 1.3em;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    font-weight: 500;
-  }
-
+@media (max-width: 768px) {
   .social-icons-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 20px;
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  .social-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+@media (max-width: 480px) {
+  .social-icons-grid {
+    grid-template-columns: 1fr;
   }
-
-  .social-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  .card-image {
-    width: 100%;
-    height: 120px;
-    overflow: hidden;
-  }
-
-  .card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .social-card:hover .card-image img {
-    transform: scale(1.1);
-  }
-
-  .card-content {
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #f8f9fa;
-  }
-
-  .card-content svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-  }
-
-  .card-content span {
-    font-size: 0.9em;
-    color: #495057;
-  }
-
-  .contact-form-main {
-    background: #f8f9fa; /* 表单区域背景色，与页面背景稍作区分 */
-    padding: 35px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
-  }
-  .form-intro {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #555;
-    font-size: 1em;
-  }
-
-  .form-group {
-    margin-bottom: 25px;
-  }
-
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #ced4da; /* 更柔和的边框 */
-    border-radius: 6px;
-    font-size: 1em;
-    font-family: inherit;
-    box-sizing: border-box; /* 确保padding不影响总宽度 */
-    transition:
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-  .form-group input:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-
-  .form-group textarea {
-    min-height: 130px;
-    resize: vertical;
-  }
-
-  .submit-button {
-    display: block;
-    width: 100%;
-    background-color: #007bff; /* 主题色 */
-    color: white;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 500;
-    transition:
-      background-color 0.3s ease,
-      transform 0.2s ease;
-  }
-
-  .submit-button:hover {
-    background-color: #0056b3; /* 深一点的主题色 */
-    transform: translateY(-2px);
-  }
-
-  /* 响应式调整 */
-  @media (max-width: 992px) {
-    .contact-layout {
-      grid-template-columns: 1fr; /* 中等屏幕变为单列 */
-      gap: 30px;
-    }
-    .contact-visual-info {
-      position: static; /* 取消粘性定位 */
-      text-align: center; /* 居中图片和信息 */
-    }
-    .image-wrapper {
-      max-width: 500px; /* 限制图片最大宽度 */
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .quick-info {
-      justify-content: center; /* 居中简要信息 */
-    }
-    .info-block {
-      justify-content: center;
-    }
-    .social-media-links-detailed h3 {
-      font-size: 1.2em;
-    }
-    .contact-details-form {
-      padding-top: 0;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .contact-header h2 {
-      font-size: 2.2em;
-    }
-    .contact-header p {
-      font-size: 1em;
-    }
-    .form-group input,
-    .form-group textarea,
-    .submit-button {
-      font-size: 0.95em;
-    }
-    .image-overlay-text p {
-      font-size: 1em;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .social-icons-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 480px) {
-    .social-icons-grid {
-      grid-template-columns: 1fr;
-    }
-  }
+}
 </style>

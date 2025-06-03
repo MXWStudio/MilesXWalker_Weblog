@@ -7,12 +7,12 @@
 </template>
 
 <script setup>
-  import Hero from '@/components/ui/Hero.vue'
-  // Gallery 组件已移除
+import Hero from '@/components/ui/Hero.vue'
+// Gallery 组件已移除
 </script>
 
 <style scoped>
-  .home {
-    flex: 1;
-  }
+.home {
+  flex: 1;
+}
 </style>

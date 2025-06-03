@@ -15,6 +15,9 @@ MilesXWalkerStudio 是一个基于Vue 3 + TypeScript + Vite构建的现代化前
 - **路由管理**: Vue Router 4
 - **样式框架**: Tailwind CSS
 - **UI组件**: Inspira UI
+- **3D渲染**: Three.js + TresJS
+- **3D模型**: ReadyPlayerMe GLB格式
+- **支付系统**: Stripe API
 - **工具库**: VueUse, Lucide Vue
 - **部署平台**: Vercel
 
@@ -165,10 +168,74 @@ VITE_APP_ENV=production
 VITE_API_BASE_URL=https://your-api-domain.com
 VITE_API_TIMEOUT=10000
 
+# Ready Player Me 配置
+VITE_RPM_SUBDOMAIN=mxw
+VITE_RPM_APPLICATION_ID=683e4b6fbf64bc8c6cab557b
+RPM_API_KEY=your_ready_player_me_api_key
+
+# 支付系统配置 (Stripe) 🆕
+# ========================================
+# 🔑 服务器端密钥 - 已配置
+STRIPE_SECRET_KEY=sk_live_vzhe1sDF1FqnsLZEF9hEMvqj0AEHd6F-vyF
+# 前端可发布密钥 - 需要从Stripe控制台获取
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_your_publishable_key_here
+VITE_PAYMENT_API_URL=https://your-domain.com/api/payment
+VITE_WEBHOOK_ENDPOINT=/api/webhooks/stripe
+
 # 功能开关
 VITE_ENABLE_PWA=true
 VITE_ENABLE_MOCK=false
+VITE_ENABLE_PAYMENTS=true
 ```
+
+### 📋 API 密钥配置指南
+
+#### 🔐 ✅ Stripe 支付系统已就绪！
+
+项目已成功配置 Stripe 支付系统，当前状态：
+
+**✅ 已完成配置：**
+
+- ✅ 测试环境可发布密钥：已配置并可用
+- ✅ 服务器端密钥：已配置 (混合模式)
+- ✅ 本地环境变量文件：`.env` 已创建
+- ✅ 支付功能开关：已启用
+- ✅ 前端支付组件：已创建完成
+- ✅ 后端API服务：已创建完成
+- ✅ 路由配置：支付页面已就绪
+
+**🧪 立即测试支付功能：**
+
+```bash
+# 启动完整开发环境
+npm run start
+
+# 访问支付测试页面
+open http://localhost:5173/payment
+```
+
+**📚 详细测试指南：** 📖 [支付功能测试指南](./config/payment-testing-guide.md)
+
+**🔑 测试卡号：**
+
+- 成功支付：`4242 4242 4242 4242`
+- 被拒绝卡：`4000 0000 0000 0002`
+- 过期日期：任意未来日期，CVC：任意3位数
+
+**需要完成的配置（可选）：**
+
+1. 🔑 **获取匹配的测试服务器密钥**：
+
+   - 访问 [Stripe 控制台](https://dashboard.stripe.com/apikeys)
+   - 切换到 **"查看测试数据"** 模式
+   - 复制测试服务器端密钥 (以 `sk_test_` 开头)
+   - 在 `.env` 文件中设置：`STRIPE_SECRET_KEY=sk_test_...`
+
+2. 🚀 **生产环境配置**：
+   - 获取生产环境密钥对 (pk*live*... 和 sk*live*...)
+   - 在 Vercel 项目设置中配置环境变量
+
+**详细配置说明：** 📖 [API 密钥配置指南](./config/api-keys-setup.md)
 
 ### 部署优化特性
 
@@ -247,3 +314,43 @@ MIT License
 3. 查看 [文档中心](./docs/README.md) 获取完整指南
 
 _本项目遵循Vue.js最佳实践，为初学者提供友好的开发体验。_
+
+## 🌟 项目特性
+
+### 🎭 3D虚拟头像系统
+
+项目集成了先进的3D头像展示功能：
+
+- **🎨 3D模型渲染**: 基于Three.js + TresJS实现高性能3D渲染
+- **👤 虚拟人物**: 支持ReadyPlayerMe标准GLB模型格式
+- **🎮 交互控制**: 鼠标拖拽旋转、缩放控制
+- **📱 响应式设计**: 适配不同屏幕尺寸和设备
+- **⚡ 异步加载**: 智能加载优化和错误处理
+- **🎨 多种模式**:
+  - `decorative` - 装饰模式：适合侧边栏展示
+  - `full` - 完整模式：支持完整交互控制
+  - `simple` - 简化模式：基础展示功能
+
+#### 使用方式
+
+```vue
+<!-- 基础使用 -->
+<Avatar3D />
+
+<!-- 自定义配置 -->
+<Avatar3D
+  mode="decorative"
+  height="280px"
+  :show-controls="false"
+  :show-ground="false"
+  :initial-scale="0.8"
+  :initial-position="[0, -0.8, 0]"
+/>
+```
+
+#### 功能特点
+
+- 🎯 **易于集成**: 单个组件即可实现3D头像功能
+- 🚀 **性能优化**: 支持异步加载和错误恢复
+- 🎨 **美观设计**: 渐变背景和加载动画
+- 📐 **参数可配**: 支持多种展示模式和自定义配置

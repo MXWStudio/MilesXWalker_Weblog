@@ -11,6 +11,10 @@ import Terms from '../views/Terms.vue'
 import Privacy from '../views/Privacy.vue'
 import Blog from '../views/Blog.vue'
 import Web3D from '../views/articles/Web3D.vue'
+import AvatarTest from '../views/AvatarTest.vue'
+// 支付相关页面
+import PaymentView from '../views/PaymentView.vue'
+import PaymentSuccess from '../components/payment/PaymentSuccess.vue'
 
 const routes = [
   {
@@ -61,6 +65,33 @@ const routes = [
     component: Blog,
     meta: {
       title: '博客文章',
+    },
+  },
+  {
+    path: '/avatar-test',
+    name: 'AvatarTest',
+    component: AvatarTest,
+    meta: {
+      title: '3D虚拟形象测试',
+    },
+  },
+  // 支付相关路由
+  {
+    path: '/payment',
+    name: 'Payment',
+    component: PaymentView,
+    meta: {
+      title: '安全支付',
+      requiresAuth: false, // 支付页面不需要登录
+    },
+  },
+  {
+    path: '/payment-success',
+    name: 'PaymentSuccess',
+    component: PaymentSuccess,
+    meta: {
+      title: '支付成功',
+      requiresAuth: false,
     },
   },
   {

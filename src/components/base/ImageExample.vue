@@ -46,61 +46,60 @@
 </template>
 
 <script setup>
-  // 背景图片
-  const backgroundImage = new URL('@/assets/images/backgrounds/example-bg.jpg', import.meta.url)
-    .href
+// 背景图片
+const backgroundImage = new URL('@/assets/images/backgrounds/example-bg.jpg', import.meta.url).href
 
-  // 预览图片
-  const previewImage = new URL('@/assets/images/photos/example.jpg', import.meta.url).href
+// 预览图片
+const previewImage = new URL('@/assets/images/photos/example.jpg', import.meta.url).href
 
-  // 预览方法
-  const showPreview = () => {
-    // 这里可以实现图片预览逻辑
-    console.log('显示图片预览')
-  }
+// 预览方法
+const showPreview = () => {
+  // 这里可以实现图片预览逻辑
+  console.log('显示图片预览')
+}
 </script>
 
 <style scoped>
-  .image-examples {
-    padding: 20px;
-  }
+.image-examples {
+  padding: 20px;
+}
 
-  .image-section {
-    margin-bottom: 30px;
-  }
+.image-section {
+  margin-bottom: 30px;
+}
 
-  .basic-image {
-    max-width: 100%;
-    height: auto;
-  }
+.basic-image {
+  max-width: 100%;
+  height: auto;
+}
 
-  .responsive-image {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-  }
+.responsive-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
 
-  .background-image {
-    width: 100%;
-    height: 200px;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-  }
+.background-image {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
 
-  .preview-thumbnail {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
+.preview-thumbnail {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
 
-  .preview-thumbnail:hover {
-    transform: scale(1.05);
-  }
+.preview-thumbnail:hover {
+  transform: scale(1.05);
+}
 </style>
