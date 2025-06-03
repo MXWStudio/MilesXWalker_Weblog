@@ -1,0 +1,562 @@
+# Vue Router 使用规范
+
+## 路由基础配置
+
+### 路由器配置
+```typescript
+// router/index.ts
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
+/**
+ * 路由配置
+ * 配置应用的所有路由规则、导航守卫和路由元信息
+ */
+
+// 路由记录类型扩展
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string           // 页面标题
+    requiresAuth?: boolean   // 是否需要认证
+    roles?: string[]         // 允许访问的角色
+    layout?: string          // 使用的布局组件
+    keepAlive?: boolean      // 是否缓存组件
+    breadcrumb?: string[]    // 面包屑导航
+    icon?: string           // 菜单图标
+    hidden?: boolean        // 是否在菜单中隐藏
+    order?: number          // 菜单排序
+  }
+}
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/Home.vue'),
+    meta: {
+      title: '首页',
+      icon: 'home',
+      order: 1
+    }
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/About.vue'),
+    meta: {
+      title: '关于我们',
+      icon: 'info',
+      order: 2
+    }
+  },
+  {
+    path: '/auth',
+    name: 'Auth',
+    component: () => import('@/layouts/AuthLayout.vue'),
+    redirect: '/auth/login',
+    meta: {
+      title: '认证',
+      hidden: true
+    },
+    children: [
+      {
+        path: 'login',
+        name: 'Login',
+        component: () => import('@/views/auth/Login.vue'),
+        meta: {
+          title: '登录',
+          layout: 'auth'
+        }
+      },
+      {
+        path: 'register',
+        name: 'Register',
+        component: () => import('@/views/auth/Register.vue'),
+        meta: {
+          title: '注册',
+          layout: 'auth'
+        }
+      }
+    ]
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/layouts/DashboardLayout.vue'),
+    meta: {
+      title: '控制台',
+      requiresAuth: true,
+      icon: 'dashboard',
+      order: 3
+    },
+    children: [
+      {
+        path: '',
+        name: 'DashboardHome',
+        component: () => import('@/views/dashboard/Home.vue'),
+        meta: {
+          title: '控制台首页',
+          breadcrumb: ['控制台']
+        }
+      },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('@/views/dashboard/Profile.vue'),
+        meta: {
+          title: '个人资料',
+          breadcrumb: ['控制台', '个人资料']
+        }
+      },
+      {
+        path: 'admin',
+        name: 'Admin',
+        component: () => import('@/views/dashboard/Admin.vue'),
+        meta: {
+          title: '管理员面板',
+          requiresAuth: true,
+          roles: ['admin'],
+          breadcrumb: ['控制台', '管理员面板']
+        }
+      }
+    ]
+  },
+  {
+    path: '/404',
+    name: 'NotFound',
+    component: () => import('@/views/error/404.vue'),
+    meta: {
+      title: '页面未找到',
+      hidden: true
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404'
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  }
+})
+
+export default router
+```
+
+## 导航守卫配置
+
+### 全局前置守卫
+```typescript
+// router/guards.ts
+import type { Router } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { useAppStore } from '@/stores/app' 
+
+export function setupRouterGuards(router: Router) {
+  // 全局前置守卫
+  router.beforeEach(async (to, from, next) => {
+    const userStore = useUserStore()
+    const appStore = useAppStore()
+
+    // 显示loading
+    appStore.setLoading(true)
+
+    try {
+      // 设置页面标题
+      if (to.meta.title) {
+        document.title = `${to.meta.title} - ${import.meta.env.VITE_APP_TITLE}`
+      }
+
+      // 检查认证要求
+      if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+        // 保存重定向路径
+        appStore.setLoginRedirect(to.fullPath)
+        next('/auth/login')
+        return
+      }
+
+      // 检查角色权限
+      if (to.meta.roles && to.meta.roles.length > 0) {
+        const userRole = userStore.user?.role
+        if (!userRole || !to.meta.roles.includes(userRole)) {
+          next('/404')
+          return
+        }
+      }
+
+      // 如果已登录用户访问登录页，重定向到首页
+      if (to.name === 'Login' && userStore.isAuthenticated) {
+        next('/')
+        return
+      }
+
+      next()
+    } catch (error) {
+      console.error('路由守卫错误:', error)
+      next('/404')
+    }
+  })
+
+  // 全局后置钩子
+  router.afterEach((to, from) => {
+    const appStore = useAppStore()
+    
+    // 隐藏loading
+    appStore.setLoading(false)
+
+    // 更新面包屑
+    if (to.meta.breadcrumb) {
+      appStore.setBreadcrumb(to.meta.breadcrumb)
+    }
+
+    // 路由切换后的埋点统计
+    if (typeof gtag !== 'undefined') {
+      gtag('config', 'GA_TRACKING_ID', {
+        page_path: to.fullPath
+      })
+    }
+  })
+
+  // 路由错误处理
+  router.onError((error) => {
+    console.error('路由错误:', error)
+    // 可以发送错误到监控服务
+  })
+}
+```
+
+## 路由组织结构
+
+### 目录结构规范
+```
+router/
+├── index.ts          # 路由器配置
+├── guards.ts         # 导航守卫
+├── routes/           # 路由模块
+│   ├── auth.ts       # 认证相关路由
+│   ├── dashboard.ts  # 控制台路由
+│   ├── user.ts       # 用户相关路由
+│   └── admin.ts      # 管理员路由
+└── types.ts          # 路由类型定义
+```
+
+### 模块化路由配置
+```typescript
+// router/routes/dashboard.ts
+import type { RouteRecordRaw } from 'vue-router'
+
+export const dashboardRoutes: RouteRecordRaw[] = [
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/layouts/DashboardLayout.vue'),
+    meta: {
+      title: '控制台',
+      requiresAuth: true,
+      icon: 'dashboard'
+    },
+    children: [
+      {
+        path: '',
+        name: 'DashboardHome',
+        component: () => import('@/views/dashboard/Home.vue'),
+        meta: {
+          title: '控制台首页'
+        }
+      },
+      {
+        path: 'analytics',
+        name: 'Analytics',
+        component: () => import('@/views/dashboard/Analytics.vue'),
+        meta: {
+          title: '数据分析',
+          keepAlive: true
+        }
+      }
+    ]
+  }
+]
+
+// router/index.ts 中引入
+import { dashboardRoutes } from './routes/dashboard'
+
+const routes: RouteRecordRaw[] = [
+  ...authRoutes,
+  ...dashboardRoutes,
+  ...userRoutes
+]
+```
+
+## 路由元信息规范
+
+### 标准元信息字段
+```typescript
+interface CustomRouteMeta {
+  // 基础信息
+  title?: string              // 页面标题
+  description?: string        // 页面描述
+  keywords?: string[]         // SEO关键词
+  
+  // 权限控制
+  requiresAuth?: boolean      // 是否需要登录
+  roles?: string[]            // 允许的角色
+  permissions?: string[]      // 需要的权限
+  
+  // 布局和缓存
+  layout?: string            // 布局组件名
+  keepAlive?: boolean        // 是否缓存
+  transition?: string        // 页面切换动画
+  
+  // 导航和菜单
+  icon?: string             // 菜单图标
+  hidden?: boolean          // 是否在菜单中隐藏
+  order?: number           // 菜单排序
+  breadcrumb?: string[]    // 面包屑路径
+  
+  // 其他配置
+  requiresOnline?: boolean  // 是否需要网络连接
+  preload?: string[]       // 需要预加载的数据
+  analytics?: boolean      // 是否启用分析
+}
+```
+
+## 动态路由管理
+
+### 动态添加路由
+```typescript
+// composables/useRoutes.ts
+import { useRouter } from 'vue-router'
+
+export function useRoutes() {
+  const router = useRouter()
+
+  /**
+   * 动态添加路由
+   */
+  const addRoute = (route: RouteRecordRaw) => {
+    router.addRoute(route)
+  }
+
+  /**
+   * 根据用户权限添加路由
+   */
+  const addRoutesByPermissions = (permissions: string[]) => {
+    const dynamicRoutes = getDynamicRoutesByPermissions(permissions)
+    dynamicRoutes.forEach(route => {
+      router.addRoute(route)
+    })
+  }
+
+  /**
+   * 移除路由
+   */
+  const removeRoute = (name: string) => {
+    if (router.hasRoute(name)) {
+      router.removeRoute(name)
+    }
+  }
+
+  /**
+   * 获取所有路由
+   */
+  const getAllRoutes = () => {
+    return router.getRoutes()
+  }
+
+  return {
+    addRoute,
+    addRoutesByPermissions,
+    removeRoute,
+    getAllRoutes
+  }
+}
+```
+
+## 路由懒加载和预加载
+
+### 懒加载配置
+```typescript
+// 基础懒加载
+const Home = () => import('@/views/Home.vue')
+
+// 带webpackChunkName注释的懒加载
+const Dashboard = () => import(
+  /* webpackChunkName: "dashboard" */ 
+  '@/views/Dashboard.vue'
+)
+
+// 条件性懒加载
+const AdminPanel = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return import('@/views/admin/AdminPanel.vue')
+  }
+  return import(
+    /* webpackChunkName: "admin" */
+    '@/views/admin/AdminPanel.vue'
+  )
+}
+```
+
+### 路由预加载
+```typescript
+// composables/useRoutePreload.ts
+export function useRoutePreload() {
+  const router = useRouter()
+
+  /**
+   * 预加载路由组件
+   */
+  const preloadRoute = async (routeName: string) => {
+    const route = router.resolve({ name: routeName })
+    if (route.matched.length > 0) {
+      const component = route.matched[0].components?.default
+      if (typeof component === 'function') {
+        try {
+          await component()
+        } catch (error) {
+          console.warn(`预加载路由 ${routeName} 失败:`, error)
+        }
+      }
+    }
+  }
+
+  /**
+   * 批量预加载路由
+   */  
+  const preloadRoutes = async (routeNames: string[]) => {
+    await Promise.allSettled(
+      routeNames.map(name => preloadRoute(name))
+    )
+  }
+
+  return {
+    preloadRoute,
+    preloadRoutes
+  }
+}
+```
+
+## 路由工具函数
+
+### 路由操作组合式函数
+```typescript
+// composables/useRouter.ts
+import { useRouter, useRoute } from 'vue-router'
+
+export function useRouterHelpers() {
+  const router = useRouter()
+  const route = useRoute()
+
+  /**
+   * 安全的路由跳转
+   */
+  const safePush = async (to: string | object) => {
+    try {
+      await router.push(to)
+    } catch (error) {
+      // 处理导航失败
+      if (error.name === 'NavigationDuplicated') {
+        // 重复导航，忽略
+        return
+      }
+      console.error('路由跳转失败:', error)
+    }
+  }
+
+  /**
+   * 返回上一页
+   */
+  const goBack = () => {
+    if (window.history.length > 1) {
+      router.go(-1)
+    } else {
+      router.push('/')
+    }
+  }
+
+  /**
+   * 刷新当前页面
+   */
+  const refresh = async () => {
+    const currentRoute = route.fullPath
+    await router.push('/refresh')
+    await nextTick()
+    await router.push(currentRoute)
+  }
+
+  /**
+   * 获取查询参数
+   */
+  const getQuery = <T = any>(key: string, defaultValue?: T): T => {
+    const value = route.query[key]
+    if (value === undefined) return defaultValue as T
+    return value as T  
+  }
+
+  /**
+   * 更新查询参数
+   */
+  const updateQuery = (query: Record<string, any>) => {
+    router.push({
+      path: route.path,
+      query: { ...route.query, ...query }
+    })
+  }
+
+  return {
+    safePush,
+    goBack,
+    refresh,
+    getQuery,
+    updateQuery
+  }
+}
+```
+
+## 路由测试
+
+### 路由单元测试
+```typescript
+import { mount } from '@vue/test-utils'
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
+
+describe('路由测试', () => {
+  let router: Router
+
+  beforeEach(async () => {
+    router = createRouter({
+      history: createWebHistory(),
+      routes: [
+        {
+          path: '/',
+          name: 'Home',
+          component: Home
+        }
+      ]
+    })
+
+    router.push('/')
+    await router.isReady()
+  })
+
+  it('应该正确渲染首页', async () => {
+    const wrapper = mount(Home, {
+      global: {
+        plugins: [router]
+      }
+    })
+
+    expect(wrapper.html()).toContain('首页内容')
+  })
+})
+``` 

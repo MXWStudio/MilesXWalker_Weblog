@@ -1,5 +1,5 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 /**
  * 合并 Tailwind CSS 类名的工具函数
@@ -7,7 +7,7 @@ import { twMerge } from "tailwind-merge";
  * @returns 合并后的类名字符串
  */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 /**
@@ -16,4 +16,4 @@ export function cn(...inputs: ClassValue[]) {
  * type Colors = { primary: 'red'; secondary: 'blue' };
  * type ColorValues = ObjectValues<Colors>; // 'red' | 'blue'
  */
-export type ObjectValues<T> = T[keyof T]; 
+export type ObjectValues<T> = T[keyof T]

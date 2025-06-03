@@ -1,8 +1,8 @@
- # photos 目录说明
+# photos 目录说明
 
 本目录专门用于存放照片类图片资源。
 
 - 用于页面作品展示、个人相册等与摄影相关的图片。
-- 命名建议：photo_描述_编号.jpg（如 photo_lake_01.jpg）。
+- 命名建议：photo*描述*编号.jpg（如 photo_lake_01.jpg）。
 - 建议按主题或时间进一步细分子目录（如 travel、nature、2024 等）。
 - 图片应为高质量JPG/PNG，大小适中，便于网页加载。

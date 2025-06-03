@@ -2,7 +2,10 @@
   <div class="web3d-article-float">
     <div class="web3d-article-content">
       <h1>我们需要一个属于创作者的 Web3D 虚拟人物标准</h1>
-      <p class="meta">作者：Miles Walker &nbsp;|&nbsp; 分类：Web3D · 虚拟人物 · 创作标准 &nbsp;|&nbsp; 发布时间：2024-06-01</p>
+      <p class="meta">
+        作者：Miles Walker &nbsp;|&nbsp; 分类：Web3D · 虚拟人物 · 创作标准 &nbsp;|&nbsp;
+        发布时间：2024-06-01
+      </p>
       <section class="content">
         <h2>前言：当我开始"虚拟人+摄影"创作时，遇到了什么？</h2>
         <p>
@@ -13,9 +16,7 @@
           <li>想添加一个"拿相机的动作"，每个平台的定义方式完全不同；</li>
           <li>想发布在网页上，又得压缩、转换、加脚本……</li>
         </ul>
-        <p>
-          我开始思考：我们是不是缺少一个真正统一、开放、轻量、Web友好的虚拟人标准？
-        </p>
+        <p>我开始思考：我们是不是缺少一个真正统一、开放、轻量、Web友好的虚拟人标准？</p>
         <hr class="section-divider" />
         <h2>我找到了两个"最接近"的答案：glTF 和 VRM</h2>
         <div class="web3d-article-video-float">
@@ -27,8 +28,8 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-          </iframe>
+            allowfullscreen
+          ></iframe>
           <!-- 将第二个视频也移到这里 -->
           <iframe
             width="420"
@@ -38,21 +39,27 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-          </iframe>
+            allowfullscreen
+          ></iframe>
         </div>
         <h3>✅ 什么是 glTF？</h3>
         <p>
-          glTF 是一个被称为"3D界的JPEG"的文件格式，由 Khronos Group 推出。它让3D模型像图片一样轻便，能快速加载到网页、APP、VR、AR里，支持骨骼、动画、PBR 材质等。<br>
+          glTF 是一个被称为"3D界的JPEG"的文件格式，由 Khronos Group
+          推出。它让3D模型像图片一样轻便，能快速加载到网页、APP、VR、AR里，支持骨骼、动画、PBR
+          材质等。
+          <br />
           <strong>📦 适合通用模型传输。</strong>
         </p>
         <h3>✅ 什么是 VRM？</h3>
         <p>
-          VRM 是一个基于 glTF 扩展的虚拟人标准，由日本Unity社区提出，专门用来描述人物的骨架、表情、服装、挂件、物理效果。它是目前 Vtuber、虚拟偶像、虚拟人展示中最常用的格式之一。<br>
+          VRM 是一个基于 glTF
+          扩展的虚拟人标准，由日本Unity社区提出，专门用来描述人物的骨架、表情、服装、挂件、物理效果。它是目前
+          Vtuber、虚拟偶像、虚拟人展示中最常用的格式之一。
+          <br />
           <strong>🧍 适合人物语义、动作表现。</strong>
         </p>
         <h3>✅ 组合使用：glTF（通用模型） + VRM（虚拟人定义），是目前最实用的"事实标准"。</h3>
-        
+
         <!-- 标准对比表格 -->
         <div class="compare-table-wrapper">
           <table class="compare-table">
@@ -86,9 +93,8 @@
               </tr>
             </tbody>
           </table>
-          
         </div>
-        
+
         <!-- 新增：我们真正需要的标准 -->
         <h2>我们真正需要的是一种什么样的标准？</h2>
         <ul>
@@ -125,12 +131,15 @@
         <hr class="section-divider" />
         <h2>结语：虚拟人标准，不是平台说了算，而是我们一起定义的</h2>
         <p>
-          一个开放、轻量、跨平台的虚拟人+动作+挂件标准，将是Web3D时代最重要的基础设施之一。<br>
+          一个开放、轻量、跨平台的虚拟人+动作+挂件标准，将是Web3D时代最重要的基础设施之一。
+          <br />
           它值得每一位创作者、艺术家、设计师共同参与。
         </p>
         <p>
-          📧 如果你想一起参与这项实践，欢迎联系我：<br>
-          👉 milesxwalkerstudio@gmail.com<br>
+          📧 如果你想一起参与这项实践，欢迎联系我：
+          <br />
+          👉 milesxwalkerstudio@gmail.com
+          <br />
         </p>
       </section>
     </div>
@@ -138,117 +147,120 @@
 </template>
 
 <script setup>
-// 目前无需特殊逻辑
+  // 目前无需特殊逻辑
 </script>
 
 <style scoped>
-.web3d-article-float {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 64px 24px 80px 24px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(118,159,205,0.08);
-}
-.web3d-article-content {
-  text-align: left;
-}
-.web3d-article-video-float {
-  float: right;
-  width: 420px;
-  margin: 0 0 24px 36px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(118,159,205,0.10);
-  /* background: #000; */ /* 移除背景色，使视频间隙透明，显示页面背景 */
-}
-.web3d-article-video-float iframe {
-  width: 100%;
-  height: 236px;
-  border-radius: 12px;
-  display: block;
-}
-/* 为同一列中的多个视频之间添加间距 */
-.web3d-article-video-float iframe:not(:last-child) {
-  margin-bottom: 16px; 
-}
-@media (max-width: 900px) {
+  .web3d-article-float {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 24px 80px 24px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(118, 159, 205, 0.08);
+  }
+  .web3d-article-content {
+    text-align: left;
+  }
   .web3d-article-video-float {
-    float: none;
-    width: 100%;
-    margin: 0 0 18px 0;
+    float: right;
+    width: 420px;
+    margin: 0 0 24px 36px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(118, 159, 205, 0.1);
+    /* background: #000; */ /* 移除背景色，使视频间隙透明，显示页面背景 */
   }
   .web3d-article-video-float iframe {
-    height: 200px;
+    width: 100%;
+    height: 236px;
+    border-radius: 12px;
+    display: block;
   }
-}
-.web3d-article-content h1 {
-  font-size: 1.6em;
-  color: #2c3e50;
-  margin-bottom: 24px;
-  font-weight: 700;
-  line-height: 1.3;
-  text-align: center;
-}
-.meta {
-  color: #888;
-  font-size: 0.95em;
-  margin-bottom: 36px;
-}
-.content p, .content ul {
-  font-size: 1em;
-  color: #333;
-  line-height: 1.8;
-  margin-bottom: 18px;
-}
-.content strong {
-  color: #4a6fa5;
-}
-.content h2 {
-  font-size: 1.08em;
-  color: #4a6fa5;
-  margin: 36px 0 14px 0;
-  font-weight: 700;
-}
-.content h3 {
-  font-size: 0.98em;
-  color: #2c3e50;
-  margin: 18px 0 8px 0;
-  font-weight: 600;
-}
-.section-divider {
-  border: none;
-  border-top: 2px dashed #e0e7ef;
-  margin: 36px 0 30px 0;
-}
-.compare-table-wrapper {
-  margin: 32px 0 36px 0;
-  overflow-x: auto;
-}
-.compare-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #f8fafc;
-  border-radius: 10px;
-  overflow: hidden;
-  font-size: 0.98em;
-}
-.compare-table th, .compare-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e0e7ef;
-  text-align: left;
-}
-.compare-table th {
-  background: #e0e7ef;
-  color: #2c3e50;
-  font-weight: 700;
-}
-.compare-table tr:last-child td {
-  border-bottom: none;
-}
-@media (max-width: 600px) {
-  .compare-table th, .compare-table td {
-    padding: 10px 8px;
+  /* 为同一列中的多个视频之间添加间距 */
+  .web3d-article-video-float iframe:not(:last-child) {
+    margin-bottom: 16px;
+  }
+  @media (max-width: 900px) {
+    .web3d-article-video-float {
+      float: none;
+      width: 100%;
+      margin: 0 0 18px 0;
+    }
+    .web3d-article-video-float iframe {
+      height: 200px;
+    }
+  }
+  .web3d-article-content h1 {
+    font-size: 1.6em;
+    color: #2c3e50;
+    margin-bottom: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .meta {
+    color: #888;
     font-size: 0.95em;
+    margin-bottom: 36px;
   }
-}
-</style> 
+  .content p,
+  .content ul {
+    font-size: 1em;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 18px;
+  }
+  .content strong {
+    color: #4a6fa5;
+  }
+  .content h2 {
+    font-size: 1.08em;
+    color: #4a6fa5;
+    margin: 36px 0 14px 0;
+    font-weight: 700;
+  }
+  .content h3 {
+    font-size: 0.98em;
+    color: #2c3e50;
+    margin: 18px 0 8px 0;
+    font-weight: 600;
+  }
+  .section-divider {
+    border: none;
+    border-top: 2px dashed #e0e7ef;
+    margin: 36px 0 30px 0;
+  }
+  .compare-table-wrapper {
+    margin: 32px 0 36px 0;
+    overflow-x: auto;
+  }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #f8fafc;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 0.98em;
+  }
+  .compare-table th,
+  .compare-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e0e7ef;
+    text-align: left;
+  }
+  .compare-table th {
+    background: #e0e7ef;
+    color: #2c3e50;
+    font-weight: 700;
+  }
+  .compare-table tr:last-child td {
+    border-bottom: none;
+  }
+  @media (max-width: 600px) {
+    .compare-table th,
+    .compare-table td {
+      padding: 10px 8px;
+      font-size: 0.95em;
+    }
+  }
+</style>

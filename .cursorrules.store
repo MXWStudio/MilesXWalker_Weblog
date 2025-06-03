@@ -1,0 +1,450 @@
+# Pinia 状态管理规范
+
+## Pinia 基础规范
+
+### Store 定义规范
+```typescript
+// stores/user.ts
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type { User, UserPreferences } from '@/types/user'
+
+/**
+ * 用户状态管理
+ * 管理用户信息、认证状态和用户偏好设置
+ */
+export const useUserStore = defineStore('user', () => {
+  // 状态定义 (State)
+  const user = ref<User | null>(null)
+  const isAuthenticated = ref(false)
+  const preferences = ref<UserPreferences>({
+    theme: 'auto',
+    language: 'zh-CN'
+  })
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
+
+  // 计算属性 (Getters)
+  const userDisplayName = computed(() => {
+    return user.value?.nickname || user.value?.username || '未知用户'
+  })
+
+  const isAdmin = computed(() => {
+    return user.value?.role === 'admin'
+  })
+
+  // 操作方法 (Actions)
+  const login = async (credentials: LoginCredentials) => {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const response = await authApi.login(credentials)
+      user.value = response.user
+      isAuthenticated.value = true
+      
+      // 保存token到localStorage
+      localStorage.setItem('auth_token', response.token)
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : '登录失败'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const logout = async () => {
+    try {
+      await authApi.logout()
+    } finally {
+      user.value = null
+      isAuthenticated.value = false
+      localStorage.removeItem('auth_token')
+    }
+  }
+
+  const updatePreferences = (newPreferences: Partial<UserPreferences>) => {
+    preferences.value = { ...preferences.value, ...newPreferences }
+    // 持久化到localStorage
+    localStorage.setItem('user_preferences', JSON.stringify(preferences.value))
+  }
+
+  // 初始化方法
+  const initialize = async () => {
+    // 从localStorage恢复用户偏好
+    const savedPreferences = localStorage.getItem('user_preferences')
+    if (savedPreferences) {
+      preferences.value = JSON.parse(savedPreferences)
+    }
+
+    // 检查是否有有效的认证token
+    const token = localStorage.getItem('auth_token')
+    if (token) {
+      try {
+        const userInfo = await authApi.getCurrentUser()
+        user.value = userInfo
+        isAuthenticated.value = true
+      } catch {
+        // token无效，清除
+        localStorage.removeItem('auth_token')
+      }
+    }
+  }
+
+  return {
+    // 状态
+    user,
+    isAuthenticated,
+    preferences,
+    isLoading,
+    error,
+    
+    // 计算属性
+    userDisplayName,
+    isAdmin,
+    
+    // 方法
+    login,
+    logout,
+    updatePreferences,
+    initialize
+  }
+})
+```
+
+## Store 组织结构
+
+### 目录结构规范
+```
+stores/
+├── index.ts          # 统一导出
+├── types/            # 类型定义
+│   ├── user.ts
+│   └── app.ts
+├── modules/          # 业务模块Store
+│   ├── user.ts       # 用户相关
+│   ├── app.ts        # 应用设置
+│   ├── product.ts    # 产品相关
+│   └── cart.ts       # 购物车
+└── plugins/          # Pinia插件
+    ├── persistence.ts # 持久化插件
+    └── logger.ts     # 日志插件
+```
+
+### Store 命名规范
+- Store名称使用camelCase：`useUserStore`, `useProductStore`
+- Store ID使用kebab-case：`'user'`, `'product-list'`
+- 状态字段使用描述性名称：`isLoading`, `userList`, `currentPage`
+
+## 状态设计模式
+
+### 状态分类和设计
+```typescript
+export const useExampleStore = defineStore('example', () => {
+  // 1. 基础状态 - 使用ref
+  const items = ref<Item[]>([])
+  const currentItem = ref<Item | null>(null)
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
+
+  // 2. 复杂状态 - 使用reactive
+  const pagination = reactive({
+    page: 1,
+    pageSize: 20,
+    total: 0
+  })
+
+  const filters = reactive({
+    search: '',
+    category: '',
+    status: 'all'
+  })
+
+  // 3. 计算状态 - 使用computed
+  const filteredItems = computed(() => {
+    return items.value.filter(item => {
+      if (filters.search && !item.name.includes(filters.search)) return false
+      if (filters.category && item.category !== filters.category) return false
+      if (filters.status !== 'all' && item.status !== filters.status) return false
+      return true
+    })
+  })
+
+  const hasItems = computed(() => items.value.length > 0)
+  const isEmpty = computed(() => !isLoading.value && items.value.length === 0)
+
+  return {
+    // 导出状态和计算属性
+    items,
+    currentItem,
+    isLoading,
+    error,
+    pagination,
+    filters,
+    filteredItems,
+    hasItems,
+    isEmpty
+  }
+})
+```
+
+### 异步操作规范
+```typescript
+// 标准异步操作模式
+const fetchItems = async (params?: FetchParams) => {
+  isLoading.value = true
+  error.value = null
+  
+  try {
+    const response = await api.getItems(params)
+    items.value = response.data
+    pagination.total = response.total
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : '获取数据失败'
+    console.error('获取items失败:', err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 乐观更新模式
+const updateItem = async (id: string, updates: Partial<Item>) => {
+  const index = items.value.findIndex(item => item.id === id)
+  if (index === -1) return
+
+  // 乐观更新
+  const originalItem = { ...items.value[index] }
+  items.value[index] = { ...originalItem, ...updates }
+
+  try {
+    const updatedItem = await api.updateItem(id, updates)
+    items.value[index] = updatedItem
+  } catch (err) {
+    // 回滚
+    items.value[index] = originalItem
+    error.value = '更新失败'
+    throw err
+  }
+}
+```
+
+## Store 组合和复用
+
+### 组合多个Store
+```typescript
+// 在组件中使用多个Store
+export default defineComponent({
+  setup() {
+    const userStore = useUserStore()
+    const appStore = useAppStore()
+    const productStore = useProductStore()
+
+    // 组合状态
+    const isReady = computed(() => {
+      return userStore.isAuthenticated && appStore.isInitialized
+    })
+
+    return {
+      userStore,
+      appStore,
+      productStore,
+      isReady
+    }
+  }
+})
+```
+
+### Store 间通信
+```typescript
+// 通过组合式函数封装Store间交互
+export function useAuth() {
+  const userStore = useUserStore()
+  const appStore = useAppStore()
+
+  const loginWithRedirect = async (credentials: LoginCredentials) => {
+    try {
+      await userStore.login(credentials)
+      
+      // 登录成功后更新应用状态
+      appStore.setUserOnline(true)
+      
+      // 重定向到原页面或首页
+      const redirect = appStore.loginRedirect || '/'
+      router.push(redirect)
+      appStore.clearLoginRedirect()
+    } catch (error) {
+      // 处理登录错误
+      appStore.showNotification({
+        type: 'error',
+        message: '登录失败，请检查用户名和密码'
+      })
+    }
+  }
+
+  return {
+    loginWithRedirect
+  }
+}
+```
+
+## 数据持久化
+
+### 持久化配置
+```typescript
+// plugins/persistence.ts
+import { PiniaPluginContext } from 'pinia'
+
+interface PersistenceOptions {
+  key?: string
+  storage?: Storage
+  serialize?: (data: any) => string
+  deserialize?: (data: string) => any
+  include?: string[]
+  exclude?: string[]
+}
+
+export function createPersistencePlugin(options: PersistenceOptions = {}) {
+  return ({ store, options: storeOptions }: PiniaPluginContext) => {
+    if (!storeOptions.persist) return
+
+    const {
+      key = store.$id,
+      storage = localStorage,
+      serialize = JSON.stringify,
+      deserialize = JSON.parse,
+      include,
+      exclude
+    } = { ...options, ...storeOptions.persist }
+
+    // 恢复状态
+    const savedState = storage.getItem(key)
+    if (savedState) {
+      try {
+        const data = deserialize(savedState)
+        store.$patch(data)
+      } catch (error) {
+        console.error(`恢复Store状态失败 (${key}):`, error)
+      }
+    }
+
+    // 监听状态变化并保存
+    store.$subscribe((mutation, state) => {
+      try {
+        let dataToSave = state
+        
+        if (include) {
+          dataToSave = Object.keys(state)
+            .filter(key => include.includes(key))
+            .reduce((obj, key) => ({ ...obj, [key]: state[key] }), {})
+        }
+        
+        if (exclude) {
+          dataToSave = Object.keys(state)
+            .filter(key => !exclude.includes(key))
+            .reduce((obj, key) => ({ ...obj, [key]: state[key] }), {})
+        }
+
+        storage.setItem(key, serialize(dataToSave))
+      } catch (error) {
+        console.error(`保存Store状态失败 (${key}):`, error)
+      }
+    })
+  }
+}
+```
+
+### Store 使用持久化
+```typescript
+export const useUserStore = defineStore('user', () => {
+  // Store定义...
+}, {
+  persist: {
+    key: 'user-store',
+    storage: localStorage,
+    include: ['preferences', 'user'], // 只持久化这些字段
+    exclude: ['isLoading', 'error']    // 排除这些字段
+  }
+})
+```
+
+## 性能优化
+
+### 状态分片
+```typescript
+// 避免大型单一Store，拆分为多个小Store
+export const useUserProfileStore = defineStore('userProfile', () => {
+  // 只管理用户档案相关状态
+})
+
+export const useUserPreferencesStore = defineStore('userPreferences', () => {
+  // 只管理用户偏好设置
+})
+
+export const useUserNotificationsStore = defineStore('userNotifications', () => {
+  // 只管理用户通知
+})
+```
+
+### 惰性加载
+```typescript
+// 惰性加载Store数据
+export const useProductStore = defineStore('product', () => {
+  const products = ref<Product[]>([])
+  const isLoaded = ref(false)
+
+  const ensureLoaded = async () => {
+    if (!isLoaded.value) {
+      await fetchProducts()
+      isLoaded.value = true
+    }
+  }
+
+  const fetchProducts = async () => {
+    // 获取产品数据
+  }
+
+  return {
+    products,
+    ensureLoaded,
+    fetchProducts
+  }
+})
+```
+
+## 测试规范
+
+### Store 单元测试
+```typescript
+import { setActivePinia, createPinia } from 'pinia'
+import { useUserStore } from '@/stores/user'
+
+describe('UserStore', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('应该正确设置初始状态', () => {
+    const store = useUserStore()
+    
+    expect(store.user).toBe(null)
+    expect(store.isAuthenticated).toBe(false)
+    expect(store.isLoading).toBe(false)
+  })
+
+  it('登录成功后应该更新状态', async () => {
+    const store = useUserStore()
+    const mockUser = { id: '1', username: 'test' }
+    
+    // Mock API
+    vi.mocked(authApi.login).mockResolvedValue({
+      user: mockUser,
+      token: 'mock-token'
+    })
+
+    await store.login({ username: 'test', password: 'password' })
+
+    expect(store.user).toEqual(mockUser)
+    expect(store.isAuthenticated).toBe(true)
+  })
+})
+``` 

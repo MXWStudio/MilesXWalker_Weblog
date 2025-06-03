@@ -17,4 +17,4 @@
 ### 复杂页面建议
 
 - Photos（照片作品页）：建议建立 photos/ 目录，包含 Index.vue（列表）、Detail.vue（详情）、components/（私有组件）等。
-- Videos（视频作品页）：建议建立 videos/ 目录，包含 Index.vue（列表）、Detail.vue（详情）、components/（私有组件）等。 
+- Videos（视频作品页）：建议建立 videos/ 目录，包含 Index.vue（列表）、Detail.vue（详情）、components/（私有组件）等。

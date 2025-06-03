@@ -1,0 +1,638 @@
+# Tailwind CSS 和样式规范
+
+## Tailwind CSS 配置
+
+### 基础配置
+```typescript
+// tailwind.config.ts
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './components/**/*.{vue,js,ts}',
+  ],
+  theme: {
+    extend: {
+      // 自定义颜色
+      colors: {
+        primary: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          500: '#3b82f6',
+          600: '#2563eb',
+          900: '#1e3a8a',
+        },
+        gray: {
+          50: '#f9fafb',
+          100: '#f3f4f6',
+          500: '#6b7280',
+          900: '#111827',
+        }
+      },
+      
+      // 自定义字体
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      
+      // 自定义间距
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+      },
+      
+      // 自定义断点
+      screens: {
+        'xs': '475px',
+        '3xl': '1600px',
+      },
+      
+      // 自定义阴影
+      boxShadow: {
+        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      },
+      
+      // 自定义动画
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(100%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        }
+      }
+    },
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/aspect-ratio'),
+    require('tailwindcss-animate'),
+  ],
+  darkMode: 'class', // 支持深色模式
+}
+
+export default config
+```
+
+## 组件样式规范
+
+### 基础组件样式结构
+```vue
+<template>
+  <button 
+    :class="buttonClasses"
+    :disabled="disabled"
+    @click="handleClick"
+  >
+    <Icon v-if="icon" :name="icon" :class="iconClasses" />
+    <span v-if="$slots.default" :class="textClasses">
+      <slot />
+    </span>
+    <LoadingSpinner v-if="loading" :class="spinnerClasses" />
+  </button>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
+
+// 使用CVA定义变体样式
+const buttonVariants = cva(
+  // 基础样式
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+)
+
+interface Props extends VariantProps<typeof buttonVariants> {
+  disabled?: boolean
+  loading?: boolean
+  icon?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'default',
+  size: 'default',
+  disabled: false,
+  loading: false
+})
+
+// 计算样式类
+const buttonClasses = computed(() => 
+  cn(buttonVariants({ variant: props.variant, size: props.size }))
+)
+
+const iconClasses = computed(() => 
+  cn('flex-shrink-0', {
+    'w-4 h-4': props.size === 'default' || props.size === 'sm',
+    'w-5 h-5': props.size === 'lg',
+    'mr-2': $slots.default // 有文本时添加右边距
+  })
+)
+
+const textClasses = computed(() => 
+  cn('truncate', {
+    'ml-2': props.icon && props.loading // 同时有图标和loading时的间距
+  })
+)
+
+const spinnerClasses = computed(() => 
+  cn('animate-spin flex-shrink-0', {
+    'w-4 h-4': props.size === 'default' || props.size === 'sm',
+    'w-5 h-5': props.size === 'lg',
+    'ml-2': $slots.default || props.icon // 有内容时添加间距
+  })
+)
+</script>
+```
+
+### 响应式设计规范
+```vue
+<template>
+  <!-- 响应式布局 -->
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- 响应式网格 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+      <div class="bg-white rounded-lg shadow-md p-4 lg:p-6">
+        <!-- 响应式文字大小 -->
+        <h3 class="text-lg sm:text-xl lg:text-2xl font-semibold mb-2 lg:mb-4">
+          标题
+        </h3>
+        
+        <!-- 响应式图片 -->
+        <img 
+          src="/image.jpg" 
+          alt="示例图片"
+          class="w-full h-48 sm:h-56 lg:h-64 object-cover rounded-md"
+        />
+        
+        <!-- 响应式按钮 -->
+        <button class="w-full sm:w-auto mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+          操作按钮
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+## 样式组织规范
+
+### CSS 文件结构
+```
+src/
+├── styles/
+│   ├── globals.css          # 全局样式
+│   ├── components/          # 组件样式
+│   │   ├── button.css
+│   │   ├── form.css
+│   │   └── navigation.css
+│   ├── utilities/           # 工具类
+│   │   ├── animations.css
+│   │   ├── layout.css
+│   │   └── typography.css
+│   ├── themes/              # 主题样式
+│   │   ├── light.css
+│   │   ├── dark.css
+│   │   └── variables.css
+│   └── vendor/              # 第三方样式
+│       └── overrides.css
+```
+
+### 全局样式配置
+```css
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义CSS变量 */
+@layer base {
+  :root {
+    /* 主色调 */
+    --color-primary: 59 130 246;
+    --color-primary-foreground: 255 255 255;
+    
+    /* 背景色 */
+    --color-background: 255 255 255;
+    --color-foreground: 17 24 39;
+    
+    /* 边框色 */
+    --color-border: 229 231 235;
+    --color-input: 229 231 235;
+    
+    /* 圆角 */
+    --radius: 0.5rem;
+    
+    /* 字体 */
+    --font-family-sans: 'Inter', system-ui, sans-serif;
+  }
+
+  .dark {
+    --color-background: 17 24 39;
+    --color-foreground: 249 250 251;
+    --color-border: 55 65 81;
+    --color-input: 55 65 81;
+  }
+}
+
+/* 基础样式重置 */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  /* 滚动条样式 */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+  }
+}
+
+/* 组件样式 */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+  
+  .card {
+    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+  }
+  
+  .input {
+    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2;
+    @apply text-sm ring-offset-background file:border-0 file:bg-transparent;
+    @apply placeholder:text-muted-foreground focus-visible:outline-none;
+    @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
+
+/* 工具类 */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  
+  /* 动画相关 */
+  .animate-in {
+    animation-duration: 150ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+  
+  .fade-in {
+    animation-name: fadeIn;
+  }
+  
+  .slide-in-from-top {
+    animation-name: slideInFromTop;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideInFromTop {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+}
+```
+
+## 深色模式支持
+
+### 主题切换组合式函数
+```typescript
+// composables/useTheme.ts
+import { ref, computed, watchEffect } from 'vue'
+
+type Theme = 'light' | 'dark' | 'system'
+
+const theme = ref<Theme>('system')
+const systemTheme = ref<'light' | 'dark'>('light')
+
+export function useTheme() {
+  // 检测系统主题
+  const detectSystemTheme = () => {
+    if (typeof window !== 'undefined') {
+      systemTheme.value = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+  }
+
+  // 计算当前主题
+  const currentTheme = computed(() => {
+    if (theme.value === 'system') {
+      return systemTheme.value
+    }
+    return theme.value
+  })
+
+  // 应用主题
+  const applyTheme = (newTheme: 'light' | 'dark') => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.remove('light', 'dark')
+      document.documentElement.classList.add(newTheme)
+    }
+  }
+
+  // 设置主题
+  const setTheme = (newTheme: Theme) => {
+    theme.value = newTheme
+    localStorage.setItem('theme', newTheme)
+  }
+
+  // 切换主题
+  const toggleTheme = () => {
+    if (currentTheme.value === 'light') {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+  }
+
+  // 初始化主题
+  const initTheme = () => {
+    // 从localStorage恢复主题设置
+    const savedTheme = localStorage.getItem('theme') as Theme
+    if (savedTheme) {
+      theme.value = savedTheme
+    }
+
+    // 检测系统主题
+    detectSystemTheme()
+
+    // 监听系统主题变化
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      mediaQuery.addEventListener('change', detectSystemTheme)
+    }
+  }
+
+  // 监听主题变化并应用
+  watchEffect(() => {
+    applyTheme(currentTheme.value)
+  })
+
+  return {
+    theme: readonly(theme),
+    currentTheme: readonly(currentTheme),
+    setTheme,
+    toggleTheme,
+    initTheme
+  }
+}
+```
+
+### 主题配置样式
+```css
+/* 深色模式变量 */
+.dark {
+  --color-background: 11 11 13;
+  --color-foreground: 250 250 250;
+  --color-card: 24 24 27;
+  --color-card-foreground: 250 250 250;
+  --color-primary: 59 130 246;
+  --color-primary-foreground: 255 255 255;
+  --color-muted: 39 39 42;
+  --color-muted-foreground: 161 161 170;
+  --color-accent: 39 39 42;
+  --color-accent-foreground: 250 250 250;
+  --color-border: 39 39 42;
+  --color-input: 39 39 42;
+}
+
+/* 主题切换动画 */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+```
+
+## 动画和过渡效果
+
+### 常用动画类
+```css
+/* styles/utilities/animations.css */
+@layer utilities {
+  /* 淡入淡出 */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-in-out;
+  }
+  
+  /* 滑动效果 */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+  
+  .animate-slide-left {
+    animation: slideLeft 0.3s ease-out;
+  }
+  
+  .animate-slide-right {
+    animation: slideRight 0.3s ease-out;
+  }
+  
+  /* 缩放效果 */
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+  }
+  
+  .animate-scale-out {
+    animation: scaleOut 0.2s ease-in;
+  }
+  
+  /* 弹跳效果 */
+  .animate-bounce-in {
+    animation: bounceIn 0.6s ease-out;
+  }
+  
+  /* 旋转效果 */
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+  
+  /* 脉冲效果 */
+  .animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+}
+
+/* 动画关键帧 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scaleOut {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.9); opacity: 0; }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+```
+
+## 性能优化
+
+### CSS 优化技巧
+```css
+/* 使用CSS containment提升性能 */
+.card {
+  contain: layout style paint;
+}
+
+/* 使用will-change优化动画 */
+.animated-element {
+  will-change: transform;
+}
+
+.animated-element:not(:hover) {
+  will-change: auto;
+}
+
+/* 优化重绘性能 */
+.smooth-transform {
+  transform: translateZ(0); /* 触发硬件加速 */
+}
+
+/* 优化字体渲染 */
+.optimized-text {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+```
+
+### 样式代码分割
+```typescript
+// 按需加载样式
+const loadThemeStyles = async (theme: string) => {
+  if (theme === 'dark') {
+    await import('./styles/themes/dark.css')
+  } else {
+    await import('./styles/themes/light.css')
+  }
+}
+
+// 组件级别样式懒加载
+const LazyComponent = defineAsyncComponent({
+  loader: () => import('./HeavyComponent.vue'),
+  loadingComponent: LoadingSpinner,
+  delay: 200
+})
+``` 

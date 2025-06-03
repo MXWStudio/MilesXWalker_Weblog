@@ -1,0 +1,670 @@
+# 部署和环境配置规范
+
+## 环境配置管理
+
+### 环境变量配置
+```typescript
+// .env.example - 环境变量模板
+# 应用基础配置
+VITE_APP_TITLE=MilesXWalkerStudio
+VITE_APP_VERSION=0.1.0
+VITE_APP_DESCRIPTION=Vue3.js创意框架
+
+# 环境标识
+VITE_APP_ENV=development
+NODE_ENV=development
+
+# API配置
+VITE_API_BASE_URL=http://localhost:3000/api
+VITE_API_TIMEOUT=10000
+VITE_API_VERSION=v1
+
+# 认证配置
+VITE_AUTH_TOKEN_KEY=auth_token
+VITE_AUTH_REFRESH_TOKEN_KEY=refresh_token
+VITE_AUTH_TOKEN_EXPIRES=7200
+
+# 功能开关
+VITE_ENABLE_PWA=false
+VITE_ENABLE_MOCK=true
+VITE_ENABLE_DEBUG=true
+VITE_ENABLE_ANALYTICS=false
+
+# 第三方服务
+VITE_GOOGLE_ANALYTICS_ID=
+VITE_SENTRY_DSN=
+VITE_FIREBASE_CONFIG=
+
+# CDN配置
+VITE_CDN_URL=
+VITE_STATIC_URL=
+
+# 安全配置
+VITE_ENCRYPTION_KEY=
+VITE_HASH_SALT=
+```
+
+### 环境配置文件
+```typescript
+// config/env.ts
+interface AppConfig {
+  app: {
+    title: string
+    version: string
+    description: string
+    env: 'development' | 'staging' | 'production'
+  }
+  api: {
+    baseURL: string
+    timeout: number
+    version: string
+  }
+  auth: {
+    tokenKey: string
+    refreshTokenKey: string
+    tokenExpires: number
+  }
+  features: {
+    enablePWA: boolean
+    enableMock: boolean
+    enableDebug: boolean
+    enableAnalytics: boolean
+  }
+  services: {
+    googleAnalyticsId?: string
+    sentryDsn?: string
+    firebaseConfig?: object
+  }
+}
+
+export const appConfig: AppConfig = {
+  app: {
+    title: import.meta.env.VITE_APP_TITLE || 'MilesXWalkerStudio',
+    version: import.meta.env.VITE_APP_VERSION || '0.1.0',
+    description: import.meta.env.VITE_APP_DESCRIPTION || '',
+    env: import.meta.env.VITE_APP_ENV || 'development'
+  },
+  api: {
+    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+    timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 10000,
+    version: import.meta.env.VITE_API_VERSION || 'v1'
+  },
+  auth: {
+    tokenKey: import.meta.env.VITE_AUTH_TOKEN_KEY || 'auth_token',
+    refreshTokenKey: import.meta.env.VITE_AUTH_REFRESH_TOKEN_KEY || 'refresh_token',
+    tokenExpires: Number(import.meta.env.VITE_AUTH_TOKEN_EXPIRES) || 7200
+  },
+  features: {
+    enablePWA: import.meta.env.VITE_ENABLE_PWA === 'true',
+    enableMock: import.meta.env.VITE_ENABLE_MOCK === 'true',
+    enableDebug: import.meta.env.VITE_ENABLE_DEBUG === 'true',
+    enableAnalytics: import.meta.env.VITE_ENABLE_ANALYTICS === 'true'
+  },
+  services: {
+    googleAnalyticsId: import.meta.env.VITE_GOOGLE_ANALYTICS_ID,
+    sentryDsn: import.meta.env.VITE_SENTRY_DSN,
+    firebaseConfig: import.meta.env.VITE_FIREBASE_CONFIG 
+      ? JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG) 
+      : undefined
+  }
+}
+
+// 环境检查工具
+export const isDevelopment = appConfig.app.env === 'development'
+export const isStaging = appConfig.app.env === 'staging'
+export const isProduction = appConfig.app.env === 'production'
+export const isClient = typeof window !== 'undefined'
+export const isServer = typeof window === 'undefined'
+```
+
+## Vercel 部署配置
+
+### vercel.json 配置
+```json
+{
+  "version": 2,
+  "name": "milesxwalkerstudio",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))$",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+        }
+      ]
+    }
+  ],
+  "regions": ["hkg1", "sfo1", "iad1"],
+  "framework": "vite"
+}
+```
+
+### 部署脚本配置
+```json
+// package.json scripts
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "build:dev": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:prod": "vite build --mode production",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .vue,.js,.ts --fix",
+    "type-check": "vue-tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "vercel:dev": "vercel dev",
+    "vercel:build": "vercel build",
+    "vercel:deploy": "vercel --prod",
+    "vercel:preview": "vercel",
+    "deploy:staging": "npm run build:staging && vercel --prod --target staging",
+    "deploy:prod": "npm run build:prod && vercel --prod --target production"
+  }
+}
+```
+
+### GitHub Actions 配置
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run tests
+        run: npm run test
+
+  deploy-preview:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+```
+
+## Docker 部署配置
+
+### Dockerfile
+```dockerfile
+# Dockerfile
+FROM node:18-alpine AS builder
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制package文件
+COPY package*.json ./
+
+# 安装依赖
+RUN npm ci --only=production
+
+# 复制源代码
+COPY . .
+
+# 构建应用
+RUN npm run build
+
+# 生产环境镜像
+FROM nginx:alpine
+
+# 复制构建结果
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# 复制nginx配置
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# 暴露端口
+EXPOSE 80
+
+# 启动nginx
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+### Docker Compose
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - app
+    restart: unless-stopped
+```
+
+### Nginx 配置
+```nginx
+# nginx.conf
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # Gzip压缩
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/javascript
+        application/xml+rss
+        application/json;
+
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # 静态资源缓存
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+
+        # SPA路由支持
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        # 安全头
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    }
+}
+```
+
+## 性能优化配置
+
+### Vite 构建优化
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
+
+export default defineConfig({
+  plugins: [vue()],
+  
+  // 构建优化
+  build: {
+    // 目标浏览器
+    target: 'es2015',
+    
+    // 输出目录
+    outDir: 'dist',
+    
+    // 资源内联阈值
+    assetsInlineLimit: 4096,
+    
+    // CSS代码分割
+    cssCodeSplit: true,
+    
+    // 生成sourcemap
+    sourcemap: false,
+    
+    // 压缩配置
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    
+    // Rollup配置
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+      },
+      output: {
+        // 分包策略
+        manualChunks: {
+          vendor: ['vue', 'vue-router', 'pinia'],
+          ui: ['lucide-vue-next'],
+          utils: ['date-fns', 'lodash-es'],
+        },
+        
+        // 文件命名
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split('.')
+          const ext = info[info.length - 1]
+          if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)$/.test(assetInfo.name)) {
+            return `assets/media/[name]-[hash].${ext}`
+          }
+          if (/\.(png|jpe?g|gif|svg|ico|webp)$/.test(assetInfo.name)) {
+            return `assets/images/[name]-[hash].${ext}`
+          }
+          if (/\.(woff2?|eot|ttf|otf)$/.test(assetInfo.name)) {
+            return `assets/fonts/[name]-[hash].${ext}`
+          }
+          return `assets/[ext]/[name]-[hash].${ext}`
+        },
+      },
+    },
+    
+    // 报告分析
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 1000,
+  },
+  
+  // 路径别名
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@components': resolve(__dirname, 'src/components'),
+      '@views': resolve(__dirname, 'src/views'),
+      '@utils': resolve(__dirname, 'src/utils'),
+      '@stores': resolve(__dirname, 'src/stores'),
+    },
+  },
+  
+  // 开发服务器
+  server: {
+    port: 5173,
+    host: true,
+    cors: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
+  
+  // 预览服务器
+  preview: {
+    port: 4173,
+    host: true,
+  },
+})
+```
+
+## 监控和分析
+
+### 性能监控配置
+```typescript
+// plugins/monitoring.ts
+import { appConfig } from '@/config/env'
+
+// Google Analytics配置
+export const setupAnalytics = () => {
+  if (appConfig.features.enableAnalytics && appConfig.services.googleAnalyticsId) {
+    const script = document.createElement('script')
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${appConfig.services.googleAnalyticsId}`
+    document.head.appendChild(script)
+
+    window.dataLayer = window.dataLayer || []
+    function gtag(...args: any[]) {
+      window.dataLayer.push(args)
+    }
+    
+    gtag('js', new Date())
+    gtag('config', appConfig.services.googleAnalyticsId, {
+      page_title: document.title,
+      page_location: window.location.href,
+    })
+  }
+}
+
+// Sentry错误监控
+export const setupSentry = async () => {
+  if (appConfig.services.sentryDsn) {
+    const { init, vueIntegration } = await import('@sentry/vue')
+    
+    init({
+      dsn: appConfig.services.sentryDsn,
+      environment: appConfig.app.env,
+      release: appConfig.app.version,
+      integrations: [vueIntegration()],
+      tracesSampleRate: isProduction ? 0.1 : 1.0,
+    })
+  }
+}
+
+// 性能监控
+export const setupPerformanceMonitoring = () => {
+  if ('performance' in window) {
+    window.addEventListener('load', () => {
+      const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+      
+      // 记录关键性能指标
+      const metrics = {
+        dns: perfData.domainLookupEnd - perfData.domainLookupStart,
+        tcp: perfData.connectEnd - perfData.connectStart,
+        ttfb: perfData.responseStart - perfData.requestStart,
+        download: perfData.responseEnd - perfData.responseStart,
+        domReady: perfData.domContentLoadedEventEnd - perfData.navigationStart,
+        load: perfData.loadEventEnd - perfData.navigationStart,
+      }
+
+      console.log('Performance Metrics:', metrics)
+      
+      // 发送到监控服务
+      if (appConfig.features.enableAnalytics) {
+        gtag('event', 'page_load_time', {
+          custom_map: metrics
+        })
+      }
+    })
+  }
+}
+```
+
+### 部署健康检查
+```typescript
+// utils/healthCheck.ts
+interface HealthCheckResult {
+  status: 'healthy' | 'degraded' | 'unhealthy'
+  checks: Record<string, boolean>
+  timestamp: string
+  version: string
+}
+
+export const performHealthCheck = async (): Promise<HealthCheckResult> => {
+  const checks: Record<string, boolean> = {}
+  
+  // 检查API连接
+  try {
+    const response = await fetch('/api/health', { timeout: 5000 })
+    checks.api = response.ok
+  } catch {
+    checks.api = false
+  }
+  
+  // 检查本地存储
+  try {
+    localStorage.setItem('health_check', 'test')
+    localStorage.removeItem('health_check')
+    checks.localStorage = true
+  } catch {
+    checks.localStorage = false
+  }
+  
+  // 检查服务Worker
+  checks.serviceWorker = 'serviceWorker' in navigator
+  
+  // 检查网络连接
+  checks.online = navigator.onLine
+  
+  // 计算整体状态
+  const healthyChecks = Object.values(checks).filter(Boolean).length
+  const totalChecks = Object.keys(checks).length
+  
+  let status: HealthCheckResult['status']
+  if (healthyChecks === totalChecks) {
+    status = 'healthy'
+  } else if (healthyChecks > totalChecks / 2) {
+    status = 'degraded'
+  } else {
+    status = 'unhealthy'
+  }
+  
+  return {
+    status,
+    checks,
+    timestamp: new Date().toISOString(),
+    version: appConfig.app.version
+  }
+}
+```
+
+## 部署检查清单
+
+### 上线前检查
+- [ ] 环境变量配置正确
+- [ ] 构建无错误和警告
+- [ ] 所有测试通过
+- [ ] 性能指标达标
+- [ ] 安全头配置正确
+- [ ] SSL证书有效
+- [ ] CDN配置正确
+- [ ] 监控和分析已启用
+- [ ] 错误报告配置正确
+- [ ] 备份和回滚计划就绪
+
+### 上线后检查
+- [ ] 应用正常访问
+- [ ] 所有页面加载正常
+- [ ] API接口响应正常
+- [ ] 用户认证功能正常
+- [ ] 静态资源加载正常
+- [ ] 移动端兼容性良好
+- [ ] 性能指标正常
+- [ ] 错误监控正常
+- [ ] 分析数据收集正常
+- [ ] SEO优化生效 

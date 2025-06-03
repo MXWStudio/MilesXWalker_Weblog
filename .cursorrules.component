@@ -1,0 +1,338 @@
+# 组件开发最佳实践
+
+## 组件设计原则
+
+### 可复用性
+- 设计通用组件时考虑多场景复用
+- 使用props传递配置，避免硬编码
+- 提供合理的默认值
+- 使用slot提供内容扩展能力
+
+### 可维护性
+- 保持组件单一职责
+- 避免组件过度复杂，超过200行代码考虑拆分
+- 使用清晰的接口设计
+- 提供完整的TypeScript类型定义
+
+## 组件结构规范
+
+### 基础组件模板
+```vue
+<template>
+  <!-- 组件模板内容 -->
+  <div :class="containerClass">
+    <slot />
+  </div>
+</template>
+
+<script setup lang="ts">
+/**
+ * 组件名称 - 组件功能描述
+ * @author 开发者
+ * @since 创建日期
+ */
+
+// 导入依赖
+import { computed, defineProps, defineEmits } from 'vue'
+import type { ComponentProps } from './types'
+
+// Props定义
+interface Props {
+  size?: 'small' | 'medium' | 'large'
+  variant?: 'primary' | 'secondary'
+  disabled?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  size: 'medium',
+  variant: 'primary',
+  disabled: false
+})
+
+// Emits定义
+interface Emits {
+  click: [event: MouseEvent]
+  change: [value: string]
+}
+
+const emit = defineEmits<Emits>()
+
+// 计算属性
+const containerClass = computed(() => ({
+  [`size-${props.size}`]: true,
+  [`variant-${props.variant}`]: true,
+  'disabled': props.disabled
+}))
+
+// 方法定义
+const handleClick = (event: MouseEvent) => {
+  if (!props.disabled) {
+    emit('click', event)
+  }
+}
+</script>
+
+<style scoped>
+/* 组件样式 */
+</style>
+```
+
+### 组件文件组织
+```
+components/
+├── base/           # 基础UI组件
+│   ├── Button/
+│   │   ├── Button.vue
+│   │   ├── types.ts
+│   │   ├── index.ts
+│   │   └── README.md
+│   └── Input/
+├── layout/         # 布局组件
+├── business/       # 业务组件
+└── effects/        # 特效组件
+```
+
+## 组件Props设计
+
+### Props类型定义
+```typescript
+// 推荐：使用接口定义Props
+interface ButtonProps {
+  /**
+   * 按钮大小
+   * @default 'medium'
+   */
+  size?: 'small' | 'medium' | 'large'
+  
+  /**
+   * 按钮变体
+   * @default 'primary'
+   */
+  variant?: 'primary' | 'secondary' | 'danger'
+  
+  /**
+   * 是否禁用
+   * @default false
+   */
+  disabled?: boolean
+  
+  /**
+   * 按钮文本
+   */
+  label?: string
+}
+```
+
+### Props验证和默认值
+```typescript
+// 使用withDefaults提供默认值
+const props = withDefaults(defineProps<ButtonProps>(), {
+  size: 'medium',
+  variant: 'primary',
+  disabled: false
+})
+
+// 复杂默认值使用函数形式
+const props = withDefaults(defineProps<Props>(), {
+  options: () => ([]),
+  config: () => ({ theme: 'light' })
+})
+```
+
+## 组件事件设计
+
+### 事件命名规范
+- 使用动词形式：`click`, `change`, `submit`
+- 添加前缀表示阶段：`before-close`, `after-open`
+- 使用kebab-case在模板中：`@before-close`
+
+### 事件参数设计
+```typescript
+interface Emits {
+  // 简单事件
+  click: [event: MouseEvent]
+  
+  // 复杂事件，传递多个参数
+  change: [value: string, oldValue: string]
+  
+  // 传递对象参数
+  select: [option: SelectOption]
+  
+  // 异步事件回调
+  submit: [data: FormData, callback: (success: boolean) => void]
+}
+```
+
+## 组件插槽设计
+
+### 具名插槽
+```vue
+<template>
+  <div class="card">
+    <header class="card-header">
+      <slot name="header" :title="title" />
+    </header>
+    
+    <main class="card-body">
+      <slot :data="data" />
+    </main>
+    
+    <footer class="card-footer">
+      <slot name="footer" />
+    </footer>
+  </div>
+</template>
+```
+
+### 作用域插槽
+```vue
+<template>
+  <div class="list">
+    <div 
+      v-for="(item, index) in items" 
+      :key="item.id"
+      class="list-item"
+    >
+      <slot 
+        :item="item" 
+        :index="index" 
+        :isFirst="index === 0"
+        :isLast="index === items.length - 1"
+      />
+    </div>
+  </div>
+</template>
+```
+
+## 组件样式规范
+
+### CSS Scoped
+- 优先使用scoped样式避免样式污染
+- 使用深度选择器时谨慎操作：`:deep(.child-class)`
+- 避免在scoped中使用全局样式
+
+### CSS变量和主题
+```vue
+<style scoped>
+.button {
+  --button-bg: theme('colors.blue.500');
+  --button-text: theme('colors.white');
+  --button-radius: theme('borderRadius.md');
+  
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border-radius: var(--button-radius);
+}
+
+.button--large {
+  --button-padding: theme('spacing.4') theme('spacing.6');
+  padding: var(--button-padding);
+}
+</style>
+```
+
+## 组件通信模式
+
+### 父子组件通信
+```typescript
+// 子组件向父组件传递数据
+const emit = defineEmits<{
+  update: [value: string]
+  'update:modelValue': [value: string]  // v-model支持
+}>()
+
+// 支持v-model
+const props = defineProps<{
+  modelValue?: string
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
+}>()
+```
+
+### 组件间通信
+```typescript
+// 使用Provide/Inject
+// 父组件
+provide('theme', reactive({ mode: 'dark' }))
+
+// 子组件
+const theme = inject<Theme>('theme')
+```
+
+## 组件测试规范
+
+### 组件单元测试
+```typescript
+import { mount } from '@vue/test-utils'
+import Button from './Button.vue'
+
+describe('Button组件', () => {
+  it('应该正确渲染按钮文本', () => {
+    const wrapper = mount(Button, {
+      props: { label: '点击我' }
+    })
+    
+    expect(wrapper.text()).toContain('点击我')
+  })
+  
+  it('点击时应该触发事件', async () => {
+    const wrapper = mount(Button)
+    
+    await wrapper.trigger('click')
+    
+    expect(wrapper.emitted('click')).toBeTruthy()
+  })
+})
+```
+
+## 组件文档规范
+
+### README.md模板
+```markdown
+# Button 按钮组件
+
+## 功能描述
+通用按钮组件，支持多种尺寸和样式变体。
+
+## Props
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| size | 'small' \| 'medium' \| 'large' | 'medium' | 按钮大小 |
+| variant | 'primary' \| 'secondary' | 'primary' | 按钮变体 |
+| disabled | boolean | false | 是否禁用 |
+
+## Events
+| 事件名 | 参数 | 说明 |
+|--------|------|------|
+| click | MouseEvent | 点击事件 |
+
+## Slots
+| 插槽名 | 参数 | 说明 |
+|--------|------|------|
+| default | - | 按钮内容 |
+
+## 使用示例
+\```vue
+<Button 
+  size="large" 
+  variant="primary"
+  @click="handleClick"
+>
+  点击我
+</Button>
+\```
+```
+
+## 组件迁移和兼容
+
+### 组件迁移策略
+- 迁移组件时，将原文件内容完整迁移到新位置
+- 在原文件保留迁移提示和重定向逻辑
+- 提供平滑的迁移路径和文档说明
+
+### 版本兼容性
+- 保持向后兼容，使用@deprecated标记废弃API
+- 提供清晰的迁移文档和示例
+- 给予充分的废弃通知期 

@@ -4,7 +4,10 @@
 
 @layer base {
   html {
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
   :root {
     --background: 0 0% 100%;
@@ -65,17 +68,15 @@
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200;
   }
-  
+
   .btn-primary {
     @apply bg-primary-600 text-white hover:bg-primary-700;
   }
-  
+
   .btn-secondary {
     @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
   }
 }
-
-
 
 @layer base {
   * {
@@ -84,4 +85,4 @@
   body {
     @apply bg-background text-foreground;
   }
-} 
+}

@@ -1,0 +1,249 @@
+# MilesXWalkerStudio 规则管理器
+
+## 规则系统概述
+
+这是一个模块化的Cursor规则管理系统，专为MilesXWalkerStudio Vue3.js项目设计。系统将不同方面的开发规范拆分为独立的规则文件，便于维护和管理。
+
+## 规则文件结构
+
+```
+.cursorrules.*
+├── .cursorrules.main          # 主规则 - 核心开发理念和工作流程
+├── .cursorrules.code          # 代码规范 - 代码质量和编码标准
+├── .cursorrules.component     # 组件开发 - 组件设计和最佳实践
+├── .cursorrules.store         # 状态管理 - Pinia使用规范
+├── .cursorrules.router        # 路由管理 - Vue Router配置和使用
+├── .cursorrules.style         # 样式规范 - Tailwind CSS和样式管理
+├── .cursorrules.structure     # 项目结构 - 文件组织和命名规范
+├── .cursorrules.deploy        # 部署配置 - 环境管理和部署流程
+├── .cursorrules.debug         # 调试指南 - 问题诊断和解决流程
+└── .cursorrules.manager       # 规则管理器 - 系统说明和使用指南
+```
+
+## 规则使用指南
+
+### 基础使用
+1. **主规则文件** (`.cursorrules`): 包含核心开发理念，是所有规则的基础
+2. **专门规则文件** (`.cursorrules.*`): 针对特定开发方面的详细规范
+
+### 规则文件内容概览
+
+#### .cursorrules.main - 主规则
+- 角色定义和核心目标
+- 项目初始化流程
+- 需求分析和开发流程
+- 项目总结和优化
+
+#### .cursorrules.code - 代码规范
+- Vue 3 Composition API使用规范
+- TypeScript类型定义标准
+- ESLint和Prettier配置
+- 代码质量和性能优化
+
+#### .cursorrules.component - 组件开发
+- 组件设计原则
+- 组件文件结构规范
+- Props、Events、Slots设计
+- 组件测试和文档规范
+
+#### .cursorrules.store - 状态管理
+- Pinia Store定义规范
+- 状态设计模式
+- 异步操作处理
+- 数据持久化配置
+
+#### .cursorrules.router - 路由管理
+- Vue Router配置规范
+- 路由元信息设计
+- 导航守卫使用
+- 动态路由管理
+
+#### .cursorrules.style - 样式规范
+- Tailwind CSS配置
+- 响应式设计规范
+- 深色模式支持
+- CSS性能优化
+
+#### .cursorrules.structure - 项目结构
+- 标准目录结构
+- 文件命名规范
+- 导入路径管理
+- 文档规范
+
+#### .cursorrules.deploy - 部署配置
+- 环境变量管理
+- Vercel部署配置
+- 性能监控设置
+- 部署检查清单
+
+#### .cursorrules.debug - 调试指南
+- 调试工具配置
+- 常见问题诊断
+- 错误处理策略
+- Bug修复流程
+
+## 快速启动指南
+
+### 1. 了解项目规则
+首先阅读主规则文件和项目README.md，了解项目整体架构：
+```bash
+# 查看主规则
+cat .cursorrules.main
+
+# 查看项目说明
+cat README.md
+```
+
+### 2. 选择相关规则
+根据你要进行的开发任务，参考相应的规则文件：
+
+**开发新组件时：**
+- `.cursorrules.component` - 组件开发规范
+- `.cursorrules.style` - 样式规范
+- `.cursorrules.code` - 代码规范
+
+**添加新页面时：**
+- `.cursorrules.router` - 路由配置
+- `.cursorrules.structure` - 文件组织
+- `.cursorrules.component` - 页面组件开发
+
+**状态管理时：**
+- `.cursorrules.store` - Pinia使用规范
+- `.cursorrules.code` - 代码质量标准
+
+**调试问题时：**
+- `.cursorrules.debug` - 调试和问题解决
+- `.cursorrules.deploy` - 环境配置检查
+
+### 3. 遵循开发流程
+按照规则文件中定义的流程进行开发：
+1. 需求分析
+2. 技术方案设计
+3. 代码实现
+4. 测试验证
+5. 文档更新
+
+## 规则维护指南
+
+### 规则更新流程
+1. **识别需要更新的规则类型**
+2. **修改对应的规则文件**
+3. **更新相关文档**
+4. **通知团队成员**
+
+### 新增规则类型
+如果需要添加新的规则类型，按以下格式创建：
+```bash
+# 创建新规则文件
+touch .cursorrules.[new-category]
+
+# 在文件中添加规范内容
+echo "# [规则分类名称] 规范" > .cursorrules.[new-category]
+```
+
+### 规则文件模板
+```markdown
+# [规则分类名称] 规范
+
+## 概述
+简要描述此规则文件的用途和适用范围。
+
+## 基础规范
+### 规范1
+具体的规范内容和示例代码。
+
+### 规范2
+具体的规范内容和示例代码。
+
+## 最佳实践
+提供最佳实践建议和反例。
+
+## 工具配置
+相关工具的配置方法。
+
+## 常见问题
+常见问题和解决方案。
+```
+
+## 规则系统特性
+
+### 模块化设计
+- **独立性**: 每个规则文件专注特定领域
+- **关联性**: 规则间相互引用和补充
+- **可维护性**: 便于单独更新和维护
+
+### 完整性保证
+- **全面覆盖**: 涵盖开发全流程
+- **细致入微**: 提供具体的实施指导
+- **实用性**: 基于实际项目经验
+
+### 易用性优化
+- **清晰结构**: 逻辑清晰，易于查找
+- **示例丰富**: 提供大量代码示例
+- **文档完善**: 每个规则都有详细说明
+
+## 使用建议
+
+### 针对不同角色
+**初级开发者：**
+- 重点关注 `.cursorrules.code` 和 `.cursorrules.component`
+- 严格按照规范进行开发
+- 遇到问题时参考 `.cursorrules.debug`
+
+**中级开发者：**
+- 熟悉所有规则文件
+- 在开发中灵活运用规则
+- 协助维护和优化规则
+
+**高级开发者：**
+- 负责规则的制定和更新
+- 指导团队成员使用规则
+- 确保项目架构符合规范
+
+### 常用命令
+```bash
+# 查看所有规则文件
+ls .cursorrules*
+
+# 搜索特定规范
+grep -n "组件" .cursorrules.component
+
+# 查看规则文件大小
+du -h .cursorrules*
+
+# 统计规则文件行数
+wc -l .cursorrules*
+```
+
+## 未来改进方向
+
+### 1. 自动化集成
+- 集成到CI/CD流程
+- 自动规则检查工具
+- 代码质量报告
+
+### 2. 规则验证
+- 规则遵循度统计
+- 自动化测试集成
+- 质量门禁设置
+
+### 3. 文档生成
+- 自动生成开发手册
+- 规则变更历史
+- 最佳实践收集
+
+### 4. 团队协作
+- 规则讨论和投票机制
+- 经验分享平台
+- 培训材料生成
+
+## 联系和反馈
+
+如有规则相关的问题或建议，请通过以下方式联系：
+- 创建Issue讨论
+- 提交Pull Request
+- 团队内部讨论
+
+---
+
+*本规则系统将持续改进，以适应项目发展需要和最佳实践演进。* 

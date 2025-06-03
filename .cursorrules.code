@@ -1,0 +1,107 @@
+# 代码规范和质量标准
+
+## Vue 3 开发规范
+
+### Composition API 使用
+- 使用Vue 3的Composition API进行开发，合理使用setup语法糖
+- 优先使用`<script setup>`语法，减少样板代码
+- 合理使用ref、reactive等响应式API
+- 使用Vue的生命周期钩子和组合式函数
+
+### 单文件组件(SFC)规范
+- 遵循Vue.js的最佳实践和设计模式
+- 使用单文件组件(SFC)格式
+- 组件结构顺序：`<template>` -> `<script setup>` -> `<style scoped>`
+
+### TypeScript 规范
+- 使用TypeScript进行类型检查，提高代码质量
+- 为所有函数参数和返回值定义类型
+- 使用接口(Interface)定义复杂数据结构
+- 合理使用泛型提高代码复用性
+
+## 代码质量标准
+
+### 注释规范
+- 编写详细的代码注释，确保可维护性
+- 每个文件头部必须添加注释，说明文件用途
+- 每个函数必须添加JSDoc注释
+- 复杂逻辑必须添加行内注释
+
+```typescript
+/**
+ * 用户信息处理函数
+ * @param userId 用户ID
+ * @param options 可选配置参数
+ * @returns 处理后的用户信息
+ */
+const processUserInfo = (userId: string, options?: ProcessOptions): UserInfo => {
+  // 处理逻辑...
+}
+```
+
+### 错误处理
+- 在代码中添加必要的错误处理和日志记录
+- 使用try-catch包装可能出错的代码块
+- 提供友好的错误提示信息
+- 记录错误日志便于调试
+
+### 代码组织
+- 导入语句按类型分组：第三方库 -> Vue相关 -> 项目内部模块
+- 使用有意义的变量和函数命名
+- 保持函数单一职责，避免过长的函数
+- 合理使用组合式函数(Composables)提取逻辑
+
+## ESLint 和 Prettier 配置
+
+### ESLint 规则
+- 使用项目配置的ESLint规则进行代码检查
+- 必须修复所有ESLint错误和警告
+- 遵循Vue官方ESLint插件推荐规则
+
+### 代码格式化
+- 使用Prettier进行代码格式化
+- 统一使用2空格缩进
+- 行长度限制为100字符
+- 使用单引号，末尾添加分号
+
+## 命名约定
+
+### 文件命名
+- 组件文件使用PascalCase：`UserProfile.vue`
+- 页面文件使用PascalCase：`HomePage.vue`
+- 工具函数文件使用camelCase：`utils.ts`
+- 常量文件使用SCREAMING_SNAKE_CASE：`API_CONSTANTS.ts`
+
+### 变量命名
+- 变量和函数使用camelCase：`userName`, `getUserInfo()`
+- 常量使用SCREAMING_SNAKE_CASE：`MAX_RETRY_COUNT`
+- 组件名使用PascalCase：`UserProfile`
+- CSS类名使用kebab-case：`user-profile`
+
+## 性能优化规范
+
+### 响应式数据优化
+- 合理选择ref和reactive
+- 避免深层嵌套的响应式对象
+- 使用shallowRef和shallowReactive优化性能
+- 及时清理watch和effect
+
+### 组件优化
+- 使用v-memo优化列表渲染
+- 合理使用keep-alive缓存组件
+- 实现组件的懒加载
+- 避免在模板中使用复杂计算
+
+## 测试规范
+
+### 单元测试
+- 为关键函数编写单元测试
+- 使用Jest或Vitest作为测试框架
+- 测试覆盖率要求达到80%以上
+- 测试用例命名要清晰明确
+
+### 集成测试
+- 为重要页面编写E2E测试
+- 使用Playwright或Cypress进行测试
+- 测试关键用户流程
+- 确保测试环境稳定性 
