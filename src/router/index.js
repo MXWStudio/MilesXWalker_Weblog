@@ -11,7 +11,10 @@ import Terms from '../views/Terms.vue'
 import Privacy from '../views/Privacy.vue'
 import Blog from '../views/Blog.vue'
 import Web3D from '../views/articles/Web3D.vue'
+import TrailLog from '../views/articles/TrailLog.vue'
 import AvatarTest from '../views/AvatarTest.vue'
+import FlatVisual from '../views/FlatVisual.vue'
+import Modelling3D from '../views/3DModelling.vue'
 // 支付相关页面
 import PaymentView from '../views/PaymentView.vue'
 import PaymentSuccess from '../components/payment/PaymentSuccess.vue'
@@ -68,6 +71,22 @@ const routes = [
     },
   },
   {
+    path: '/flat-visual',
+    name: 'FlatVisual',
+    component: FlatVisual,
+    meta: {
+      title: '平面视觉设计',
+    },
+  },
+  {
+    path: '/3d-modelling',
+    name: 'Modelling3D',
+    component: Modelling3D,
+    meta: {
+      title: '3D建模设计',
+    },
+  },
+  {
     path: '/avatar-test',
     name: 'AvatarTest',
     component: AvatarTest,
@@ -119,6 +138,12 @@ const routes = [
     name: 'Web3DArticle',
     component: Web3D,
     meta: { title: 'Web3D虚拟人物标准' },
+  },
+  {
+    path: '/articles/trail-log',
+    name: 'TrailLogArticle',
+    component: TrailLog,
+    meta: { title: 'Trail Log 开发日志 · 第一篇' },
   },
 ]
 

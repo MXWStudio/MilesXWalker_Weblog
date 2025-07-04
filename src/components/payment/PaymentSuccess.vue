@@ -13,7 +13,7 @@
         <p class="success-message">感谢您的购买，您的订单已经成功处理。</p>
 
         <!-- 订单详情 -->
-        <div class="order-details" v-if="paymentData">
+        <div v-if="paymentData" class="order-details">
           <h3 class="details-title">订单详情</h3>
           <div class="details-grid">
             <div class="detail-item">
@@ -37,8 +37,8 @@
 
         <!-- 操作按钮 -->
         <div class="action-buttons">
-          <button @click="downloadReceipt" class="btn-secondary">📄 下载收据</button>
-          <button @click="goToHome" class="btn-primary">🏠 返回首页</button>
+          <button class="btn-secondary" @click="downloadReceipt">📄 下载收据</button>
+          <button class="btn-primary" @click="goToHome">🏠 返回首页</button>
         </div>
 
         <!-- 联系信息 -->

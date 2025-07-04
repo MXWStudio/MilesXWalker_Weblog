@@ -29,18 +29,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 
-interface Card {
-  id: number
-  title: string
-  thumbnail: string
-  description: string
-  tags: string[]
-}
-
-const cards = ref<Card[]>([
+const cards = ref([
   {
     id: 1,
     title: '智能图像识别',

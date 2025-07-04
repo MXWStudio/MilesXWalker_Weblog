@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext vue,js,jsx,cjs,mjs,ts,tsx,cts,mts --fix",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
     "lint:style": "stylelint **/*.{vue,css,scss} --fix",
     "server": "node server/index.js",
     "server:dev": "nodemon server/index.js",
@@ -17,7 +18,9 @@
     "setup:rpm": "npm run check:rpm && echo '请根据检查结果配置 .env 文件'",
     "vercel:build": "vite build",
     "vercel:preview": "vercel --prod",
-    "vercel:deploy": "vercel --prod"
+    "vercel:deploy": "vercel --prod",
+    "check-all": "npm run lint:check && npm run build",
+    "fix-all": "npm run lint && npm run lint:style"
   },
   "dependencies": {
     "@iconify/vue": "^5.0.0",
@@ -42,6 +45,8 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
     "@vitejs/plugin-vue": "^4.5.2",
     "@vue/eslint-config-prettier": "^8.0.0",
     "autoprefixer": "^10.4.16",

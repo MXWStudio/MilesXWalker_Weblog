@@ -255,7 +255,9 @@
 </template>
 
 <script setup>
-import persaboutRightImg from '@/assets/images/photos/about_right.jpg'
+import personalHeadshot from '@/assets/images/photos/resume photo.jpg'
+import aboutLeftImg from '@/assets/images/photos/about_left.jpg'
+import aboutRightImg from '@/assets/images/photos/about_right.jpg'
 </script>
 
 <style scoped>

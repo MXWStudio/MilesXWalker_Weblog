@@ -11,7 +11,7 @@
       </div>
 
       <!-- 订单信息 -->
-      <div class="order-summary" v-if="orderInfo">
+      <div v-if="orderInfo" class="order-summary">
         <h3 class="order-title">订单信息</h3>
         <div class="order-details">
           <div class="order-item">
@@ -26,7 +26,7 @@
       </div>
 
       <!-- 支付表单 -->
-      <form @submit.prevent="handleSubmit" class="payment-form">
+      <form class="payment-form" @submit.prevent="handleSubmit">
         <!-- Stripe Elements 容器 -->
         <div ref="cardElementRef" class="stripe-card-element" :class="{ error: hasCardError }">
           <!-- Stripe Card Element 将挂载到这里 -->

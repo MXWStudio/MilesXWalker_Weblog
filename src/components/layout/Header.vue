@@ -11,6 +11,13 @@
             <router-link to="/ai" class="dropdown-item">AI</router-link>
           </div>
         </div>
+        <div class="dropdown">
+          <span class="category-link dropdown-trigger">Design</span>
+          <div class="dropdown-menu">
+            <router-link to="/flat-visual" class="dropdown-item">Flat Visual</router-link>
+            <router-link to="/3d-modelling" class="dropdown-item">3D Modelling</router-link>
+          </div>
+        </div>
         <router-link to="/blog" class="category-link">Blog</router-link>
         <router-link to="/subscribe" class="category-link">Subscribe</router-link>
       </nav>
@@ -39,7 +46,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 4%; /* 将左右内边距从2%增加到4%，使内容向中心靠拢 */
+  padding: 15px 2%; /* 左右内边距从4%改为2%，让内容更靠边 */
   background-color: #ffffff;
   min-height: 70px;
   height: 70px;
@@ -59,7 +66,7 @@
 
 .left-section {
   justify-content: flex-start;
-  margin-right: 20px;
+  /* margin-right: 20px; 移除右边距，让左侧更贴边 */
 }
 
 .right-section {
@@ -82,7 +89,7 @@
 /* 左侧部分：分类 */
 .categories {
   display: flex;
-  gap: 8px;
+  gap: 20px;
   flex-wrap: nowrap;
   /* overflow: hidden; */ /* 移除或注释掉这里，以允许下拉菜单溢出分类栏 */
   width: 100%;
@@ -204,8 +211,8 @@
 /* 下拉菜单样式 */
 .dropdown {
   position: relative;
-  display: inline-flex; /* 改为 inline-flex 以更好地控制内部对齐 */
-  align-items: center; /* 垂直居中 .dropdown-trigger span */
+  display: inline-flex;
+  align-items: center;
 }
 
 .dropdown-trigger {
@@ -216,10 +223,10 @@
 
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* 将菜单顶部对齐到 .dropdown 容器的底部 */
+  top: 100%;
   left: 0;
-  margin-top: 4px; /* 在触发器和菜单之间添加一个小的固定间隙 */
-  min-width: 140px;
+  margin-top: 4px;
+  min-width: 90px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -227,14 +234,16 @@
   pointer-events: none;
   transition:
     opacity 0.2s ease-out,
-    transform 0.2s ease-out; /* 调整过渡效果 */
-  transform: translateY(8px); /* 动画起始时，菜单稍微靠下一点 */
+    transform 0.2s ease-out;
+  transform: translateY(8px);
   z-index: 1000;
+  /* 添加一个透明的缓冲区区域 */
+  padding-top: 8px;
+  margin-top: -8px;
 }
+
 .dropdown:hover {
-  /* 当下拉菜单激活时，提升其父元素 .dropdown 的堆叠顺序，确保菜单在 logo 之上 */
-  /* .dropdown 已经有 position: relative，所以 z-index 会生效 */
-  z-index: 3; /* 需要高于 .center-section 的 z-index: 2 */
+  z-index: 3;
 }
 
 .dropdown:hover .dropdown-menu,
@@ -246,18 +255,46 @@
 
 .dropdown-item {
   display: block;
-  padding: 10px 18px;
+  padding: 10px 6px;
   color: #333;
   text-decoration: none;
   white-space: nowrap;
   transition:
     background 0.2s,
     color 0.2s;
+  /* 确保菜单项有足够的点击区域 */
+  margin: 2px 0;
 }
 
-.dropdown-item:hover {
+.dropdown-item:hover,
+.dropdown-item.router-link-active {
   background: #f0f6ff;
   color: #007bff;
+}
+
+/* 第一个菜单项悬浮/激活时，顶部圆角 */
+.dropdown-item:first-child:hover,
+.dropdown-item:first-child.router-link-active {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* 最后一个菜单项悬浮/激活时，底部圆角 */
+.dropdown-item:last-child:hover,
+.dropdown-item:last-child.router-link-active {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* 添加一个伪元素作为缓冲区 */
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: transparent;
 }
 
 /* 下拉箭头 */

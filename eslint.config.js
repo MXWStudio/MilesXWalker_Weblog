@@ -1,5 +1,3 @@
-import typescript from '@typescript-eslint/eslint-plugin'
-import typescriptParser from '@typescript-eslint/parser'
 import prettier from 'eslint-config-prettier'
 import vue from 'eslint-plugin-vue'
 import vueParser from 'vue-eslint-parser'
@@ -17,13 +15,12 @@ export default [
     ]
   },
   
-  // JavaScript/TypeScript 文件配置
+  // JavaScript 文件配置
   {
-    files: ['**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx'],
+    files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      parser: typescriptParser,
       globals: {
         console: 'readonly',
         process: 'readonly',
@@ -36,16 +33,7 @@ export default [
         require: 'readonly',
       }
     },
-    plugins: {
-      '@typescript-eslint': typescript,
-    },
     rules: {
-      // TypeScript规则
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      
       // 通用规则
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -60,14 +48,12 @@ export default [
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: typescriptParser,
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
     },
     plugins: {
       vue: vue,
-      '@typescript-eslint': typescript,
     },
     rules: {
       // Vue 推荐规则
@@ -81,10 +67,6 @@ export default [
       'vue/component-definition-name-casing': ['error', 'PascalCase'],
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-unused-vars': 'error',
-      
-      // TypeScript规则（Vue文件中）
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
       
       // 通用规则
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

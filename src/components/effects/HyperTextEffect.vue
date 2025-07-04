@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="cn('flex scale-100 cursor-default overflow-hidden py-2', $props.class)"
+    :class="cn('flex scale-100 cursor-default overflow-hidden py-2', $props.className)"
     @mouseenter="triggerAnimation"
   >
     <div class="flex">
@@ -8,7 +8,7 @@
         v-for="(letter, i) in displayText"
         :key="i"
         as="span"
-        :class="cn(letter === ' ' ? 'w-3' : '', $props.class)"
+        :class="cn(letter === ' ' ? 'w-3' : '', $props.className)"
         class="inline-block font-mono"
         :initial="{ opacity: 0, y: -10 }"
         :animate="{ opacity: 1, y: 0 }"
@@ -20,19 +20,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, watch, type HTMLAttributes } from 'vue'
+<script setup>
+import { ref, computed, watch } from 'vue'
 import { useIntervalFn } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { Motion } from 'motion-v'
 
 const props = withDefaults(
-  defineProps<{
-    class?: HTMLAttributes['class']
-    text: string
-    duration?: number
-    animateOnLoad: boolean
-  }>(),
+  defineProps(['className', 'text', 'duration', 'animateOnLoad']),
   {
     duration: 800,
   }

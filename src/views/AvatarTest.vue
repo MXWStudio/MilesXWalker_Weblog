@@ -9,16 +9,16 @@
         <h3>选择模式:</h3>
         <div class="mode-buttons">
           <button
-            @click="setMode('create')"
             :class="{ active: currentTestMode === 'create' }"
             class="mode-btn"
+            @click="setMode('create')"
           >
             🎨 创建新虚拟人物
           </button>
           <button
-            @click="setMode('test')"
             :class="{ active: currentTestMode === 'test' }"
             class="mode-btn"
+            @click="setMode('test')"
           >
             🔧 测试现有URL
           </button>
@@ -105,10 +105,10 @@
                 </p>
               </div>
               <div class="recent-actions">
-                <button @click="previewRecentAvatar(avatar)" class="preview-recent-btn">
+                <button class="preview-recent-btn" @click="previewRecentAvatar(avatar)">
                   预览
                 </button>
-                <button @click="useRecentAvatar(avatar)" class="use-recent-btn">使用</button>
+                <button class="use-recent-btn" @click="useRecentAvatar(avatar)">使用</button>
               </div>
             </div>
           </div>

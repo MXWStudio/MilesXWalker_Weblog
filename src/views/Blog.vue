@@ -198,6 +198,16 @@ const blogPosts = ref([
     image: 'https://picsum.photos/800/400?random=101',
     route: '/articles/web3d',
   },
+  {
+    id: 6,
+    title: 'Trail Log 开发日志 · 第一篇',
+    excerpt:
+      '从 FullTrack 到 Trail Log：我开始打造自己的徒步 App。一个更纯粹、更安静的工具，只是帮你找到路，记录你走的每一步...',
+    date: '2024-12-20',
+    category: '开发日志',
+    image: 'https://picsum.photos/800/400?random=6',
+    route: '/articles/trail-log',
+  },
 ])
 
 // 获取所有分类

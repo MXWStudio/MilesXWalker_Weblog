@@ -50,7 +50,7 @@
                         <div class="plan-name">{{ plan.name }}</div>
                         <div class="plan-price">${{ (plan.amount / 100).toFixed(2) }}</div>
                       </div>
-                      <div class="plan-discount" v-if="plan.discount">省 {{ plan.discount }}%</div>
+                      <div v-if="plan.discount" class="plan-discount">省 {{ plan.discount }}%</div>
                     </div>
                   </div>
                 </div>
@@ -93,7 +93,7 @@
           </h3>
           <p class="alert-message">{{ alertMessage }}</p>
         </div>
-        <button @click="closeAlert" class="alert-close">×</button>
+        <button class="alert-close" @click="closeAlert">×</button>
       </div>
     </div>
 
