@@ -12,6 +12,7 @@ import Privacy from '../views/Privacy.vue'
 import Blog from '../views/Blog.vue'
 import Web3D from '../views/articles/Web3D.vue'
 import TrailLog from '../views/articles/TrailLog.vue'
+import ModelingJourney from '../views/articles/3DModelingJourney.vue'
 import AvatarTest from '../views/AvatarTest.vue'
 import FlatVisual from '../views/FlatVisual.vue'
 import Modelling3D from '../views/3DModelling.vue'
@@ -144,6 +145,12 @@ const routes = [
     name: 'TrailLogArticle',
     component: TrailLog,
     meta: { title: 'Trail Log 开发日志 · 第一篇' },
+  },
+  {
+    path: '/articles/3d-modeling-journey',
+    name: 'ModelingJourneyArticle',
+    component: ModelingJourney,
+    meta: { title: '我的3D建模学习之路' },
   },
 ]
 

@@ -208,6 +208,16 @@ const blogPosts = ref([
     image: 'https://picsum.photos/800/400?random=6',
     route: '/articles/trail-log',
   },
+  {
+    id: 7,
+    title: '我的3D建模学习之路：从零基础到创作作品集',
+    excerpt:
+      '记录了我从零基础开始学习3D建模的完整历程。从最初的几何体练习到复杂的场景创作，分享8个重要作品、学习技巧和心得体会...',
+    date: '2024-12-15',
+    category: '3D建模',
+    image: '/images/3D/几何物体.png',
+    route: '/articles/3d-modeling-journey',
+  },
 ])
 
 // 获取所有分类

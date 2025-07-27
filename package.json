@@ -25,7 +25,7 @@
   "dependencies": {
     "@iconify/vue": "^5.0.0",
     "@inspira-ui/plugins": "^0.0.1",
-    "@stagewise/toolbar-vue": "^0.2.0",
+    "@stagewise/toolbar-vue": "^0.6.2",
     "@stripe/stripe-js": "^7.3.1",
     "@tresjs/cientos": "^4.3.1",
     "@tresjs/core": "^4.3.5",
