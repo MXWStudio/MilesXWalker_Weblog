@@ -19,6 +19,8 @@ import Modelling3D from '../views/3DModelling.vue'
 // 支付相关页面
 import PaymentView from '../views/PaymentView.vue'
 import PaymentSuccess from '../components/payment/PaymentSuccess.vue'
+// 存储相关页面
+import Storage from '../views/Storage.vue'
 
 const routes = [
   {
@@ -112,6 +114,14 @@ const routes = [
     meta: {
       title: '支付成功',
       requiresAuth: false,
+    },
+  },
+  {
+    path: '/storage',
+    name: 'Storage',
+    component: Storage,
+    meta: {
+      title: '文件存储管理',
     },
   },
   {
