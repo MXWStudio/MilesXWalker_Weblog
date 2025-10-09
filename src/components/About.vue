@@ -2,6 +2,31 @@
 <template>
   <div class="about-page-container">
     <div class="about-page-content">
+      <!-- 简历生成器入口按钮 -->
+      <div class="resume-generator-btn-wrapper">
+        <button class="resume-generator-btn" title="简历生成器" @click="goToResumeGenerator">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="resume-icon"
+          >
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span class="resume-btn-text">简历生成器</span>
+        </button>
+      </div>
+
       <h1 class="page-title">ABOUT ME</h1>
       <div class="main-layout">
         <aside class="profile-sidebar">
@@ -255,9 +280,17 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import personalHeadshot from '@/assets/images/photos/resume photo.jpg'
 import aboutLeftImg from '@/assets/images/photos/about_left.jpg'
 import aboutRightImg from '@/assets/images/photos/about_right.jpg'
+
+const router = useRouter()
+
+// 跳转到简历生成器页面
+const goToResumeGenerator = () => {
+  router.push('/resume-generator')
+}
 </script>
 
 <style scoped>
@@ -555,5 +588,76 @@ import aboutRightImg from '@/assets/images/photos/about_right.jpg'
 }
 .bleachfilm-link:hover .bleachfilm-svg {
   filter: drop-shadow(0 0 16px #00cfff);
+}
+
+/* 简历生成器按钮样式 */
+.resume-generator-btn-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.resume-generator-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition:
+    all 0.3s ease,
+    transform 0.2s ease;
+}
+
+.resume-generator-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.resume-generator-btn:active {
+  transform: translateY(0);
+}
+
+.resume-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.resume-btn-text {
+  white-space: nowrap;
+}
+
+/* 移动端优化 */
+@media (max-width: 640px) {
+  .resume-generator-btn-wrapper {
+    top: 10px;
+    right: 10px;
+  }
+
+  .resume-generator-btn {
+    padding: 8px 12px;
+    font-size: 0.85em;
+  }
+
+  .resume-btn-text {
+    display: none;
+  }
+
+  .resume-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.about-page-content {
+  position: relative;
 }
 </style>

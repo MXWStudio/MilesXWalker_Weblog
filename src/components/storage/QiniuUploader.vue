@@ -27,9 +27,9 @@
         {{ connectionStatus.message }}
       </div>
       <button
-        @click="testConnection"
         :disabled="testing"
         class="ml-3 px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+        @click="testConnection"
       >
         {{ testing ? '测试中...' : '重新测试' }}
       </button>
@@ -37,15 +37,15 @@
 
     <!-- 上传区域 -->
     <div
-      @drop="handleDrop"
-      @dragover.prevent
-      @dragenter.prevent
       :class="[
         'upload-area border-2 border-dashed rounded-lg p-8 text-center transition-colors',
         isDragging
           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
           : 'border-gray-300 dark:border-gray-600 hover:border-gray-400',
       ]"
+      @drop="handleDrop"
+      @dragover.prevent
+      @dragenter.prevent
     >
       <div class="upload-icon mb-4">
         <svg
@@ -69,9 +69,9 @@
           <input
             type="file"
             multiple
-            @change="handleFileSelect"
             class="hidden"
             :accept="acceptedTypes"
+            @change="handleFileSelect"
           />
         </label>
       </p>
@@ -180,18 +180,18 @@
               <!-- 操作按钮 -->
               <button
                 v-if="upload.status === 'success' && upload.url"
-                @click="copyUrl(upload.url)"
                 class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
                 title="复制链接"
+                @click="copyUrl(upload.url)"
               >
                 复制链接
               </button>
 
               <button
                 v-if="upload.status === 'success'"
-                @click="deleteFile(upload)"
                 class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
                 title="删除文件"
+                @click="deleteFile(upload)"
               >
                 删除
               </button>
@@ -232,15 +232,15 @@
       <!-- 批量操作 -->
       <div class="batch-actions mt-4 flex space-x-3">
         <button
-          @click="clearUploads"
           class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          @click="clearUploads"
         >
           清空列表
         </button>
         <button
-          @click="retryFailedUploads"
           v-if="failedUploads.length > 0"
           class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+          @click="retryFailedUploads"
         >
           重试失败 ({{ failedUploads.length }})
         </button>

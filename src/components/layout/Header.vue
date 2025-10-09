@@ -1,7 +1,7 @@
 <template>
   <header class="app-header">
     <!-- 汉堡菜单按钮 - 仅在移动端显示 -->
-    <button class="hamburger-btn" @click="toggleMobileMenu" aria-label="Toggle menu">
+    <button class="hamburger-btn" aria-label="Toggle menu" @click="toggleMobileMenu">
       <span :class="{ active: isMobileMenuOpen }"></span>
       <span :class="{ active: isMobileMenuOpen }"></span>
       <span :class="{ active: isMobileMenuOpen }"></span>
@@ -47,7 +47,7 @@
         <nav class="mobile-nav" @click.stop>
           <div class="mobile-nav-header">
             <h3>导航菜单</h3>
-            <button class="close-btn" @click="closeMobileMenu" aria-label="Close menu">✕</button>
+            <button class="close-btn" aria-label="Close menu" @click="closeMobileMenu">✕</button>
           </div>
 
           <div class="mobile-nav-content">

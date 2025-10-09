@@ -123,13 +123,13 @@
           <button
             v-for="tab in tabs"
             :key="tab.key"
-            @click="activeTab = tab.key"
             :class="[
               'tab-button px-4 py-2 rounded-md font-medium transition-all',
               activeTab === tab.key
                 ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                 : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white',
             ]"
+            @click="activeTab = tab.key"
           >
             {{ tab.name }}
           </button>
@@ -157,15 +157,15 @@
               <h3 class="text-xl font-bold text-gray-900 dark:text-white">文件管理</h3>
               <div class="manager-actions flex space-x-3">
                 <button
-                  @click="refreshFileList"
                   :disabled="loading"
                   class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                  @click="refreshFileList"
                 >
                   {{ loading ? '刷新中...' : '刷新列表' }}
                 </button>
                 <button
-                  @click="showCreateFolder = true"
                   class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  @click="showCreateFolder = true"
                 >
                   新建文件夹
                 </button>
@@ -308,8 +308,8 @@
               <!-- 保存按钮 -->
               <div class="setting-actions">
                 <button
-                  @click="saveSettings"
                   class="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  @click="saveSettings"
                 >
                   保存设置
                 </button>

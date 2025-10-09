@@ -70,8 +70,8 @@
 
 ```bash
 # Stripe API密钥
-STRIPE_SECRET_KEY=sk_live_vzhe1sDF1FqnsLZEF9hEMvqj0AEHd6F-vyF
-VITE_STRIPE_PUBLISHABLE_KEY=pk_live_your_publishable_key_here
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
 
 # 支付功能开关
 VITE_ENABLE_PAYMENTS=true

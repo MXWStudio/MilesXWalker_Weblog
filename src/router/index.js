@@ -21,6 +21,8 @@ import PaymentView from '../views/PaymentView.vue'
 import PaymentSuccess from '../components/payment/PaymentSuccess.vue'
 // 存储相关页面
 import Storage from '../views/Storage.vue'
+// 简历生成器
+import ResumeGenerator from '../components/ResumeGenerator.vue'
 
 const routes = [
   {
@@ -122,6 +124,14 @@ const routes = [
     component: Storage,
     meta: {
       title: '文件存储管理',
+    },
+  },
+  {
+    path: '/resume-generator',
+    name: 'ResumeGenerator',
+    component: ResumeGenerator,
+    meta: {
+      title: '简历生成器',
     },
   },
   {

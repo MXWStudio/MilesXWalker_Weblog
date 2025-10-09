@@ -2,9 +2,9 @@
 
 ## 🔐 重要：您已提供的 API 密钥
 
-**测试环境可发布密钥**：`pk_test_51RVpm5CpAF0X0OGYwS1emqVLMAWCdxjxOLU7f9hi7vpfkCc5rLn4oityVXxSrANXum7GHSutept3BcpR9Fxy4PpO005aZRRHPL`
+**测试环境可发布密钥**：`pk_test_your_test_publishable_key_here`
 
-**生产环境服务器端密钥**：`sk_live_vzhe1sDF1FqnsLZEF9hEMvqj0AEHd6F-vyF`
+**生产环境服务器端密钥**：`sk_live_your_live_secret_key_here`
 
 ## ⚠️ 重要配置说明
 
@@ -20,14 +20,14 @@
 ```bash
 # 测试环境配置 - 安全的开发测试
 STRIPE_SECRET_KEY=sk_test_your_test_secret_key_here
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_51RVpm5CpAF0X0OGYwS1emqVLMAWCdxjxOLU7f9hi7vpfkCc5rLn4oityVXxSrANXum7GHSutept3BcpR9Fxy4PpO005aZRRHPL
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_test_publishable_key_here
 ```
 
 #### 方案二：生产环境（用于真实交易）
 
 ```bash
 # 生产环境配置 - 真实资金交易
-STRIPE_SECRET_KEY=sk_live_vzhe1sDF1FqnsLZEF9hEMvqj0AEHd6F-vyF
+STRIPE_SECRET_KEY=sk_live_your_live_secret_key_here
 VITE_STRIPE_PUBLISHABLE_KEY=pk_live_your_live_publishable_key_here
 ```
 

@@ -175,10 +175,10 @@ RPM_API_KEY=your_ready_player_me_api_key
 
 # 支付系统配置 (Stripe) 🆕
 # ========================================
-# 🔑 服务器端密钥 - 已配置
-STRIPE_SECRET_KEY=sk_live_vzhe1sDF1FqnsLZEF9hEMvqj0AEHd6F-vyF
+# 🔑 服务器端密钥 - 请从 Stripe 控制台获取
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
 # 前端可发布密钥 - 需要从Stripe控制台获取
-VITE_STRIPE_PUBLISHABLE_KEY=pk_live_your_publishable_key_here
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
 VITE_PAYMENT_API_URL=https://your-domain.com/api/payment
 VITE_WEBHOOK_ENDPOINT=/api/webhooks/stripe
 
@@ -253,7 +253,6 @@ open http://localhost:5173/payment
 **需要完成的配置（可选）：**
 
 1. 🔑 **获取匹配的测试服务器密钥**：
-
    - 访问 [Stripe 控制台](https://dashboard.stripe.com/apikeys)
    - 切换到 **"查看测试数据"** 模式
    - 复制测试服务器端密钥 (以 `sk_test_` 开头)
@@ -344,6 +343,121 @@ MIT License
 _本项目遵循Vue.js最佳实践，为初学者提供友好的开发体验。_
 
 ## 🌟 项目特性
+
+### 📄 专业简历生成器 🆕
+
+项目集成了功能完善的在线简历生成器：
+
+#### 核心功能
+
+- **🌐 个人网站信息抓取**: 一键导入个人信息 ✨ **v2.2 新功能**
+  - 从个人网站/博客自动抓取基本信息
+  - 智能解析 Markdown frontmatter
+  - 自动填充姓名、职位、邮箱、技能、项目等
+  - 支持工作经历、教育背景批量导入
+  - 完美配合 AI 岗位定制功能
+
+- **📁 基本信息智能折叠**: 优化编辑体验 ✨ **v2.2 新功能**
+  - 基本信息区域默认折叠，节省空间
+  - 一键展开/折叠，操作便捷
+  - 平滑动画效果，视觉流畅
+  - 专注核心内容编辑
+
+- **🤖 AI 岗位定制**: 智能简历优化功能 ✨ **v2.1 功能**
+  - 根据目标岗位自动优化简历内容
+  - 快捷岗位选择（6个常见岗位）
+  - 实时优化建议和反馈
+  - 预留 AI API 接口（支持未来接入真实 AI）
+  - 自动设置目标岗位字段
+  - 提供针对性的内容优化建议
+
+- **📝 富文本编辑**: 基于 Tiptap 的专业编辑器
+  - 支持粗体、斜体、下划线
+  - 标题和段落格式
+  - 有序/无序列表
+  - 清除格式功能
+
+- **🎯 智能岗位选择**: 50+ 常见岗位预设
+  - 技术类（前端、后端、全栈等）
+  - 设计类（UI/UX、3D等）
+  - 产品/运营/市场类
+  - 实时搜索过滤
+  - 支持自定义输入
+- **💾 自动保存草稿**: 使用 @vueuse/core 的 useStorage
+  - 实时保存到 localStorage
+  - 刷新页面不丢失数据
+  - 显示上次保存时间
+- **📊 完成度追踪**:
+  - 实时显示简历完成百分比
+  - 智能提示缺失信息
+  - 进度条可视化展示
+- **📥 PDF 导出**: 基于 html2pdf.js
+  - 专业的 PDF 格式
+  - 支持 A4 纸张大小
+  - 高质量输出 (98% JPEG)
+  - 一键下载或预览
+- **📦 数据管理**:
+  - 导出/导入 JSON 格式
+  - 从 Markdown 文件导入（gray-matter）
+  - 支持从博客文章提取信息
+- **🌐 博客数据导入**: 🆕
+  - 从本地 Markdown 文件导入
+  - 从 URL 抓取博客内容
+  - 自动解析 YAML frontmatter
+  - 智能数据合并选项
+- **🎨 响应式设计**:
+  - 桌面端双栏布局（编辑+预览）
+  - 移动端自适应
+  - 实时预览效果
+
+#### 技术栈
+
+- **@tiptap/vue-3**: 富文本编辑器
+- **@tiptap/starter-kit**: 编辑器扩展包
+- **html2pdf.js**: PDF 导出工具
+- **gray-matter**: Markdown 解析器
+- **@vueuse/core**: Vue 组合式工具集
+- **Pinia**: 状态管理
+
+#### 使用方式
+
+```bash
+# 访问简历生成器页面
+http://localhost:5173/resume-generator
+
+# 快速生成流程（v2.2 优化）
+1. 输入个人网站 URL → 抓取基本信息
+2. 选择目标岗位 → AI 优化建议
+3. 微调内容（需要时展开基本信息）
+4. 导出 PDF
+
+# 或从导航菜单进入
+```
+
+#### 文件结构 (最新 v2.2)
+
+```
+src/
+├── components/
+│   ├── ResumeGenerator.vue         # 主组件（含 AI 智能生成）
+│   ├── ResumeEditor.vue            # 可编辑表单区域（含折叠功能）
+│   ├── ResumePreview.vue           # PDF 预览区域
+│   ├── JobSelector.vue             # 岗位选择器
+│   └── resume/
+│       ├── RichTextEditor.vue      # 富文本编辑器
+│       └── README.md               # 组件说明
+├── stores/
+│   └── resumeStore.js              # 简历数据 Store
+└── utils/
+    ├── pdfExporter.js              # PDF 导出工具
+    └── blogParser.js               # 博客数据抓取（含网站信息提取）
+```
+
+> 💡 **版本历程**:
+>
+> - v2.0: 模块化组件设计 → [架构重构说明](./docs/简历生成器架构重构说明.md)
+> - v2.1: AI 岗位定制功能 → [v2.1 更新日志](./docs/简历生成器v2.1更新日志.md)
+> - v2.2: 网站抓取 + 折叠优化 → [v2.2 更新日志](./docs/简历生成器v2.2更新日志.md)
 
 ### 🎭 3D虚拟头像系统
 
