@@ -511,20 +511,40 @@ import aboutRightImg from '@/assets/images/photos/about_right.jpg'
   width: 100%;
   margin-top: 38px;
   border-collapse: separate;
-  border-spacing: 24px 0;
+  border-spacing: 0;
 }
 .about-image-table td {
   vertical-align: top;
-  width: 50%;
+  width: 100%;
   padding: 0;
+  display: block;
+  margin-bottom: 16px;
+}
+.about-image-table td:last-child {
+  margin-bottom: 0;
 }
 .about-table-img {
   width: 100%;
-  height: 400px;
+  height: 280px;
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
   display: block;
+}
+
+/* 平板和桌面端 */
+@media (min-width: 768px) {
+  .about-image-table {
+    border-spacing: 24px 0;
+  }
+  .about-image-table td {
+    width: 50%;
+    display: table-cell;
+    margin-bottom: 0;
+  }
+  .about-table-img {
+    height: 400px;
+  }
 }
 
 .bleachfilm-svg {
