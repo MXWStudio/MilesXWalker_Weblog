@@ -17,7 +17,6 @@ MilesXWalkerStudio 是一个基于Vue 3 + TypeScript + Vite构建的现代化前
 - **UI组件**: Inspira UI
 - **3D渲染**: Three.js + TresJS
 - **3D模型**: ReadyPlayerMe GLB格式
-- **支付系统**: Stripe API
 - **工具库**: VueUse, Lucide Vue
 - **部署平台**: Vercel
 
@@ -173,24 +172,12 @@ VITE_RPM_SUBDOMAIN=mxw
 VITE_RPM_APPLICATION_ID=683e4b6fbf64bc8c6cab557b
 RPM_API_KEY=your_ready_player_me_api_key
 
-# 支付系统配置 (Stripe) 🆕
-# ========================================
-# 🔑 服务器端密钥 - 请从 Stripe 控制台获取
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
-# 前端可发布密钥 - 需要从Stripe控制台获取
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
-VITE_PAYMENT_API_URL=https://your-domain.com/api/payment
-VITE_WEBHOOK_ENDPOINT=/api/webhooks/stripe
-
 # 功能开关
 VITE_ENABLE_PWA=true
 VITE_ENABLE_MOCK=false
-VITE_ENABLE_PAYMENTS=true
 ```
 
 ### 📋 API 密钥配置指南
-
-#### 🔐 ✅ Stripe 支付系统已就绪！
 
 #### 🌩️ ✅ 七牛云存储系统已就绪！
 
@@ -220,49 +207,6 @@ open http://localhost:5173/storage
 
 **📚 详细配置指南：** 📖 [七牛云配置使用指南](./docs/七牛云配置使用指南.md)
 
-项目已成功配置 Stripe 支付系统，当前状态：
-
-**✅ 已完成配置：**
-
-- ✅ 测试环境可发布密钥：已配置并可用
-- ✅ 服务器端密钥：已配置 (混合模式)
-- ✅ 本地环境变量文件：`.env` 已创建
-- ✅ 支付功能开关：已启用
-- ✅ 前端支付组件：已创建完成
-- ✅ 后端API服务：已创建完成
-- ✅ 路由配置：支付页面已就绪
-
-**🧪 立即测试支付功能：**
-
-```bash
-# 启动完整开发环境
-npm run start
-
-# 访问支付测试页面
-open http://localhost:5173/payment
-```
-
-**📚 详细测试指南：** 📖 [支付功能测试指南](./config/payment-testing-guide.md)
-
-**🔑 测试卡号：**
-
-- 成功支付：`4242 4242 4242 4242`
-- 被拒绝卡：`4000 0000 0000 0002`
-- 过期日期：任意未来日期，CVC：任意3位数
-
-**需要完成的配置（可选）：**
-
-1. 🔑 **获取匹配的测试服务器密钥**：
-   - 访问 [Stripe 控制台](https://dashboard.stripe.com/apikeys)
-   - 切换到 **"查看测试数据"** 模式
-   - 复制测试服务器端密钥 (以 `sk_test_` 开头)
-   - 在 `.env` 文件中设置：`STRIPE_SECRET_KEY=sk_test_...`
-
-2. 🚀 **生产环境配置**：
-   - 获取生产环境密钥对 (pk*live*... 和 sk*live*...)
-   - 在 Vercel 项目设置中配置环境变量
-
-**详细配置说明：** 📖 [API 密钥配置指南](./config/api-keys-setup.md)
 
 ### 部署优化特性
 

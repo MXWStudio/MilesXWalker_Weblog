@@ -18,7 +18,6 @@ import { dirname, join } from 'path'
 
 // 导入API路由
 import readyPlayerMeRoutes from './api/ready-player-me.js'
-import paymentRoutes from './api/payment.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -40,12 +39,11 @@ app.use(
           "'self'",
           'https://api.readyplayer.me',
           'https://models.readyplayer.me',
-          'https://api.stripe.com',
         ],
         fontSrc: ["'self'"],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'"],
-        frameSrc: ["'self'", 'https://*.readyplayer.me', 'https://js.stripe.com'],
+        frameSrc: ["'self'", 'https://*.readyplayer.me'],
       },
     },
   })
@@ -88,7 +86,6 @@ app.get('/health', (req, res) => {
 
 // API 路由
 app.use('/api/rpm', readyPlayerMeRoutes)
-app.use('/api/payment', paymentRoutes)
 
 // API 根路径
 app.get('/api', (req, res) => {
@@ -98,15 +95,10 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       rpmHealth: '/api/rpm/health',
-      paymentHealth: '/api/payment/health',
       createGuestAccount: 'POST /api/rpm/guest-account',
       getAuthToken: 'GET /api/rpm/auth-token?userId=xxx&subdomain=xxx',
       getUserStatus: 'GET /api/rpm/user-status/:userId',
       migrateAccount: 'POST /api/rpm/migrate-account',
-      createPaymentIntent: 'POST /api/payment/create-payment-intent',
-      checkPaymentStatus: 'GET /api/payment/status/:payment_intent_id',
-      cancelPayment: 'POST /api/payment/cancel/:payment_intent_id',
-      paymentMethods: 'GET /api/payment/payment-methods',
     },
     documentation: 'See README.md for detailed API documentation',
   })
@@ -140,25 +132,10 @@ app.listen(PORT, () => {
   // 配置检查
   const hasApiKey = !!process.env.RPM_API_KEY
   const hasAppId = !!process.env.VITE_RPM_APPLICATION_ID
-  const hasStripeKey = !!process.env.STRIPE_SECRET_KEY
-  const hasStripePublishable = !!process.env.VITE_STRIPE_PUBLISHABLE_KEY
-  const paymentsEnabled = process.env.VITE_ENABLE_PAYMENTS === 'true'
 
   console.log('\n⚙️  Configuration:')
   console.log(`   RPM API Key: ${hasApiKey ? '✅ Set' : '❌ Missing'}`)
   console.log(`   Application ID: ${hasAppId ? '✅ Set' : '❌ Missing'}`)
-  console.log(`   Stripe Secret Key: ${hasStripeKey ? '✅ Set' : '❌ Missing'}`)
-  console.log(`   Stripe Publishable Key: ${hasStripePublishable ? '✅ Set' : '❌ Missing'}`)
-  console.log(`   Payments Enabled: ${paymentsEnabled ? '✅ Yes' : '❌ No'}`)
-
-  if (hasStripeKey) {
-    const isTestMode = process.env.STRIPE_SECRET_KEY.startsWith('sk_test_')
-    console.log(`   Stripe Environment: ${isTestMode ? '🧪 Test Mode' : '🔴 Live Mode'}`)
-  }
-
-  console.log('\n💳 Payment Features:')
-  console.log(`   Payment API: http://localhost:${PORT}/api/payment/health`)
-  console.log(`   Test Cards: http://localhost:${PORT}/api/payment/payment-methods`)
 
   if (!hasApiKey || !hasAppId) {
     console.log('\n⚠️  Warning: Missing required environment variables!')

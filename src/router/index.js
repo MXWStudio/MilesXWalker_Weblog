@@ -16,9 +16,6 @@ import ModelingJourney from '../views/articles/3DModelingJourney.vue'
 import AvatarTest from '../views/AvatarTest.vue'
 import FlatVisual from '../views/FlatVisual.vue'
 import Modelling3D from '../views/3DModelling.vue'
-// 支付相关页面
-import PaymentView from '../views/PaymentView.vue'
-import PaymentSuccess from '../components/payment/PaymentSuccess.vue'
 // 存储相关页面
 import Storage from '../views/Storage.vue'
 // 简历生成器
@@ -97,25 +94,6 @@ const routes = [
     component: AvatarTest,
     meta: {
       title: '3D虚拟形象测试',
-    },
-  },
-  // 支付相关路由
-  {
-    path: '/payment',
-    name: 'Payment',
-    component: PaymentView,
-    meta: {
-      title: '安全支付',
-      requiresAuth: false, // 支付页面不需要登录
-    },
-  },
-  {
-    path: '/payment-success',
-    name: 'PaymentSuccess',
-    component: PaymentSuccess,
-    meta: {
-      title: '支付成功',
-      requiresAuth: false,
     },
   },
   {
