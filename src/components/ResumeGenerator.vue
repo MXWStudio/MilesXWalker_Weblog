@@ -215,6 +215,7 @@ import { useResumeStore } from '@/stores/resumeStore'
 import ResumeEditor from '@/components/ResumeEditor.vue'
 import ResumePreview from '@/components/ResumePreview.vue'
 import { parseLocalMarkdownFile, fetchAndParseBlog, mergeResumeData } from '@/utils/blogParser'
+import { generateSmartResume } from '@/composables/useAI'
 
 // 使用简历 Store
 const resumeStore = useResumeStore()
@@ -354,8 +355,7 @@ const handleJSONImport = () => {
 
 /**
  * AI 优化简历
- * 当前为非 AI 版本：根据岗位设置目标岗位字段，提供优化建议
- * 未来接入真实 AI 时：可以调用 AI API 重写简历内容
+ * 调用统一的 AI 接口生成智能简历建议
  */
 const handleAIOptimize = async () => {
   if (!jobInput.value.trim()) {
@@ -363,45 +363,98 @@ const handleAIOptimize = async () => {
     return
   }
 
+  // 检查是否有基本信息
+  if (!resumeStore.resumeData.fullName && !resumeStore.resumeData.email) {
+    alert('请先填写基本信息或从本站获取个人信息后再使用 AI 优化功能')
+    return
+  }
+
   aiOptimizing.value = true
   aiOptimizationResult.value = ''
 
   try {
-    // 模拟 AI 处理延迟
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    console.log('🚀 开始 AI 简历优化...')
+    console.log('目标岗位:', jobInput.value)
+    console.log('当前简历数据:', resumeStore.resumeData)
 
     // 设置目标岗位到简历数据
     resumeStore.setTargetJob(jobInput.value)
 
-    // 提供优化建议（非 AI 版本）
+    // 调用统一的 AI 接口
+    const aiResult = await generateSmartResume(jobInput.value, resumeStore.resumeData, {
+      model: 'openai', // 可选: 'openai' 或 'ollama'
+    })
+
+    console.log('✅ AI 生成结果:', aiResult)
+
+    // 处理 AI 返回的结果
+    if (aiResult.summary) {
+      console.log('📝 AI 生成的简介:', aiResult.summary)
+      // 如果用户简介为空或者用户确认替换，则使用 AI 生成的简介
+      if (!resumeStore.resumeData.summary || confirm('AI 已生成新的个人简介，是否替换当前简介？')) {
+        resumeStore.resumeData.summary = aiResult.summary
+        console.log('✨ 已更新简介')
+      }
+    }
+
+    // 处理技能推荐
+    if (aiResult.highlightedSkills && aiResult.highlightedSkills.length > 0) {
+      console.log('💡 AI 推荐的技能:', aiResult.highlightedSkills)
+      const newSkills = aiResult.highlightedSkills.filter(
+        skill => !resumeStore.resumeData.skills.includes(skill)
+      )
+      if (newSkills.length > 0) {
+        if (confirm(`AI 推荐添加以下技能：\n${newSkills.join(', ')}\n\n是否添加到简历？`)) {
+          newSkills.forEach(skill => resumeStore.addSkill(skill))
+          console.log('✨ 已添加新技能:', newSkills)
+        }
+      }
+    }
+
+    // 显示优化建议
+    if (aiResult.recommendations && aiResult.recommendations.length > 0) {
+      console.log('📋 AI 优化建议:', aiResult.recommendations)
+    }
+
     const suggestions = [
-      `已将目标岗位设置为："${jobInput.value}"`,
-      '建议：在个人简介中突出与该岗位相关的经验',
-      '建议：调整技能顺序，将相关技能置于前列',
-      '建议：在工作经历中强调与岗位匹配的项目成果',
-    ]
+      `✅ AI 优化完成！目标岗位："${jobInput.value}"`,
+      aiResult.summary ? '✨ 已生成个性化简介' : '',
+      aiResult.highlightedSkills?.length > 0
+        ? `💡 推荐技能：${aiResult.highlightedSkills.join(', ')}`
+        : '',
+      '',
+      '📋 优化建议：',
+      ...(aiResult.recommendations || []),
+    ].filter(Boolean)
 
     aiOptimizationResult.value = suggestions.join('\n')
 
-    // 3秒后自动隐藏结果
+    // 10秒后自动隐藏结果
     setTimeout(() => {
       aiOptimizationResult.value = ''
-    }, 8000)
-
-    // 未来接入真实 AI 时的接口示例：
-    // const aiResponse = await fetch('/api/ai/optimize-resume', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     resumeData: resumeStore.resumeData,
-    //     targetJob: jobInput.value,
-    //   }),
-    // })
-    // const optimizedData = await aiResponse.json()
-    // resumeStore.importJSON(optimizedData)
+    }, 10000)
   } catch (error) {
-    console.error('AI 优化失败:', error)
-    alert('优化失败: ' + error.message)
+    console.error('❌ AI 优化失败:', error)
+
+    // 友好的错误提示
+    let errorMessage = 'AI 优化失败'
+
+    if (error.message.includes('VITE_OPENAI_API_KEY')) {
+      errorMessage =
+        '未配置 OpenAI API Key\n\n请在项目根目录创建 .env 文件并添加：\nVITE_OPENAI_API_KEY=your_api_key'
+    } else if (error.message.includes('Ollama')) {
+      errorMessage = 'Ollama 服务未启动\n\n请确保本地 Ollama 服务正在运行'
+    } else {
+      errorMessage = `优化失败：${error.message}\n\n提示：请检查网络连接和 API 配置`
+    }
+
+    alert(errorMessage)
+
+    // 显示错误信息
+    aiOptimizationResult.value = `❌ ${errorMessage.split('\n')[0]}`
+    setTimeout(() => {
+      aiOptimizationResult.value = ''
+    }, 5000)
   } finally {
     aiOptimizing.value = false
   }

@@ -167,6 +167,9 @@ VITE_APP_ENV=production
 VITE_API_BASE_URL=https://your-api-domain.com
 VITE_API_TIMEOUT=10000
 
+# OpenAI 配置（用于简历生成器 AI 功能）
+VITE_OPENAI_API_KEY=your_openai_api_key_here
+
 # Ready Player Me 配置
 VITE_RPM_SUBDOMAIN=mxw
 VITE_RPM_APPLICATION_ID=683e4b6fbf64bc8c6cab557b
@@ -177,9 +180,30 @@ VITE_ENABLE_PWA=true
 VITE_ENABLE_MOCK=false
 ```
 
+#### 🤖 AI 功能配置
+
+**OpenAI API Key 配置：**
+
+1. 访问 [OpenAI Platform](https://platform.openai.com/api-keys) 获取 API Key
+2. 在本地开发环境创建 `.env` 文件（参考 `.env.example`）
+3. 在 Vercel 部署环境添加环境变量 `VITE_OPENAI_API_KEY`
+
+**本地 Ollama 配置（可选）：**
+
+```bash
+# 安装 Ollama
+brew install ollama
+
+# 启动服务并运行模型
+ollama serve
+ollama run llama3.2
+```
+
+📖 详细配置请查看：[AI 简历优化功能使用指南](./docs/AI简历优化功能使用指南.md)
+
 ### 📋 API 密钥配置指南
 
-#### 🌩️ ✅ 七牛云存储系统已就绪！
+#### 🌩️ 七牛云存储系统已就绪
 
 项目已成功集成七牛云对象存储服务，当前状态：
 
@@ -206,7 +230,6 @@ open http://localhost:5173/storage
 ```
 
 **📚 详细配置指南：** 📖 [七牛云配置使用指南](./docs/七牛云配置使用指南.md)
-
 
 ### 部署优化特性
 
@@ -307,13 +330,15 @@ _本项目遵循Vue.js最佳实践，为初学者提供友好的开发体验。_
   - 平滑动画效果，视觉流畅
   - 专注核心内容编辑
 
-- **🤖 AI 岗位定制**: 智能简历优化功能 ✨ **v2.1 功能**
-  - 根据目标岗位自动优化简历内容
+- **🤖 AI 岗位定制**: 智能简历优化功能 ✨ **v2.3 真实 AI 接入**
+  - 统一 AI 接口调用：`generateSmartResume(jobInput, resumeData, { model: 'openai' })`
+  - 支持 OpenAI GPT-4o-mini（云端，效果好）
+  - 支持 Ollama Llama3.2（本地，隐私保护）
+  - 根据目标岗位生成个性化简介
+  - AI 推荐最相关的技能
+  - 提供针对性的优化建议
   - 快捷岗位选择（6个常见岗位）
-  - 实时优化建议和反馈
-  - 预留 AI API 接口（支持未来接入真实 AI）
-  - 自动设置目标岗位字段
-  - 提供针对性的内容优化建议
+  - 实时优化反馈和用户交互确认
 
 - **📝 富文本编辑**: 基于 Tiptap 的专业编辑器
   - 支持粗体、斜体、下划线
@@ -363,24 +388,24 @@ _本项目遵循Vue.js最佳实践，为初学者提供友好的开发体验。_
 - **@vueuse/core**: Vue 组合式工具集
 - **Pinia**: 状态管理
 
-#### 使用方式
+#### 简历生成器使用方式
 
 ```bash
 # 访问简历生成器页面
-http://localhost:5173/resume-generator
+# http://localhost:5173/resume-generator
 
 # 快速生成流程（v2.2 优化）
-1. 输入个人网站 URL → 抓取基本信息
-2. 选择目标岗位 → AI 优化建议
-3. 微调内容（需要时展开基本信息）
-4. 导出 PDF
+# 1. 输入个人网站 URL → 抓取基本信息
+# 2. 选择目标岗位 → AI 优化建议
+# 3. 微调内容（需要时展开基本信息）
+# 4. 导出 PDF
 
 # 或从导航菜单进入
 ```
 
-#### 文件结构 (最新 v2.2)
+#### 简历生成器文件结构 (最新 v2.3)
 
-```
+```text
 src/
 ├── components/
 │   ├── ResumeGenerator.vue         # 主组件（含 AI 智能生成）
@@ -390,11 +415,19 @@ src/
 │   └── resume/
 │       ├── RichTextEditor.vue      # 富文本编辑器
 │       └── README.md               # 组件说明
+├── composables/
+│   └── useAI.js                    # 🤖 统一 AI 接口（OpenAI + Ollama）
 ├── stores/
 │   └── resumeStore.js              # 简历数据 Store
 └── utils/
     ├── pdfExporter.js              # PDF 导出工具
     └── blogParser.js               # 博客数据抓取（含网站信息提取）
+
+docs/
+├── AI简历优化功能使用指南.md      # 🤖 AI 功能完整说明
+├── AI简历优化功能测试.md          # 测试文档
+└── commands/
+    └── AI功能快速参考.md          # 快速参考手册
 ```
 
 > 💡 **版本历程**:
@@ -402,6 +435,7 @@ src/
 > - v2.0: 模块化组件设计 → [架构重构说明](./docs/简历生成器架构重构说明.md)
 > - v2.1: AI 岗位定制功能 → [v2.1 更新日志](./docs/简历生成器v2.1更新日志.md)
 > - v2.2: 网站抓取 + 折叠优化 → [v2.2 更新日志](./docs/简历生成器v2.2更新日志.md)
+> - **v2.3: 真实 AI 接口接入** → [AI 使用指南](./docs/AI简历优化功能使用指南.md) ✨ **最新**
 
 ### 🎭 3D虚拟头像系统
 
@@ -417,7 +451,7 @@ src/
   - `full` - 完整模式：支持完整交互控制
   - `simple` - 简化模式：基础展示功能
 
-#### 使用方式
+#### Avatar 使用方式
 
 ```vue
 <!-- 基础使用 -->

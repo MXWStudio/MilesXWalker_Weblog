@@ -35,11 +35,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'"],
         scriptSrc: ["'self'"],
         imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: [
-          "'self'",
-          'https://api.readyplayer.me',
-          'https://models.readyplayer.me',
-        ],
+        connectSrc: ["'self'", 'https://api.readyplayer.me', 'https://models.readyplayer.me'],
         fontSrc: ["'self'"],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'"],
