@@ -24,12 +24,47 @@
 
         <!-- 导入功能 -->
         <div class="header-actions">
+          <!-- 云端存储按钮 -->
+          <div class="cloud-storage-buttons">
+            <button
+              class="btn-cloud-save"
+              type="button"
+              :disabled="cloudSyncing"
+              @click="handleSaveToCloud"
+            >
+              <span v-if="cloudSyncing" class="loading-spinner"></span>
+              {{ cloudSyncing ? '保存中...' : '☁️ 保存到云端' }}
+            </button>
+            <button
+              class="btn-cloud-load"
+              type="button"
+              :disabled="cloudSyncing"
+              @click="handleLoadFromCloud"
+            >
+              <span v-if="cloudSyncing" class="loading-spinner"></span>
+              {{ cloudSyncing ? '加载中...' : '📥 从云端加载' }}
+            </button>
+          </div>
+          <div class="divider"></div>
           <button class="btn-import" type="button" @click="showImportDialog = true">
-            📥 导入简历
+            📥 导入本地文件
           </button>
           <button class="btn-export-json" type="button" @click="handleExportJSON">
             💾 导出 JSON
           </button>
+        </div>
+
+        <!-- 云端同步状态提示 -->
+        <div v-if="lastCloudSaved" class="cloud-sync-status">
+          <span class="cloud-sync-label">☁️ 上次云端保存：</span>
+          <span class="cloud-sync-time">{{ formatTime(lastCloudSaved) }}</span>
+        </div>
+
+        <!-- 云端同步错误提示 -->
+        <div v-if="cloudSyncError" class="cloud-sync-error">
+          <span class="error-icon">⚠️</span>
+          <span class="error-message">{{ cloudSyncError }}</span>
+          <button class="btn-dismiss" type="button" @click="clearCloudSyncError">✕</button>
         </div>
       </header>
 
@@ -432,8 +467,15 @@ import JobMatchAnalysis from '@/components/JobMatchAnalysis.vue'
 
 // 使用简历 Store
 const resumeStore = useResumeStore()
-const { completionPercentage, lastSaved } = storeToRefs(resumeStore)
-const { exportJSON, importJSON: importJSONToStore } = resumeStore
+const { completionPercentage, lastSaved, cloudSyncing, cloudSyncError, lastCloudSaved } =
+  storeToRefs(resumeStore)
+const {
+  exportJSON,
+  importJSON: importJSONToStore,
+  saveToCloud,
+  loadFromCloud,
+  clearCloudSyncError,
+} = resumeStore
 
 // 导入对话框状态
 const showImportDialog = ref(false)
@@ -500,6 +542,45 @@ const formatTime = timestamp => {
  */
 const handleExportJSON = () => {
   exportJSON()
+}
+
+/**
+ * 保存到云端
+ */
+const handleSaveToCloud = async () => {
+  try {
+    const result = await saveToCloud()
+    if (result.success) {
+      alert('✅ 简历已成功保存到云端！\n\n您可以随时从任何设备加载这份简历。')
+    } else {
+      alert(`❌ 保存失败：${result.error}\n\n请检查七牛云配置是否正确。`)
+    }
+  } catch (error) {
+    alert(`❌ 保存失败：${error.message}`)
+  }
+}
+
+/**
+ * 从云端加载
+ */
+const handleLoadFromCloud = async () => {
+  // 询问用户是否确定要加载云端数据
+  if (confirm('⚠️ 加载云端数据将覆盖当前的本地数据，是否继续？\n\n建议先导出当前数据作为备份。')) {
+    try {
+      const result = await loadFromCloud()
+      if (result.success) {
+        alert('✅ 简历已成功从云端加载！\n\n数据已同步到本地，您可以继续编辑。')
+      } else {
+        if (result.error.includes('没有找到')) {
+          alert('❌ 云端没有找到简历数据\n\n请先点击"保存到云端"按钮保存您的简历。')
+        } else {
+          alert(`❌ 加载失败：${result.error}\n\n请检查网络连接和七牛云配置。`)
+        }
+      }
+    } catch (error) {
+      alert(`❌ 加载失败：${error.message}`)
+    }
+  }
 }
 
 /**
@@ -1126,10 +1207,19 @@ const handleDownloadMatchReport = () => {
 .header-actions {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 15px;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
+.cloud-storage-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-cloud-save,
+.btn-cloud-load,
 .btn-import,
 .btn-export-json {
   padding: 10px 20px;
@@ -1139,6 +1229,46 @@ const handleDownloadMatchReport = () => {
   font-size: 0.95em;
   font-weight: 600;
   transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-cloud-save {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-cloud-save:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-cloud-load {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.btn-cloud-load:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e082ea 0%, #e4465b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
+}
+
+.btn-cloud-save:disabled,
+.btn-cloud-load:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.divider {
+  width: 2px;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
 }
 
 .btn-import {
@@ -1159,6 +1289,68 @@ const handleDownloadMatchReport = () => {
 .btn-export-json:hover {
   background: #38a169;
   transform: translateY(-2px);
+}
+
+/* 云端同步状态 */
+.cloud-sync-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.cloud-sync-label {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.cloud-sync-time {
+  color: #666;
+}
+
+/* 云端同步错误 */
+.cloud-sync-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(245, 87, 108, 0.1) 0%, rgba(240, 147, 251, 0.1) 100%);
+  border: 1px solid rgba(245, 87, 108, 0.3);
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.error-icon {
+  font-size: 1.2em;
+}
+
+.error-message {
+  color: #e53e3e;
+  font-weight: 500;
+  flex: 1;
+}
+
+.btn-dismiss {
+  padding: 2px 8px;
+  border: none;
+  background: rgba(245, 87, 108, 0.2);
+  color: #e53e3e;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-dismiss:hover {
+  background: rgba(245, 87, 108, 0.3);
 }
 
 /* 主体内容 */

@@ -2,17 +2,20 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { fetchBlogResumeData, parseLocalMarkdownFile, mergeResumeData } from '@/utils/blogParser'
+import resumeCloudService from '@/services/resumeCloudService'
 
 /**
  * 简历数据管理 Store
  * 使用 VueUse 的 useStorage 实现自动保存草稿到 localStorage
+ * 支持云端存储和同步功能
  *
  * 功能：
  * 1. 本地数据自动保存（localStorage）
- * 2. 从博客数据生成简历
- * 3. 从 Markdown 文件导入简历
- * 4. 支持 JSON 导入导出
- * 5. 完整的简历数据 CRUD 操作
+ * 2. 云端数据存储和同步（七牛云）
+ * 3. 从博客数据生成简历
+ * 4. 从 Markdown 文件导入简历
+ * 5. 支持 JSON 导入导出
+ * 6. 完整的简历数据 CRUD 操作
  */
 export const useResumeStore = defineStore('resume', () => {
   // 使用 useStorage 自动保存到 localStorage
@@ -107,6 +110,12 @@ export const useResumeStore = defineStore('resume', () => {
 
   // 错误信息
   const error = ref(null)
+
+  // 云端同步状态
+  const cloudSyncing = ref(false)
+  const cloudSyncError = ref(null)
+  const lastCloudSaved = useStorage('resume-last-cloud-saved', null, localStorage)
+  const cloudSyncEnabled = useStorage('resume-cloud-sync-enabled', false, localStorage)
 
   // 计算属性：检查简历是否完整
   const isComplete = computed(() => {
@@ -570,11 +579,183 @@ export const useResumeStore = defineStore('resume', () => {
     error.value = null
   }
 
+  /**
+   * 保存简历到云端
+   * @param {Object} options - 保存选项
+   * @returns {Promise<Object>} 保存结果
+   */
+  async function saveToCloud(options = {}) {
+    cloudSyncing.value = true
+    cloudSyncError.value = null
+
+    try {
+      console.log('💾 开始保存简历到云端...')
+
+      const result = await resumeCloudService.saveResume(resumeData.value, {
+        resumeId: options.resumeId || 'default',
+        onProgress: options.onProgress,
+      })
+
+      if (result.success) {
+        lastCloudSaved.value = result.data.savedAt
+        console.log('✅ 简历已保存到云端', result.data)
+        return result
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ 保存到云端失败:', err)
+      cloudSyncError.value = err.message
+      return {
+        success: false,
+        error: err.message,
+      }
+    } finally {
+      cloudSyncing.value = false
+    }
+  }
+
+  /**
+   * 从云端加载简历
+   * @param {String} resumeId - 简历ID
+   * @returns {Promise<Object>} 加载结果
+   */
+  async function loadFromCloud(resumeId = 'default') {
+    cloudSyncing.value = true
+    cloudSyncError.value = null
+
+    try {
+      console.log('📥 开始从云端加载简历...')
+
+      const result = await resumeCloudService.loadResume(resumeId)
+
+      if (result.success) {
+        // 将云端数据合并到本地
+        resumeData.value = { ...resumeData.value, ...result.data }
+        lastCloudSaved.value = result.metadata.savedAt
+        console.log('✅ 简历已从云端加载', result.metadata)
+        return result
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ 从云端加载失败:', err)
+      cloudSyncError.value = err.message
+      return {
+        success: false,
+        error: err.message,
+      }
+    } finally {
+      cloudSyncing.value = false
+    }
+  }
+
+  /**
+   * 同步简历到云端
+   * @returns {Promise<Object>} 同步结果
+   */
+  async function syncToCloud() {
+    cloudSyncing.value = true
+    cloudSyncError.value = null
+
+    try {
+      console.log('🔄 开始同步简历到云端...')
+
+      const result = await resumeCloudService.syncResume(resumeData.value)
+
+      if (result.success) {
+        lastCloudSaved.value = new Date().toISOString()
+        console.log('✅ 简历已同步到云端')
+        return result
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ 同步到云端失败:', err)
+      cloudSyncError.value = err.message
+      return {
+        success: false,
+        error: err.message,
+      }
+    } finally {
+      cloudSyncing.value = false
+    }
+  }
+
+  /**
+   * 获取云端简历列表
+   * @returns {Promise<Array>} 简历列表
+   */
+  async function getCloudResumeList() {
+    try {
+      const result = await resumeCloudService.listResumes()
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('获取云端简历列表失败:', err)
+      return []
+    }
+  }
+
+  /**
+   * 删除云端简历
+   * @param {String} resumeId - 简历ID
+   * @returns {Promise<Object>} 删除结果
+   */
+  async function deleteCloudResume(resumeId) {
+    try {
+      const result = await resumeCloudService.deleteResume(resumeId)
+      return result
+    } catch (err) {
+      console.error('删除云端简历失败:', err)
+      return {
+        success: false,
+        error: err.message,
+      }
+    }
+  }
+
+  /**
+   * 启用/禁用云端自动同步
+   * @param {Boolean} enabled - 是否启用
+   */
+  function setCloudSyncEnabled(enabled) {
+    cloudSyncEnabled.value = enabled
+    console.log(`云端自动同步已${enabled ? '启用' : '禁用'}`)
+  }
+
+  /**
+   * 检查云端是否有简历数据
+   * @returns {Promise<Boolean>} 是否存在
+   */
+  async function hasCloudResume() {
+    try {
+      return await resumeCloudService.hasResume()
+    } catch (err) {
+      return false
+    }
+  }
+
+  /**
+   * 清除云端同步错误
+   */
+  function clearCloudSyncError() {
+    cloudSyncError.value = null
+  }
+
   // 监听数据变化，自动更新保存时间
   watch(
     resumeData,
     () => {
       updateSaveTime()
+
+      // 如果启用了云端自动同步，则自动保存到云端
+      if (cloudSyncEnabled.value) {
+        resumeCloudService.autoSave(resumeData.value)
+      }
     },
     { deep: true }
   )
@@ -587,6 +768,12 @@ export const useResumeStore = defineStore('resume', () => {
     themeColor,
     loading,
     error,
+
+    // 云端同步状态
+    cloudSyncing,
+    cloudSyncError,
+    lastCloudSaved,
+    cloudSyncEnabled,
 
     // 计算属性
     isComplete,
@@ -620,5 +807,15 @@ export const useResumeStore = defineStore('resume', () => {
     generateFromMarkdownFile,
     generateFromAPI,
     clearError,
+
+    // 云端存储方法
+    saveToCloud,
+    loadFromCloud,
+    syncToCloud,
+    getCloudResumeList,
+    deleteCloudResume,
+    setCloudSyncEnabled,
+    hasCloudResume,
+    clearCloudSyncError,
   }
 })

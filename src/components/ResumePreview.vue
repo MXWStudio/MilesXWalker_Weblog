@@ -93,7 +93,11 @@
                 {{ exp.startDate }}{{ exp.endDate ? ' - ' + exp.endDate : '' }}
               </p>
             </div>
-            <div v-if="exp.description" class="resume-description" v-html="exp.description"></div>
+            <div
+              v-if="exp.description"
+              class="resume-description"
+              v-html="cleanDescription(exp.description)"
+            ></div>
           </div>
         </div>
 
@@ -177,6 +181,49 @@ const previewRef = ref(null)
 
 // 导出状态
 const isExporting = ref(false)
+
+/**
+ * 清理工作描述内容，移除重复和格式问题
+ */
+const cleanDescription = description => {
+  if (!description) return ''
+
+  let cleaned = description.trim()
+
+  // 移除可能的重复内容 - 更精确的处理
+  // 检查是否有完全重复的段落
+  const paragraphs = cleaned
+    .split(/<\/p>\s*<p>/)
+    .map(p => {
+      // 清理段落内容
+      let content = p.replace(/^<p>|<\/p>$/g, '').trim()
+      return content
+    })
+    .filter(p => p.length > 0)
+
+  // 去重，保留第一个出现的段落
+  const uniqueParagraphs = []
+  const seen = new Set()
+
+  paragraphs.forEach(content => {
+    // 使用更宽松的比较，忽略HTML标签和空格差异
+    const normalizedContent = content
+      .replace(/<[^>]*>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+    if (normalizedContent && !seen.has(normalizedContent)) {
+      seen.add(normalizedContent)
+      uniqueParagraphs.push(content)
+    }
+  })
+
+  // 重新组装HTML
+  if (uniqueParagraphs.length > 0) {
+    cleaned = uniqueParagraphs.map(content => `<p>${content}</p>`).join('')
+  }
+
+  return cleaned
+}
 
 /**
  * 预览 PDF
@@ -397,6 +444,11 @@ const handleDownload = async () => {
   gap: 15px;
 }
 
+.resume-exp-header > div {
+  flex: 1;
+  min-width: 0;
+}
+
 .resume-company,
 .resume-school,
 .resume-project-name {
@@ -404,6 +456,9 @@ const handleDownload = async () => {
   color: #2d3748;
   margin-bottom: 4px;
   font-weight: 600;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .resume-position,

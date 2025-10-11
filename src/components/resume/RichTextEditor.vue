@@ -165,9 +165,12 @@ const editor = useEditor({
 watch(
   () => props.modelValue,
   value => {
-    const isSame = editor.value.getHTML() === value
-    if (!isSame && value !== null && value !== undefined) {
-      editor.value.commands.setContent(value, false)
+    if (editor.value && value !== null && value !== undefined) {
+      const currentContent = editor.value.getHTML()
+      // 只有当内容确实不同时才更新，避免循环更新
+      if (currentContent !== value && value.trim() !== '') {
+        editor.value.commands.setContent(value, false)
+      }
     }
   }
 )
