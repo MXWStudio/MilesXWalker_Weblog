@@ -26,6 +26,7 @@ export const useResumeStore = defineStore('resume', () => {
       phone: '',
       location: '',
       website: '',
+      avatar: '', // 头像 (Base64 编码的图片数据)
 
       // 目标岗位 (用于AI定制简历)
       targetJob: '',
@@ -257,6 +258,85 @@ export const useResumeStore = defineStore('resume', () => {
   }
 
   /**
+   * 批量应用AI优化结果
+   * @param {Object} optimizedData - AI返回的优化数据
+   */
+  function applyOptimization(optimizedData) {
+    console.log('📝 应用AI优化结果...')
+
+    // 更新个人简介
+    if (optimizedData.summary) {
+      resumeData.value.summary = optimizedData.summary
+      console.log('✅ 已更新个人简介')
+    }
+
+    // 更新技能列表
+    if (optimizedData.skills && Array.isArray(optimizedData.skills)) {
+      resumeData.value.skills = optimizedData.skills
+      console.log('✅ 已更新技能列表')
+    }
+
+    // 更新工作经历
+    if (optimizedData.experience && Array.isArray(optimizedData.experience)) {
+      resumeData.value.experience = optimizedData.experience
+      console.log('✅ 已更新工作经历')
+    }
+
+    // 更新项目经验
+    if (optimizedData.projects && Array.isArray(optimizedData.projects)) {
+      resumeData.value.projects = optimizedData.projects
+      console.log('✅ 已更新项目经验')
+    }
+
+    // 更新教育背景
+    if (optimizedData.education && Array.isArray(optimizedData.education)) {
+      resumeData.value.education = optimizedData.education
+      console.log('✅ 已更新教育背景')
+    }
+
+    updateSaveTime()
+    console.log('✨ AI优化已全部应用')
+  }
+
+  /**
+   * 部分应用AI优化结果
+   * 用户可以选择应用哪些部分
+   */
+  function applyOptimizationPartial(optimizedData, options = {}) {
+    const {
+      applySummary = true,
+      applySkills = true,
+      applyExperience = true,
+      applyProjects = true,
+      applyEducation = false,
+    } = options
+
+    console.log('📝 部分应用AI优化结果...', options)
+
+    if (applySummary && optimizedData.summary) {
+      resumeData.value.summary = optimizedData.summary
+    }
+
+    if (applySkills && optimizedData.skills) {
+      resumeData.value.skills = optimizedData.skills
+    }
+
+    if (applyExperience && optimizedData.experience) {
+      resumeData.value.experience = optimizedData.experience
+    }
+
+    if (applyProjects && optimizedData.projects) {
+      resumeData.value.projects = optimizedData.projects
+    }
+
+    if (applyEducation && optimizedData.education) {
+      resumeData.value.education = optimizedData.education
+    }
+
+    updateSaveTime()
+  }
+
+  /**
    * 重置所有数据
    */
   function resetResume() {
@@ -268,6 +348,7 @@ export const useResumeStore = defineStore('resume', () => {
         phone: '',
         location: '',
         website: '',
+        avatar: '',
         targetJob: '',
         summary: '',
         experience: [
@@ -524,6 +605,10 @@ export const useResumeStore = defineStore('resume', () => {
     setTargetJob,
     resetResume,
     updateSaveTime,
+
+    // AI优化方法
+    applyOptimization,
+    applyOptimizationPartial,
 
     // 导入导出方法
     exportJSON,

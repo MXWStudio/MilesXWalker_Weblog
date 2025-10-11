@@ -12,6 +12,52 @@
 
       <!-- 可折叠的基本信息区域 -->
       <div v-show="showBasicInfo" class="collapsible-content">
+        <!-- 头像上传 -->
+        <div class="form-group">
+          <label for="avatar">个人头像</label>
+          <div class="avatar-upload-wrapper">
+            <div class="avatar-preview-container">
+              <div v-if="resumeData.avatar" class="avatar-preview">
+                <img :src="resumeData.avatar" alt="头像预览" class="avatar-image" />
+                <button
+                  type="button"
+                  class="btn-remove-avatar"
+                  title="删除头像"
+                  @click="removeAvatar"
+                >
+                  ✕
+                </button>
+              </div>
+              <div v-else class="avatar-placeholder">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>点击上传头像</span>
+              </div>
+            </div>
+            <input
+              ref="avatarInput"
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/webp"
+              style="display: none"
+              @change="handleAvatarUpload"
+            />
+            <button type="button" class="btn-upload-avatar" @click="triggerAvatarUpload">
+              {{ resumeData.avatar ? '更换头像' : '上传头像' }}
+            </button>
+          </div>
+          <small class="form-hint">支持 JPG、PNG、WEBP 格式，建议尺寸 400x400 像素</small>
+        </div>
+
         <div class="form-group">
           <label for="fullName">姓名 *</label>
           <input
@@ -353,6 +399,9 @@ const showEducation = ref(false)
 const showProjects = ref(false)
 const showSkills = ref(false)
 
+// 头像上传相关
+const avatarInput = ref(null)
+
 /**
  * 切换各区域展开/折叠
  */
@@ -427,6 +476,58 @@ const updateProjectTechnologies = (proj, event) => {
     .split(',')
     .map(t => t.trim())
     .filter(t => t.length > 0)
+}
+
+/**
+ * 触发头像上传
+ */
+const triggerAvatarUpload = () => {
+  avatarInput.value?.click()
+}
+
+/**
+ * 处理头像上传
+ */
+const handleAvatarUpload = event => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  // 检查文件类型
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+  if (!validTypes.includes(file.type)) {
+    alert('请上传 JPG、PNG 或 WEBP 格式的图片')
+    return
+  }
+
+  // 检查文件大小 (限制为 5MB)
+  const maxSize = 5 * 1024 * 1024 // 5MB
+  if (file.size > maxSize) {
+    alert('图片大小不能超过 5MB')
+    return
+  }
+
+  // 读取文件并转换为 Base64
+  const reader = new FileReader()
+  reader.onload = e => {
+    const base64Image = e.target.result
+    resumeData.value.avatar = base64Image
+  }
+  reader.onerror = () => {
+    alert('图片读取失败，请重试')
+  }
+  reader.readAsDataURL(file)
+
+  // 清空输入，允许重新上传同一文件
+  event.target.value = ''
+}
+
+/**
+ * 删除头像
+ */
+const removeAvatar = () => {
+  if (confirm('确定要删除头像吗？')) {
+    resumeData.value.avatar = ''
+  }
 }
 
 // 监听项目变化,同步技术栈显示
@@ -621,6 +722,111 @@ watch(
   transform: translateY(-1px);
 }
 
+/* 头像上传 */
+.avatar-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.avatar-preview-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background: #f7fafc;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e0;
+  transition: all 0.3s ease;
+}
+
+.avatar-preview-container:hover {
+  border-color: #667eea;
+  background: #edf2f7;
+}
+
+.avatar-preview {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #667eea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-remove-avatar {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 32px;
+  height: 32px;
+  background: #fc8181;
+  color: white;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-remove-avatar:hover {
+  background: #f56565;
+  transform: scale(1.1);
+}
+
+.avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 150px;
+  height: 150px;
+  color: #a0aec0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.avatar-placeholder:hover {
+  color: #667eea;
+  transform: scale(1.05);
+}
+
+.avatar-placeholder span {
+  font-size: 0.9em;
+  font-weight: 500;
+  text-align: center;
+}
+
+.btn-upload-avatar {
+  padding: 10px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  align-self: center;
+}
+
+.btn-upload-avatar:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
 /* 响应式 */
 @media (max-width: 640px) {
   .editor-card {
@@ -629,6 +835,12 @@ watch(
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .avatar-preview,
+  .avatar-placeholder {
+    width: 120px;
+    height: 120px;
   }
 }
 </style>

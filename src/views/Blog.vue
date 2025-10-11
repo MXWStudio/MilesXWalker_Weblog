@@ -147,57 +147,8 @@ const email = ref('')
 const currentCategory = ref('全部')
 const captchaChecked = ref(false)
 
-// 示例博客文章数据
+// 博客文章数据
 const blogPosts = ref([
-  {
-    id: 1,
-    title: '摄影入门：如何拍出好照片',
-    excerpt: '分享一些基础的摄影技巧和构图方法，帮助初学者快速入门...',
-    date: '2024-03-15',
-    category: '摄影技巧',
-    image: 'https://picsum.photos/800/400?random=1',
-  },
-  {
-    id: 2,
-    title: 'Vue3 组合式API实战心得',
-    excerpt: '深入探讨Vue3组合式API的使用技巧和最佳实践...',
-    date: '2024-03-10',
-    category: '技术分享',
-    image: 'https://picsum.photos/800/400?random=2',
-  },
-  {
-    id: 3,
-    title: '城市街拍：记录生活的瞬间',
-    excerpt: '分享我在城市中捕捉到的精彩瞬间和背后的故事...',
-    date: '2024-03-05',
-    category: '摄影作品',
-    image: 'https://picsum.photos/800/400?random=3',
-  },
-  {
-    id: 4,
-    title: '后期处理：提升照片质感的技巧',
-    excerpt: '分享一些实用的照片后期处理技巧，让你的作品更出彩...',
-    date: '2024-03-01',
-    category: '摄影技巧',
-    image: 'https://picsum.photos/800/400?random=4',
-  },
-  {
-    id: 5,
-    title: 'Vue3 性能优化实践',
-    excerpt: '探讨Vue3项目中的性能优化策略和最佳实践...',
-    date: '2024-02-28',
-    category: '技术分享',
-    image: 'https://picsum.photos/800/400?random=5',
-  },
-  {
-    id: 1001,
-    title: '我们需要一个属于创作者的 Web3D 虚拟人物标准',
-    excerpt: 'Web3D与虚拟人物的未来，需要属于创作者的开放标准。点击阅读详细观点...',
-    date: '2024-06-01',
-    category: 'Web3D',
-    image: 'https://picsum.photos/800/400?random=101',
-    route: '/articles/web3d',
-  },
   {
     id: 6,
     title: 'Trail Log 开发日志 · 第一篇',
@@ -341,6 +292,8 @@ const handleSubscribe = () => {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* 侧边栏样式 */
@@ -449,8 +402,16 @@ const handleSubscribe = () => {
 /* 文章网格样式 */
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 当只有1篇文章时，居中显示 */
+.blog-grid:has(.blog-card:only-child) {
+  grid-template-columns: 1fr;
+  max-width: 400px;
 }
 
 .blog-card {
@@ -459,6 +420,9 @@ const handleSubscribe = () => {
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  max-height: 380px;
+  display: flex;
+  flex-direction: column;
 }
 
 .blog-card:hover {
@@ -467,8 +431,9 @@ const handleSubscribe = () => {
 
 .blog-image {
   width: 100%;
-  height: 200px;
+  height: 150px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .blog-image img {
@@ -483,28 +448,41 @@ const handleSubscribe = () => {
 }
 
 .blog-content {
-  padding: 20px;
+  padding: 15px;
 }
 
 .blog-content h2 {
-  font-size: 1.4em;
+  font-size: 1.2em;
   color: #2c3e50;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  /* 限制标题显示2行，超出部分显示省略号 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
 .blog-excerpt {
   color: #666;
-  font-size: 0.95em;
-  line-height: 1.6;
-  margin-bottom: 15px;
+  font-size: 0.9em;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  /* 限制显示2行，超出部分显示省略号 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .blog-meta {
   display: flex;
   justify-content: space-between;
   color: #888;
-  font-size: 0.9em;
-  margin-bottom: 15px;
+  font-size: 0.85em;
+  margin-bottom: 8px;
 }
 
 .read-more {
@@ -528,6 +506,14 @@ const handleSubscribe = () => {
   .blog-sidebar {
     position: static;
     margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    padding: 0 10px;
   }
 }
 

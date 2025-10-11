@@ -53,12 +53,21 @@
       <div id="resume-preview" ref="previewRef" class="resume-preview">
         <!-- 简历头部 -->
         <div class="resume-header">
-          <h1 class="resume-name">{{ resumeData.fullName || '您的姓名' }}</h1>
-          <p class="resume-title">{{ resumeData.title || '职位' }}</p>
-          <div class="resume-contact">
-            <span v-if="resumeData.email">📧 {{ resumeData.email }}</span>
-            <span v-if="resumeData.phone">📞 {{ resumeData.phone }}</span>
-            <span v-if="resumeData.location">📍 {{ resumeData.location }}</span>
+          <div class="header-content">
+            <!-- 头像 -->
+            <div v-if="resumeData.avatar" class="resume-avatar">
+              <img :src="resumeData.avatar" alt="个人头像" class="avatar-image" />
+            </div>
+            <!-- 个人信息 -->
+            <div class="header-info">
+              <h1 class="resume-name">{{ resumeData.fullName || '您的姓名' }}</h1>
+              <p class="resume-title">{{ resumeData.title || '职位' }}</p>
+              <div class="resume-contact">
+                <span v-if="resumeData.email">📧 {{ resumeData.email }}</span>
+                <span v-if="resumeData.phone">📞 {{ resumeData.phone }}</span>
+                <span v-if="resumeData.location">📍 {{ resumeData.location }}</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -85,6 +94,38 @@
               </p>
             </div>
             <div v-if="exp.description" class="resume-description" v-html="exp.description"></div>
+          </div>
+        </div>
+
+        <!-- 项目经验 -->
+        <div
+          v-if="resumeData.projects && resumeData.projects.length && resumeData.projects[0].name"
+          class="resume-section"
+        >
+          <h2 class="resume-section-title">项目经验</h2>
+          <div v-for="proj in resumeData.projects" :key="proj.id" class="resume-project-item">
+            <div v-if="proj.name" class="resume-proj-header">
+              <div>
+                <h3 class="resume-project-name">
+                  {{ proj.name }}
+                  <span v-if="proj.role" class="resume-project-role"> - {{ proj.role }}</span>
+                </h3>
+                <p v-if="proj.technologies" class="resume-project-tech">
+                  技术栈：{{
+                    Array.isArray(proj.technologies)
+                      ? proj.technologies.join(', ')
+                      : proj.technologies
+                  }}
+                </p>
+              </div>
+              <p class="resume-date">
+                {{ proj.startDate }}{{ proj.endDate ? ' - ' + proj.endDate : '' }}
+              </p>
+            </div>
+            <div v-if="proj.description" class="resume-description" v-html="proj.description"></div>
+            <div v-if="proj.url" class="resume-project-url">
+              🔗 项目链接：<a :href="proj.url" target="_blank" rel="noopener">{{ proj.url }}</a>
+            </div>
           </div>
         </div>
 
@@ -273,10 +314,32 @@ const handleDownload = async () => {
 }
 
 .resume-header {
-  text-align: center;
   border-bottom: 2px solid #2d3748;
   padding-bottom: 20px;
   margin-bottom: 30px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.resume-avatar {
+  flex-shrink: 0;
+}
+
+.resume-avatar .avatar-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #667eea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.header-info {
+  flex: 1;
 }
 
 .resume-name {
@@ -294,7 +357,6 @@ const handleDownload = async () => {
 
 .resume-contact {
   display: flex;
-  justify-content: center;
   gap: 20px;
   flex-wrap: wrap;
   font-size: 0.95em;
@@ -320,12 +382,14 @@ const handleDownload = async () => {
 }
 
 .resume-experience-item,
-.resume-education-item {
+.resume-education-item,
+.resume-project-item {
   margin-bottom: 20px;
 }
 
 .resume-exp-header,
-.resume-edu-header {
+.resume-edu-header,
+.resume-proj-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -334,7 +398,8 @@ const handleDownload = async () => {
 }
 
 .resume-company,
-.resume-school {
+.resume-school,
+.resume-project-name {
   font-size: 1.15em;
   color: #2d3748;
   margin-bottom: 4px;
@@ -345,6 +410,35 @@ const handleDownload = async () => {
 .resume-degree {
   color: #4a5568;
   font-size: 0.95em;
+}
+
+.resume-project-role {
+  color: #667eea;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.resume-project-tech {
+  color: #718096;
+  font-size: 0.85em;
+  margin-top: 4px;
+}
+
+.resume-project-url {
+  color: #718096;
+  font-size: 0.85em;
+  margin-top: 8px;
+}
+
+.resume-project-url a {
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.resume-project-url a:hover {
+  color: #5a67d8;
+  text-decoration: underline;
 }
 
 .resume-date {
@@ -408,6 +502,21 @@ const handleDownload = async () => {
 @media (max-width: 640px) {
   .resume-preview {
     padding: 30px 20px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .resume-avatar .avatar-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .resume-contact {
+    justify-content: center;
   }
 
   .resume-name {

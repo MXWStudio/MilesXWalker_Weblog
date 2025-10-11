@@ -38,7 +38,7 @@
             <p>
               <span class="icon">📧</span>
               <strong></strong>
-              milesxwalkerstudio@gmail.com
+              mengxw.edit@gmail.com
             </p>
             <p>
               <span class="icon">📞</span>
