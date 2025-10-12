@@ -2,7 +2,8 @@
  * 简历云端存储服务
  * 使用七牛云存储用户简历数据
  * @author MilesXWalkerStudio
- * @version 1.0.0
+ * @version 2.0.0
+ * @note 已升级为使用服务端安全API
  */
 
 import qiniuService from './qiniuService'

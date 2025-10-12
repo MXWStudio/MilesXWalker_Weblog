@@ -1,40 +1,43 @@
 /**
- * 七牛云对象存储服务
- * 提供文件上传、下载、管理等功能
+ * 七牛云对象存储服务 - 前端客户端
+ * 通过服务端API安全地操作七牛云
  * @author MilesXWalkerStudio
- * @version 1.0.0
+ * @version 2.0.0
+ * @note 重要改进：使用服务端签名，前端不再暴露密钥
  */
 
 import axios from 'axios'
-import crypto from 'crypto-js'
 
 class QiniuService {
   constructor() {
-    this.accessKey = import.meta.env.QINIU_ACCESS_KEY || ''
-    this.secretKey = import.meta.env.QINIU_SECRET_KEY || ''
-    this.bucket = import.meta.env.QINIU_BUCKET || ''
+    // 服务端API基础URL
+    this.apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+    this.apiPath = '/api/qiniu'
+
+    // 前端可访问的配置
     this.domain = import.meta.env.VITE_QINIU_DOMAIN || ''
-    this.region = import.meta.env.VITE_QINIU_REGION || 'cn-east-1'
-    this.uploadUrl = import.meta.env.VITE_QINIU_UPLOAD_URL || 'https://upload.qiniup.com'
-    this.pathPrefix = import.meta.env.QINIU_PATH_PREFIX || 'uploads/'
-    this.maxFileSize = parseInt(import.meta.env.QINIU_MAX_FILE_SIZE || '10485760')
-    this.expireTime = parseInt(import.meta.env.QINIU_EXPIRE_TIME || '3600')
-    this.isPrivate = import.meta.env.QINIU_PRIVATE_BUCKET === 'true'
     this.debug = import.meta.env.VITE_ENABLE_QINIU_DEBUG === 'true'
 
-    // 初始化axios实例
+    // 上传URL（固定）
+    this.uploadUrl = 'https://upload.qiniup.com'
+
+    // 创建axios实例
     this.api = axios.create({
+      baseURL: `${this.apiBaseUrl}${this.apiPath}`,
       timeout: 30000,
       headers: {
         'Content-Type': 'application/json',
       },
     })
 
-    this.log('七牛云服务初始化', {
-      bucket: this.bucket,
-      region: this.region,
+    // 用于直接上传的axios实例
+    this.uploadApi = axios.create({
+      timeout: 0, // 上传不设置超时
+    })
+
+    this.log('七牛云服务初始化 v2.0', {
+      apiUrl: `${this.apiBaseUrl}${this.apiPath}`,
       domain: this.domain,
-      isPrivate: this.isPrivate,
     })
   }
 
@@ -43,150 +46,152 @@ class QiniuService {
    */
   log(message, data = null) {
     if (this.debug) {
-      console.log(`[QiniuService] ${message}`, data)
+      console.log(`[QiniuService v2.0] ${message}`, data || '')
     }
   }
 
   /**
-   * 生成Base64安全编码
+   * 测试服务端连接
+   * @returns {Promise<Object>} 测试结果
    */
-  base64UrlSafeEncode(str) {
-    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
-  }
-
-  /**
-   * 生成HMAC-SHA1签名
-   */
-  hmacSha1(message, secret) {
-    return crypto.HmacSHA1(message, secret).toString(crypto.enc.Base64)
-  }
-
-  /**
-   * 生成上传Token
-   */
-  generateUploadToken(key = null, expires = null) {
+  async testConnection() {
     try {
-      const deadline = Math.floor(Date.now() / 1000) + (expires || this.expireTime)
+      this.log('测试服务端连接...')
 
-      const putPolicy = {
-        scope: key ? `${this.bucket}:${key}` : this.bucket,
-        deadline: deadline,
-        returnBody: JSON.stringify({
-          key: '$(key)',
-          hash: '$(etag)',
-          bucket: '$(bucket)',
-          fname: '$(fname)',
-          fsize: '$(fsize)',
-          mimeType: '$(mimeType)',
-          endUser: '$(endUser)',
-          persistentId: '$(persistentId)',
-          imageInfo: '$(imageInfo.width)x$(imageInfo.height)',
-          avinfo: '$(avinfo.video.duration)',
-        }),
-      }
+      const response = await this.api.get('/test')
 
-      const putPolicyStr = JSON.stringify(putPolicy)
-      const encodedPutPolicy = this.base64UrlSafeEncode(putPolicyStr)
+      this.log('连接测试成功', response.data)
 
-      const sign = this.hmacSha1(encodedPutPolicy, this.secretKey)
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=/g, '')
-
-      const token = `${this.accessKey}:${sign}:${encodedPutPolicy}`
-
-      this.log('生成上传Token成功', { key, expires: deadline })
-      return token
+      return response.data
     } catch (error) {
-      this.log('生成上传Token失败', error)
-      throw new Error('生成上传Token失败: ' + error.message)
+      this.log('连接测试失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || '连接测试失败',
+      }
     }
   }
 
   /**
-   * 生成下载Token（私有空间）
+   * 获取配置信息
+   * @returns {Promise<Object>} 配置信息
    */
-  generateDownloadToken(url, expires = null) {
+  async getConfig() {
     try {
-      if (!this.isPrivate) {
-        return url // 公开空间直接返回URL
-      }
+      const response = await this.api.get('/config')
 
-      const deadline = Math.floor(Date.now() / 1000) + (expires || this.expireTime)
-      const urlWithDeadline = `${url}?e=${deadline}`
+      this.log('获取配置成功', response.data)
 
-      const sign = this.hmacSha1(urlWithDeadline, this.secretKey)
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=/g, '')
-
-      const tokenUrl = `${urlWithDeadline}&token=${this.accessKey}:${sign}`
-
-      this.log('生成下载Token成功', { url: tokenUrl })
-      return tokenUrl
+      return response.data
     } catch (error) {
-      this.log('生成下载Token失败', error)
-      throw new Error('生成下载Token失败: ' + error.message)
+      this.log('获取配置失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      }
+    }
+  }
+
+  /**
+   * 从服务端获取上传凭证
+   * @param {Object} options 上传选项
+   * @returns {Promise<Object>} 上传凭证信息
+   */
+  async getUploadToken(options = {}) {
+    try {
+      this.log('获取上传凭证...', options)
+
+      const response = await this.api.post('/upload-token', {
+        key: options.key || null,
+        expires: options.expires || 3600,
+        fsizeLimit: options.fsizeLimit || 1024 * 1024 * 100, // 默认100MB
+        mimeLimit: options.mimeLimit || null,
+      })
+
+      if (response.data.success) {
+        this.log('获取上传凭证成功')
+        return {
+          success: true,
+          token: response.data.token,
+          uploadUrl: response.data.uploadUrl,
+          domain: response.data.domain || this.domain,
+          expiresIn: response.data.expiresIn,
+        }
+      } else {
+        throw new Error(response.data.error || '获取上传凭证失败')
+      }
+    } catch (error) {
+      this.log('获取上传凭证失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || '获取上传凭证失败',
+      }
     }
   }
 
   /**
    * 上传文件
-   * @param {File} file - 文件对象
-   * @param {Object} options - 上传选项
-   * @returns {Promise} 上传结果
+   * @param {File} file 文件对象
+   * @param {Object} options 上传选项
+   * @returns {Promise<Object>} 上传结果
    */
   async uploadFile(file, options = {}) {
     try {
-      // 文件大小检查
-      if (file.size > this.maxFileSize) {
-        throw new Error(`文件大小超过限制 ${this.maxFileSize / 1024 / 1024}MB`)
-      }
-
-      // 生成文件名
-      const timestamp = Date.now()
-      const randomStr = Math.random().toString(36).substring(2, 15)
-      const extension = file.name.split('.').pop()
-      const fileName = options.fileName || `${timestamp}_${randomStr}.${extension}`
-      const key = `${this.pathPrefix}${fileName}`
-
-      // 生成上传Token
-      const token = this.generateUploadToken(key, options.expires)
-
-      // 准备上传数据
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('key', key)
-      formData.append('token', token)
-
-      if (options.mimeType) {
-        formData.append('mimeType', options.mimeType)
-      }
-
       this.log('开始上传文件', {
         fileName: file.name,
-        size: file.size,
-        key: key,
+        fileSize: file.size,
+        fileType: file.type,
       })
 
-      // 执行上传
-      const response = await axios.post(this.uploadUrl, formData, {
+      // 1. 获取上传凭证
+      const tokenResult = await this.getUploadToken({
+        key: options.fileName || null,
+        expires: options.expires,
+        fsizeLimit: options.fsizeLimit,
+        mimeLimit: options.mimeLimit,
+      })
+
+      if (!tokenResult.success) {
+        throw new Error(tokenResult.error)
+      }
+
+      // 2. 准备上传数据
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('token', tokenResult.token)
+
+      if (options.fileName) {
+        formData.append('key', options.fileName)
+      }
+
+      // 3. 执行上传
+      this.log('执行上传到七牛云...')
+
+      const uploadResponse = await this.uploadApi.post(tokenResult.uploadUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        onUploadProgress: options.onProgress || null,
+        onUploadProgress: progressEvent => {
+          if (options.onProgress) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            options.onProgress(percentCompleted)
+          }
+        },
       })
 
+      // 4. 处理上传结果
       const result = {
         success: true,
-        data: response.data,
-        url: this.getFileUrl(response.data.key),
-        key: response.data.key,
-        hash: response.data.hash,
-        size: response.data.fsize,
+        key: uploadResponse.data.key,
+        hash: uploadResponse.data.hash,
+        url: this.getFileUrl(uploadResponse.data.key),
+        size: uploadResponse.data.fsize || file.size,
+        mimeType: uploadResponse.data.mimeType || file.type,
+        data: uploadResponse.data,
       }
 
       this.log('文件上传成功', result)
+
       return result
     } catch (error) {
       this.log('文件上传失败', error)
@@ -199,9 +204,14 @@ class QiniuService {
 
   /**
    * 批量上传文件
+   * @param {Array<File>} files 文件数组
+   * @param {Object} options 上传选项
+   * @returns {Promise<Object>} 批量上传结果
    */
   async uploadFiles(files, options = {}) {
     try {
+      this.log('开始批量上传', { count: files.length })
+
       const uploadPromises = Array.from(files).map(file => this.uploadFile(file, options))
 
       const results = await Promise.all(uploadPromises)
@@ -229,35 +239,52 @@ class QiniuService {
 
   /**
    * 获取文件访问URL
+   * @param {String} key 文件key
+   * @param {Object} options 选项
+   * @returns {String} 文件URL
    */
   getFileUrl(key, options = {}) {
+    if (!key) return ''
+
+    // 对于公开空间，直接返回URL
+    // 对于私有空间，需要通过服务端API获取签名URL
     const baseUrl = `${this.domain}/${key}`
 
-    if (this.isPrivate) {
-      return this.generateDownloadToken(baseUrl, options.expires)
+    // 如果指定了处理参数，添加到URL
+    if (options.process) {
+      return `${baseUrl}?${options.process}`
     }
 
     return baseUrl
   }
 
   /**
-   * 删除文件
+   * 获取私有空间的下载URL（通过服务端）
+   * @param {String} key 文件key
+   * @param {Number} expires 过期时间（秒）
+   * @returns {Promise<Object>} 下载URL
    */
-  async deleteFile(key) {
+  async getDownloadUrl(key, expires = 3600) {
     try {
-      const url = `https://rs.qbox.me/delete/${this.base64UrlSafeEncode(`${this.bucket}:${key}`)}`
-      const sign = this.hmacSha1(`DELETE ${url.split('://')[1]}`, this.secretKey)
+      this.log('获取下载URL...', { key, expires })
 
-      const response = await this.api.delete(url, {
-        headers: {
-          Authorization: `QBox ${this.accessKey}:${sign}`,
-        },
+      const response = await this.api.post('/download-url', {
+        key,
+        expires,
       })
 
-      this.log('文件删除成功', { key })
-      return { success: true }
+      if (response.data.success) {
+        this.log('获取下载URL成功')
+        return {
+          success: true,
+          url: response.data.url,
+          expiresIn: response.data.expiresIn,
+        }
+      } else {
+        throw new Error(response.data.error)
+      }
     } catch (error) {
-      this.log('文件删除失败', error)
+      this.log('获取下载URL失败', error)
       return {
         success: false,
         error: error.response?.data?.error || error.message,
@@ -267,21 +294,20 @@ class QiniuService {
 
   /**
    * 获取文件信息
+   * @param {String} key 文件key
+   * @returns {Promise<Object>} 文件信息
    */
   async getFileInfo(key) {
     try {
-      const url = `https://rs.qbox.me/stat/${this.base64UrlSafeEncode(`${this.bucket}:${key}`)}`
-      const sign = this.hmacSha1(`GET ${url.split('://')[1]}`, this.secretKey)
+      this.log('获取文件信息...', { key })
 
-      const response = await this.api.get(url, {
-        headers: {
-          Authorization: `QBox ${this.accessKey}:${sign}`,
-        },
-      })
+      const response = await this.api.get(`/file-info/${encodeURIComponent(key)}`)
 
-      return {
-        success: true,
-        data: response.data,
+      if (response.data.success) {
+        this.log('获取文件信息成功')
+        return response.data
+      } else {
+        throw new Error(response.data.error)
       }
     } catch (error) {
       this.log('获取文件信息失败', error)
@@ -294,28 +320,28 @@ class QiniuService {
 
   /**
    * 列举文件
+   * @param {Object} options 列举选项
+   * @returns {Promise<Object>} 文件列表
    */
   async listFiles(options = {}) {
     try {
-      const params = new URLSearchParams({
-        bucket: this.bucket,
+      this.log('列举文件...', options)
+
+      const params = {
+        prefix: options.prefix || '',
+        marker: options.marker || '',
         limit: options.limit || 100,
-        ...(options.prefix && { prefix: options.prefix }),
-        ...(options.marker && { marker: options.marker }),
-      })
+      }
 
-      const url = `https://rsf.qbox.me/list?${params}`
-      const sign = this.hmacSha1(`GET ${url.split('://')[1]}`, this.secretKey)
+      const response = await this.api.get('/files', { params })
 
-      const response = await this.api.get(url, {
-        headers: {
-          Authorization: `QBox ${this.accessKey}:${sign}`,
-        },
-      })
-
-      return {
-        success: true,
-        data: response.data,
+      if (response.data.success) {
+        this.log('列举文件成功', {
+          count: response.data.data.items?.length || 0,
+        })
+        return response.data
+      } else {
+        throw new Error(response.data.error)
       }
     } catch (error) {
       this.log('列举文件失败', error)
@@ -327,48 +353,180 @@ class QiniuService {
   }
 
   /**
-   * 验证配置
+   * 删除文件
+   * @param {String} key 文件key
+   * @returns {Promise<Object>} 删除结果
    */
-  validateConfig() {
-    const required = [
-      { key: 'accessKey', value: this.accessKey, name: '访问密钥' },
-      { key: 'secretKey', value: this.secretKey, name: '私钥' },
-      { key: 'bucket', value: this.bucket, name: '存储空间' },
-      { key: 'domain', value: this.domain, name: '访问域名' },
-    ]
+  async deleteFile(key) {
+    try {
+      this.log('删除文件...', { key })
 
-    const missing = required.filter(item => !item.value)
+      const response = await this.api.delete(`/file/${encodeURIComponent(key)}`)
 
-    if (missing.length > 0) {
-      const missingNames = missing.map(item => item.name).join('、')
-      throw new Error(`七牛云配置不完整，缺少: ${missingNames}`)
+      if (response.data.success) {
+        this.log('文件删除成功')
+        return response.data
+      } else {
+        throw new Error(response.data.error)
+      }
+    } catch (error) {
+      this.log('文件删除失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      }
+    }
+  }
+
+  /**
+   * 批量删除文件
+   * @param {Array<String>} keys 文件key数组
+   * @returns {Promise<Object>} 批量删除结果
+   */
+  async batchDelete(keys) {
+    try {
+      this.log('批量删除文件...', { count: keys.length })
+
+      const response = await this.api.post('/batch-delete', { keys })
+
+      if (response.data.success) {
+        this.log('批量删除成功', {
+          success: response.data.successCount,
+          failed: response.data.failedCount,
+        })
+        return response.data
+      } else {
+        throw new Error(response.data.error)
+      }
+    } catch (error) {
+      this.log('批量删除失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      }
+    }
+  }
+
+  /**
+   * 移动/重命名文件
+   * @param {String} srcKey 源文件key
+   * @param {String} destKey 目标文件key
+   * @param {Boolean} force 是否强制覆盖
+   * @returns {Promise<Object>} 移动结果
+   */
+  async moveFile(srcKey, destKey, force = false) {
+    try {
+      this.log('移动文件...', { srcKey, destKey, force })
+
+      const response = await this.api.post('/move', {
+        srcKey,
+        destKey,
+        force,
+      })
+
+      if (response.data.success) {
+        this.log('文件移动成功')
+        return response.data
+      } else {
+        throw new Error(response.data.error)
+      }
+    } catch (error) {
+      this.log('文件移动失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      }
+    }
+  }
+
+  /**
+   * 复制文件
+   * @param {String} srcKey 源文件key
+   * @param {String} destKey 目标文件key
+   * @param {Boolean} force 是否强制覆盖
+   * @returns {Promise<Object>} 复制结果
+   */
+  async copyFile(srcKey, destKey, force = false) {
+    try {
+      this.log('复制文件...', { srcKey, destKey, force })
+
+      const response = await this.api.post('/copy', {
+        srcKey,
+        destKey,
+        force,
+      })
+
+      if (response.data.success) {
+        this.log('文件复制成功')
+        return response.data
+      } else {
+        throw new Error(response.data.error)
+      }
+    } catch (error) {
+      this.log('文件复制失败', error)
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      }
+    }
+  }
+
+  /**
+   * 图片处理 - 生成缩略图URL
+   * @param {String} key 文件key
+   * @param {Object} options 处理选项
+   * @returns {String} 处理后的URL
+   */
+  getThumbnailUrl(key, options = {}) {
+    const { width = 200, height = 200, mode = 1, format = null } = options
+
+    let processStr = `imageView2/${mode}/w/${width}/h/${height}`
+
+    if (format) {
+      processStr += `/format/${format}`
     }
 
-    this.log('配置验证通过')
+    return this.getFileUrl(key, { process: processStr })
+  }
+
+  /**
+   * 图片处理 - 水印
+   * @param {String} key 文件key
+   * @param {String} text 水印文字
+   * @returns {String} 处理后的URL
+   */
+  getWatermarkUrl(key, text) {
+    const encodedText = btoa(unescape(encodeURIComponent(text)))
+    const processStr = `watermark/2/text/${encodedText}`
+
+    return this.getFileUrl(key, { process: processStr })
+  }
+
+  /**
+   * 验证配置
+   * @returns {Boolean} 是否配置完整
+   */
+  validateConfig() {
+    if (!this.domain) {
+      console.warn('七牛云域名未配置，请检查 VITE_QINIU_DOMAIN 环境变量')
+      return false
+    }
+
     return true
   }
 
   /**
-   * 测试连接
+   * 健康检查
+   * @returns {Promise<Object>} 健康状态
    */
-  async testConnection() {
+  async healthCheck() {
     try {
-      this.validateConfig()
-
-      // 测试获取存储空间信息
-      const result = await this.listFiles({ limit: 1 })
-
-      if (result.success) {
-        this.log('连接测试成功')
-        return { success: true, message: '七牛云连接测试成功' }
-      } else {
-        throw new Error(result.error)
-      }
+      const response = await this.api.get('/health')
+      return response.data
     } catch (error) {
-      this.log('连接测试失败', error)
       return {
-        success: false,
-        error: error.message || '连接测试失败',
+        status: 'unhealthy',
+        error: error.message,
       }
     }
   }
@@ -378,6 +536,4 @@ class QiniuService {
 const qiniuService = new QiniuService()
 
 export default qiniuService
-
-// 导出类以便于测试
 export { QiniuService }

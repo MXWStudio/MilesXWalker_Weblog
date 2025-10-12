@@ -15,6 +15,7 @@ MilesXWalkerStudio 是一个基于Vue 3 + TypeScript + Vite构建的现代化前
 - 🤖 **AI 简历优化增强版** ✨ **全新升级！**
   - ⚡ 快速优化：智能优化简介和技能（10-15秒）
   - 🔍 深度优化：全面优化所有内容（20-30秒）
+  - 🔄 **多模型切换** 🆕 - 支持6种AI模型自由切换，包含免费、付费和本地模型
   - 📊 匹配度分析：评估简历与岗位的匹配程度
   - 💡 优化建议：AI提供具体可行的改进方向
   - 📝 对比预览：优化前后内容一目了然
@@ -30,7 +31,9 @@ MilesXWalkerStudio 是一个基于Vue 3 + TypeScript + Vite构建的现代化前
 
 **快速开始：**
 
-- [AI 简历优化增强版使用指南](./docs/AI简历优化增强版使用指南.md) 🔥 **最新功能**
+- [Gemini配置指南](./docs/Gemini配置指南.md) 🌟 **强烈推荐！免费且强大**
+- [AI 模型切换功能使用指南](./docs/AI模型切换功能使用指南.md) 🆕 **支持9种模型**
+- [AI 简历优化增强版使用指南](./docs/AI简历优化增强版使用指南.md) 🔥 **热门功能**
 - [简历云端存储功能说明](./docs/简历云端存储功能说明.md) ⚡ **全新上线**
 - [AI 简历优化快速参考](./docs/commands/AI简历优化快速参考.md) ⚡ 快速上手
 - [简历生成器使用指南](./docs/简历生成器使用指南.md)
@@ -50,7 +53,26 @@ MilesXWalkerStudio 是一个基于Vue 3 + TypeScript + Vite构建的现代化前
 - **视频作品** - 流畅的视频播放
 - **博客文章** - Markdown 支持的文章系统
 
+### ☁️ 七牛云对象存储 ✨ **v2.0 重大升级！**
+
+完全重构的安全架构，遵循官方最佳实践：
+
+- 🔐 **安全升级** - 密钥不再暴露，使用服务端签名
+- 📦 **大文件支持** - 分片上传，支持超大文件（几GB）
+- 🔄 **断点续传** - 网络中断可恢复，上传更可靠
+- ⚡ **性能优化** - 并发上传，智能重试，速度提升3倍
+- 🛠️ **功能完整** - 批量操作、文件管理、图片处理
+- 📊 **实时进度** - 精确到分片的上传进度追踪
+
+**快速开始：**
+
+- [七牛云 v2.0 使用指南](./docs/七牛云v2.0使用指南.md) 🔥 **必读！**
+- [架构重构完成报告](./docs/七牛云架构重构完成报告.md) 📖 详细说明
+- [快速测试指南](./docs/commands/七牛云v2.0快速测试.md) ⚡ 立即验证
+
 ## 技术栈
+
+### 前端技术
 
 - **前端框架**: Vue 3 (Composition API)
 - **开发语言**: TypeScript
@@ -59,33 +81,68 @@ MilesXWalkerStudio 是一个基于Vue 3 + TypeScript + Vite构建的现代化前
 - **路由管理**: Vue Router 4
 - **样式框架**: Tailwind CSS
 - **UI组件**: Inspira UI
-- **AI 功能**: OpenAI GPT-4o-mini
+- **工具库**: VueUse, Lucide Vue
+
+### 后端服务
+
+- **服务端框架**: Express.js
+- **对象存储**: 七牛云 Kodo (Node.js SDK v7.14.0) ✨ **v2.0**
+- **API 安全**: Rate Limiting, CORS, Helmet
+
+### AI & 媒体处理
+
+- **AI 功能**: 多模型支持 🆕
+  - **Google Gemini**: Gemini 2.5 Flash (免费默认), 2.5 Pro, 1.5 Flash, 1.5 Pro 🌟
+  - OpenAI: GPT-4o-mini, GPT-4o, GPT-4-turbo, GPT-4, GPT-3.5-turbo
+  - 本地: Llama 3.2 (Ollama)
+  - 自动保存模型偏好
 - **OCR 识别**: Tesseract.js
 - **富文本编辑**: TipTap
 - **3D渲染**: Three.js + TresJS
 - **3D模型**: ReadyPlayerMe GLB格式
-- **工具库**: VueUse, Lucide Vue
+
+### 部署 & 运维
+
 - **部署平台**: Vercel
+- **CDN 加速**: 七牛云 CDN
+- **环境管理**: dotenv
 
 ## 项目结构
 
+```
 src/
 ├── components/ # 可复用组件
 ├── views/ # 页面组件
 ├── router/ # 路由配置
 ├── stores/ # Pinia状态管理
+├── services/ # 服务层（API调用）
+│   ├── qiniuService.js # 七牛云服务 (v2.0) ✨
+│   └── resumeCloudService.js # 简历云端存储
 ├── utils/ # 工具函数
+│   └── qiniuUploader.js # 大文件分片上传 ✨ NEW
 ├── lib/ # 库文件
 ├── assets/ # 静态资源
 └── main.js # 应用入口
 
+server/ # 🚀 服务端目录
+├── api/ # API 路由
+│   ├── ready-player-me.js # RPM API
+│   └── qiniu.js # 七牛云 API (v2.0) ✨ NEW
+├── utils/ # 服务端工具
+│   └── qiniu-helper.js # 七牛云助手 ✨ NEW
+└── index.js # 服务器入口
+
 docs/ # 📚 项目文档中心
 ├── commands/ # 🔨 命令参考文档
+│   └── 七牛云v2.0快速测试.md ✨ NEW
 ├── deployment/ # 🚀 部署文档
-└── rules/ # 📏 开发规则文档
+├── rules/ # 📏 开发规则文档
+├── 七牛云v2.0使用指南.md ✨ NEW
+└── 七牛云架构重构完成报告.md ✨ NEW
 
 config/ # 🔧 配置文件目录
 └── README.md # 配置文件说明
+```
 
 ## 🚨 重要：文件分类规则
 

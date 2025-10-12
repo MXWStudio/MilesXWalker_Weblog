@@ -113,26 +113,97 @@
             <div class="ai-section">
               <h3 class="section-label">🎯 第二步：选择目标岗位并优化</h3>
 
-              <!-- 优化模式选择 -->
-              <div class="optimization-mode-selector">
-                <label class="mode-label">优化模式：</label>
-                <div class="mode-buttons">
-                  <button
-                    :class="['mode-btn', { active: optimizationMode === 'quick' }]"
-                    type="button"
-                    @click="optimizationMode = 'quick'"
-                  >
-                    ⚡ 快速优化
-                    <span class="mode-desc">仅优化简介和技能</span>
-                  </button>
-                  <button
-                    :class="['mode-btn', { active: optimizationMode === 'deep' }]"
-                    type="button"
-                    @click="optimizationMode = 'deep'"
-                  >
-                    🔍 深度优化
-                    <span class="mode-desc">全面优化所有内容</span>
-                  </button>
+              <!-- 优化设置：模式 + 模型 -->
+              <div class="optimization-settings">
+                <!-- 优化模式选择 -->
+                <div class="optimization-mode-selector">
+                  <label class="mode-label">优化模式：</label>
+                  <div class="mode-buttons">
+                    <button
+                      :class="['mode-btn', { active: optimizationMode === 'quick' }]"
+                      type="button"
+                      @click="optimizationMode = 'quick'"
+                    >
+                      ⚡ 快速优化
+                      <span class="mode-desc">仅优化简介和技能</span>
+                    </button>
+                    <button
+                      :class="['mode-btn', { active: optimizationMode === 'deep' }]"
+                      type="button"
+                      @click="optimizationMode = 'deep'"
+                    >
+                      🔍 深度优化
+                      <span class="mode-desc">全面优化所有内容</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- AI 模型选择 -->
+                <div class="model-selector">
+                  <label class="model-label">AI 模型：</label>
+                  <div class="model-select-wrapper">
+                    <button
+                      class="model-select-btn"
+                      type="button"
+                      @click="showModelSelector = !showModelSelector"
+                    >
+                      <span class="model-icon">🤖</span>
+                      <span class="model-name">{{ currentModelConfig.name }}</span>
+                      <span class="model-tier" :class="currentModelConfig.tier">
+                        {{
+                          currentModelConfig.tier === 'free'
+                            ? '免费'
+                            : currentModelConfig.tier === 'paid'
+                              ? '付费'
+                              : '本地'
+                        }}
+                      </span>
+                      <span class="dropdown-arrow">▼</span>
+                    </button>
+
+                    <!-- 模型选择下拉菜单 -->
+                    <div v-if="showModelSelector" class="model-dropdown">
+                      <div
+                        v-for="(group, groupKey) in MODEL_GROUPS"
+                        :key="groupKey"
+                        class="model-group"
+                      >
+                        <div class="model-group-header">
+                          <span class="model-group-title">{{ group.label }}</span>
+                          <span class="model-group-desc">{{ group.description }}</span>
+                        </div>
+                        <div class="model-list">
+                          <button
+                            v-for="model in group.models"
+                            :key="model.id"
+                            :class="[
+                              'model-option',
+                              { active: selectedModel === model.id },
+                              model.tier,
+                            ]"
+                            type="button"
+                            @click="selectModel(model.id)"
+                          >
+                            <div class="model-option-header">
+                              <span class="model-option-name">{{ model.name }}</span>
+                              <span v-if="model.recommended" class="model-recommended">推荐</span>
+                            </div>
+                            <div class="model-option-desc">{{ model.description }}</div>
+                            <div class="model-option-features">
+                              <span class="feature">⚡ {{ model.features.speed }}</span>
+                              <span class="feature">✨ {{ model.features.quality }}</span>
+                              <span class="feature">💰 {{ model.features.cost }}</span>
+                            </div>
+                            <div v-if="model.tier === 'paid'" class="model-option-pricing">
+                              输入: ${{ model.pricing.input }}/1K · 输出: ${{
+                                model.pricing.output
+                              }}/1K
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -239,8 +310,22 @@
       </div>
     </div>
 
-    <!-- AI优化结果预览对话框 -->
-    <div v-if="showOptimizationPreview" class="modal-overlay" @click="cancelOptimization">
+    <!-- AI优化迭代器 -->
+    <OptimizationIterator
+      :show="showIterator"
+      :initial-result="optimizationResult"
+      :job-requirement="jobInput"
+      :original-resume-data="resumeStore.resumeData"
+      @close="closeIterator"
+      @apply="applyOptimizationResult"
+    />
+
+    <!-- 旧的AI优化结果预览对话框（保留作为备用） -->
+    <div
+      v-if="showOptimizationPreview"
+      class="modal-overlay"
+      @click="showOptimizationPreview = false"
+    >
       <div class="modal-content optimization-preview-modal" @click.stop>
         <div class="modal-header">
           <h3>✨ AI 优化结果预览</h3>
@@ -464,6 +549,14 @@ import { intelligentScan } from '@/ai/useWebsiteScanner'
 import { analyzeJobMatch } from '@/ai/useJobMatcher'
 import { optimizeResume, quickOptimize, deepOptimize } from '@/ai/useResumeOptimizer'
 import JobMatchAnalysis from '@/components/JobMatchAnalysis.vue'
+import OptimizationIterator from '@/components/OptimizationIterator.vue'
+import {
+  ALL_MODELS,
+  MODEL_GROUPS,
+  getSavedModel,
+  saveModelPreference,
+  getModelConfig,
+} from '@/ai/aiConfig'
 
 // 使用简历 Store
 const resumeStore = useResumeStore()
@@ -517,6 +610,22 @@ const showEditor = ref(false)
 const optimizationMode = ref('quick') // 'quick' | 'deep'
 const showOptimizationPreview = ref(false)
 const optimizationResult = ref(null)
+const showIterator = ref(false) // 控制优化迭代器显示
+
+// AI 模型选择
+const selectedModel = ref(getSavedModel())
+const showModelSelector = ref(false)
+
+// 计算当前模型信息
+const currentModelConfig = computed(() => getModelConfig(selectedModel.value))
+
+// 切换模型
+const selectModel = modelId => {
+  selectedModel.value = modelId
+  saveModelPreference(modelId)
+  showModelSelector.value = false
+  console.log('✅ 已切换到模型:', getModelConfig(modelId).name)
+}
 
 /**
  * 格式化时间显示
@@ -707,23 +816,23 @@ const handleAIOptimize = async () => {
       // 深度优化：优化所有部分（简介、技能、工作经历、项目）
       console.log('🔍 使用深度优化模式...')
       result = await deepOptimize({ position: jobInput.value }, resumeStore.resumeData, {
-        model: 'openai',
+        model: selectedModel.value,
         lang: 'zh',
       })
     } else {
       // 快速优化：只优化简介和技能
       console.log('⚡ 使用快速优化模式...')
       result = await quickOptimize(jobInput.value, resumeStore.resumeData, {
-        model: 'openai',
+        model: selectedModel.value,
         lang: 'zh',
       })
     }
 
     console.log('✅ AI 优化完成:', result)
 
-    // 保存优化结果并显示预览
+    // 保存优化结果并打开迭代器
     optimizationResult.value = result
-    showOptimizationPreview.value = true
+    showIterator.value = true
 
     // 执行岗位匹配分析
     try {
@@ -769,28 +878,29 @@ const handleAIOptimize = async () => {
 }
 
 /**
- * 应用AI优化结果
+ * 应用AI优化结果（从迭代器）
  */
-const applyOptimizationResult = () => {
-  if (!optimizationResult.value) return
+const applyOptimizationResult = finalResult => {
+  if (!finalResult) return
 
-  console.log('📝 应用AI优化结果...')
+  console.log('📝 应用AI优化结果...', finalResult)
 
   // 使用Store的批量更新方法
-  resumeStore.applyOptimization(optimizationResult.value)
+  resumeStore.applyOptimization(finalResult)
+
+  // 关闭迭代器
+  showIterator.value = false
+  optimizationResult.value = null
 
   // 显示成功提示
   const mode = optimizationMode.value === 'deep' ? '深度' : '快速'
+  const matchScore = finalResult?.matchAnalysis?.matchScore || 0
+
   alert(
-    `✅ ${mode}优化已成功应用！\n\n已更新：\n• 个人简介\n• 技能列表${optimizationMode.value === 'deep' ? '\n• 工作经历\n• 项目经验' : ''}`
+    `✅ ${mode}优化已成功应用！\n\n已更新：\n• 个人简介\n• 技能列表${optimizationMode.value === 'deep' ? '\n• 工作经历\n• 项目经验' : ''}\n\n匹配度：${matchScore}%`
   )
 
-  // 关闭预览对话框
-  showOptimizationPreview.value = false
-  optimizationResult.value = null
-
   // 显示成功消息
-  const matchScore = optimizationResult.value?.matchAnalysis?.matchScore || 0
   aiOptimizationResult.value = `✨ AI优化已应用！\n匹配度：${matchScore}%\n\n查看右侧预览效果 →`
 
   setTimeout(() => {
@@ -799,11 +909,11 @@ const applyOptimizationResult = () => {
 }
 
 /**
- * 取消应用优化
+ * 关闭迭代器
  */
-const cancelOptimization = () => {
-  showOptimizationPreview.value = false
-  optimizationResult.value = null
+const closeIterator = () => {
+  showIterator.value = false
+  // 不清空 optimizationResult，以便用户可以重新打开
 }
 
 /**
@@ -1929,12 +2039,19 @@ const handleDownloadMatchReport = () => {
   white-space: pre-line;
 }
 
+/* 优化设置容器 */
+.optimization-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
 /* 优化模式选择器 */
 .optimization-mode-selector {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 20px;
 }
 
 .mode-label {
@@ -1980,6 +2097,221 @@ const handleDownloadMatchReport = () => {
   font-size: 0.8em;
   font-weight: 400;
   opacity: 0.9;
+}
+
+/* AI 模型选择器 */
+.model-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.model-label {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.model-select-wrapper {
+  position: relative;
+}
+
+.model-select-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.model-select-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.model-icon {
+  font-size: 1.2em;
+}
+
+.model-name {
+  flex: 1;
+  text-align: left;
+}
+
+.model-tier {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.model-tier.free {
+  background: rgba(72, 187, 120, 0.3);
+  color: #9ae6b4;
+}
+
+.model-tier.paid {
+  background: rgba(246, 173, 85, 0.3);
+  color: #fbd38d;
+}
+
+.model-tier.local {
+  background: rgba(99, 179, 237, 0.3);
+  color: #90cdf4;
+}
+
+.dropdown-arrow {
+  font-size: 0.7em;
+  transition: transform 0.3s ease;
+}
+
+/* 模型下拉菜单 */
+.model-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  max-height: 500px;
+  overflow-y: auto;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.model-group {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.model-group:last-child {
+  border-bottom: none;
+}
+
+.model-group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.model-group-title {
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 0.9em;
+}
+
+.model-group-desc {
+  font-size: 0.8em;
+  color: #718096;
+}
+
+.model-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.model-option {
+  padding: 12px;
+  background: #f7fafc;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.model-option:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+  transform: translateX(2px);
+}
+
+.model-option.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+}
+
+.model-option.active .model-option-name,
+.model-option.active .model-option-desc,
+.model-option.active .model-option-features,
+.model-option.active .model-option-pricing {
+  color: white;
+}
+
+.model-option-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.model-option-name {
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 0.95em;
+}
+
+.model-recommended {
+  padding: 2px 8px;
+  background: #ffd700;
+  color: #744210;
+  border-radius: 6px;
+  font-size: 0.75em;
+  font-weight: 600;
+}
+
+.model-option.active .model-recommended {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.model-option-desc {
+  color: #4a5568;
+  font-size: 0.85em;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.model-option-features {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.model-option-features .feature {
+  font-size: 0.8em;
+  color: #718096;
+}
+
+.model-option-pricing {
+  font-size: 0.75em;
+  color: #a0aec0;
+  margin-top: 4px;
 }
 
 /* 优化预览对话框 */
