@@ -20,7 +20,8 @@
     "vercel:build": "vite build",
     "vercel:preview": "vercel --prod",
     "vercel:deploy": "vercel --prod",
-    "check-all": "npm run lint:check && npm run build",
+    "test": "node src/ai/__tests__/useJobMatcher.test.js",
+    "check-all": "npm run lint:check && npm run test && npm run build",
     "fix-all": "npm run lint && npm run lint:style"
   },
   "dependencies": {
