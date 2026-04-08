@@ -11,6 +11,75 @@ import qiniuHelper from '../utils/qiniu-helper.js'
 
 const router = express.Router()
 
+// 安全限制常量
+const MAX_FSIZE_LIMIT = 100 * 1024 * 1024 // 100MB
+const MAX_EXPIRES = 7200 // 2小时
+const ALLOWED_MIME_PATTERNS = [
+  'image/*',
+  'video/*',
+  'audio/*',
+  'model/*',
+  'application/pdf',
+  'application/zip',
+  'application/x-zip-compressed',
+]
+
+/**
+ * 验证 MIME 类型限制是否安全
+ * @param {string} mimeLimit MIME限制字符串
+ * @returns {boolean} 是否安全
+ */
+const isValidMimeLimit = mimeLimit => {
+  if (!mimeLimit) return true
+  const patterns = mimeLimit.split(';')
+  return patterns.every(pattern => {
+    const p = pattern.trim()
+    if (!p) return true
+    return ALLOWED_MIME_PATTERNS.some(allowed => {
+      if (allowed.endsWith('/*')) {
+        return p.startsWith(allowed.slice(0, -1))
+      }
+      return p === allowed
+    })
+  })
+}
+
+/**
+ * 校验上传约束参数
+ * @param {Object} params 校验参数
+ * @param {number} params.expires 过期时间
+ * @param {number} params.fsizeLimit 文件大小限制
+ * @param {string} params.mimeLimit MIME类型限制
+ * @returns {Object|null} 错误响应对象，校验通过则返回 null
+ */
+const validateUploadConstraints = ({ expires, fsizeLimit, mimeLimit }) => {
+  if (expires && (typeof expires !== 'number' || expires > MAX_EXPIRES || expires < 0)) {
+    return {
+      success: false,
+      error: `过期时间无效或超过最大限制 (${MAX_EXPIRES}秒)`,
+    }
+  }
+
+  if (
+    fsizeLimit &&
+    (typeof fsizeLimit !== 'number' || fsizeLimit > MAX_FSIZE_LIMIT || fsizeLimit < 0)
+  ) {
+    return {
+      success: false,
+      error: `文件大小限制无效或超过最大限制 (${MAX_FSIZE_LIMIT / (1024 * 1024)}MB)`,
+    }
+  }
+
+  if (mimeLimit && !isValidMimeLimit(mimeLimit)) {
+    return {
+      success: false,
+      error: '包含不允许的 MIME 类型限制',
+    }
+  }
+
+  return null
+}
+
 // 速率限制配置
 const uploadLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15分钟
@@ -68,6 +137,12 @@ router.post('/upload-token', uploadLimiter, (req, res) => {
   try {
     const { key, expires, fsizeLimit, mimeLimit } = req.body
 
+    // 安全校验
+    const errorResponse = validateUploadConstraints({ expires, fsizeLimit, mimeLimit })
+    if (errorResponse) {
+      return res.status(400).json(errorResponse)
+    }
+
     const token = qiniuHelper.generateUploadToken({
       key,
       expires: expires || 3600,
@@ -110,6 +185,12 @@ router.post('/batch-upload-tokens', uploadLimiter, (req, res) => {
         success: false,
         error: '凭证数量必须在1-50之间',
       })
+    }
+
+    // 安全校验
+    const errorResponse = validateUploadConstraints({ expires, fsizeLimit, mimeLimit })
+    if (errorResponse) {
+      return res.status(400).json(errorResponse)
     }
 
     const tokens = []
