@@ -578,8 +578,9 @@ function processOptimizationResult(result, originalData) {
 
   // 处理工作经历优化
   if (result.experience && Array.isArray(result.experience)) {
+    const experienceMap = new Map(result.experience.map(opt => [opt.id, opt]))
     processed.experience = originalData.experience.map(exp => {
-      const optimized = result.experience.find(opt => opt.id === exp.id)
+      const optimized = experienceMap.get(exp.id)
       if (optimized && optimized.optimizedDescription) {
         return {
           ...exp,
@@ -592,8 +593,9 @@ function processOptimizationResult(result, originalData) {
 
   // 处理项目经验优化
   if (result.projects && Array.isArray(result.projects)) {
+    const projectsMap = new Map(result.projects.map(opt => [opt.id, opt]))
     processed.projects = originalData.projects.map(proj => {
-      const optimized = result.projects.find(opt => opt.id === proj.id)
+      const optimized = projectsMap.get(proj.id)
       if (optimized && optimized.optimizedDescription) {
         return {
           ...proj,
